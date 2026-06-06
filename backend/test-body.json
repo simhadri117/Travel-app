@@ -1,0 +1,9 @@
+{
+  "source": "Delhi",
+  "destination": "Goa",
+  "startDate": "2026-06-10",
+  "endDate": "2026-06-11",
+  "budget": 50000,
+  "travelType": "Couple",
+  "travelers": 2
+}

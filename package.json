@@ -1,0 +1,20 @@
+{
+  "name": "wanderwise-monorepo",
+  "version": "1.0.0",
+  "description": "WanderWise Monorepo Root",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:web": "npm --prefix web run dev",
+    "dev:admin": "npm --prefix admin run dev",
+    "dev:mobile": "npm --prefix mobile start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:web\" \"npm run dev:admin\"",
+    "check:types": "npm --prefix web exec tsc -- --noEmit && npm --prefix admin exec tsc -- --noEmit && npm --prefix backend exec tsc -- --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "firebase": "^12.14.0"
+  }
+}

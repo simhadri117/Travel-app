@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Local databases & logs
+mongodb_data/
+*.log
+**/gemini-debug.log
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Build and IDE configuration
+dist/
+**/dist/
+.vscode/
+.idea/
+.DS_Store
