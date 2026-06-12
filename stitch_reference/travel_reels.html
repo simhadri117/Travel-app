@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Travel Reels | TravelSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#dbe1ff",
+                    "on-error-container": "#93000a",
+                    "text-main": "#0F172A",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-lowest": "#ffffff",
+                    "text-muted": "#64748B",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "outline": "#737686",
+                    "on-secondary-fixed-variant": "#1a438e",
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-fixed": "#261900",
+                    "on-tertiary-fixed-variant": "#5d4200",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-primary-container": "#eeefff",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-bright": "#f7f9fb",
+                    "outline-variant": "#c3c6d7",
+                    "bg-pure": "#FFFFFF",
+                    "on-background": "#191c1e",
+                    "secondary": "#375ca8",
+                    "on-secondary-fixed": "#001945",
+                    "on-error": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "secondary-container": "#8aacfe",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "secondary-fixed": "#d9e2ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#004ac6",
+                    "surface-tint": "#0053db",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "map-accent": "#006CE4",
+                    "tertiary-fixed-dim": "#febb02",
+                    "on-surface-variant": "#434655",
+                    "on-secondary": "#ffffff",
+                    "border-subtle": "#E2E8F0",
+                    "tertiary-container": "#8e6700",
+                    "inverse-primary": "#b4c5ff",
+                    "background": "#f7f9fb",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#ffefd6",
+                    "on-secondary-container": "#113e89",
+                    "tertiary": "#6f5000",
+                    "tertiary-fixed": "#ffdea4",
+                    "on-primary-fixed": "#00174b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "lg": "48px",
+                    "md": "24px",
+                    "base": "8px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .video-container { height: calc(100vh - 80px); }
+        .reel-overlay { background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 40%); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-20 px-md max-w-container-max mx-auto">
+<div class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface tracking-tight">TravelSphere AI</div>
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Explore</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Planner</a>
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1" href="#">Reels</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Bookings</a>
+</nav>
+<div class="flex items-center gap-sm">
+<button class="material-symbols-outlined p-base hover:bg-surface-container rounded-full transition-all">search</button>
+<button class="bg-primary-container text-on-primary text-label-md font-label-md px-md py-sm rounded-xl shadow-md hover:scale-105 transition-transform">Login</button>
+</div>
+</div>
+</header>
+<main class="pt-20 flex max-w-container-max mx-auto h-screen overflow-hidden">
+<!-- Left Sidebar: Community & Filters (Desktop context) -->
+<aside class="hidden xl:flex flex-col w-80 p-md border-r border-border-subtle bg-bg-pure overflow-y-auto no-scrollbar">
+<h2 class="text-headline-md font-headline-md mb-md">Community</h2>
+<!-- Trending Creators -->
+<div class="space-y-sm mb-lg">
+<p class="text-label-md font-label-md text-text-muted">TRENDING CREATORS</p>
+<div class="flex items-center gap-sm p-sm rounded-xl hover:bg-surface-container-low cursor-pointer transition-all">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A professional headshot of a travel influencer with a warm smile, set against a blurred sun-drenched coastal background. The lighting is soft and golden hour, reflecting a high-end, aspirational travel aesthetic. The color palette features warm skin tones and soft turquoise water in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC8ANcslmcLbVr25b81SazxpeTQnpKsu4G8s7iYiLkm0W4qONvKMGeUlBmqIIAIv7BvuSfq2VdGtuPLnKm3JLZKFXcHTXqh0jFU9MjaHtNXp13b070wB9sFFDL5QLiviYVp1COUTuJCigvWXUOTSI2N8XcUaCnUAFbisl0MdfyVit7mc_sqoOcDhcDo1u0SJoJRcwS_5fPW4znA99NmIXKOBmUX0FcJY3CHpHoiNCgjKwGPN5k_FZFxnDFCvZFxUzJUBVupo0eu9s"/>
+<div>
+<div class="flex items-center gap-xs">
+<span class="text-label-md font-label-md">Elena Voyages</span>
+<span class="material-symbols-outlined text-[14px] text-map-accent" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-caption font-caption text-text-muted">420k followers</p>
+</div>
+</div>
+<div class="flex items-center gap-sm p-sm rounded-xl hover:bg-surface-container-low cursor-pointer transition-all">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="A portrait of a male adventurer in his late 20s, wearing rugged high-quality outdoor gear. He is standing in front of a misty alpine mountain range with sharp peaks. The lighting is cool, blue-hour moody atmospheric style, emphasizing a premium minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZxqu2KRaVzuOX7QQel2kdMMQtRMVCMq6W9UxqIWJv40Ln-q7xLvYtV8W0vygfUJx8gMG4e3Ws8GAbu3v-f0h2r79laDYyu9H5Sk-eBqCYW5IhNSTeUGCFpTd9t_x5ZL88PIfzJl-wsHdQSKbm1PqRtB-GzcXDpQnxQCea4udW5xYqAUpcExiwJBNnUS_HZSYw6kL_BChpMfoH4nm20X93DxdbD4Qn7P1JeT6d0Q0J4QGifUSqQGGbakYc7ox0rjuB1GffMBWSOfo"/>
+<div>
+<div class="flex items-center gap-xs">
+<span class="text-label-md font-label-md">Marco Peaks</span>
+<span class="material-symbols-outlined text-[14px] text-map-accent" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-caption font-caption text-text-muted">128k followers</p>
+</div>
+</div>
+</div>
+<!-- Categories -->
+<div class="space-y-sm">
+<p class="text-label-md font-label-md text-text-muted">BROWSE TOPICS</p>
+<div class="flex flex-wrap gap-xs">
+<span class="px-sm py-xs bg-primary text-on-primary rounded-full text-caption font-label-md cursor-pointer">All Feed</span>
+<span class="px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full text-caption font-label-md cursor-pointer hover:bg-secondary-fixed transition-all">Luxury Stay</span>
+<span class="px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full text-caption font-label-md cursor-pointer hover:bg-secondary-fixed transition-all">Solo Travel</span>
+<span class="px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full text-caption font-label-md cursor-pointer hover:bg-secondary-fixed transition-all">Hidden Gems</span>
+<span class="px-sm py-xs bg-secondary-container text-on-secondary-container rounded-full text-caption font-label-md cursor-pointer hover:bg-secondary-fixed transition-all">Food Tours</span>
+</div>
+</div>
+<!-- Ad/Promo Card -->
+<div class="mt-xl p-md bg-primary-fixed rounded-2xl relative overflow-hidden group cursor-pointer">
+<div class="relative z-10">
+<h3 class="text-label-md font-headline-md text-on-primary-fixed-variant mb-xs">Join the Club</h3>
+<p class="text-caption font-caption text-on-secondary-fixed-variant mb-md">Unlock exclusive AI-crafted itineraries from top influencers.</p>
+<button class="bg-primary text-on-primary px-md py-xs rounded-lg text-label-md shadow-sm">Upgrade Now</button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-primary opacity-10 text-[120px]">loyalty</span>
+</div>
+</aside>
+<!-- Center: Reel Feed -->
+<section class="flex-grow flex flex-col items-center bg-surface-container-low overflow-y-auto snap-y snap-mandatory no-scrollbar scroll-smooth h-full">
+<!-- Reel 1 -->
+<article class="snap-start min-w-full md:min-w-0 md:w-[450px] video-container relative my-base md:my-md shadow-2xl rounded-3xl overflow-hidden group">
+<!-- Mock Video Placeholder Image -->
+<div class="absolute inset-0 bg-inverse-surface">
+<img class="w-full h-full object-cover" data-alt="A breathtaking cinematic vertical shot of a traditional wooden gondola drifting through a narrow Venice canal at sunrise. The architecture is detailed with classical Italian textures, and the water reflects the soft pink and orange hues of the sky. The lighting is bright and ethereal, creating a high-end luxury travel magazine aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQj1hP_E6vcD406sTmQcw_WYC2OoqGCWUfsX6Rf97czAU2mRRBz8kaOeVMN2sOe00c0BqleT88l3wjUMuq58Zz_QJyOs8WtK3KxjT_gwLlL2GsAw9REuSdzE-lbeKYnSTiDEKigqb1eydh-iZpJlTXZundu-HhyMSB-zmb2ea7T4tvK_2vS8iyqS-2m0Me5AG5r171ktlVRvV_aEKUIG-zsfIdJT7YbiX2_sckEVejyb229VSx3DwkDTtDol_gHkhLmmWznk5bVno"/>
+</div>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 reel-overlay pointer-events-none"></div>
+<!-- Interaction Sidebar (Overlay) -->
+<div class="absolute right-4 bottom-32 flex flex-col gap-md items-center text-white">
+<div class="flex flex-col items-center">
+<button class="material-symbols-outlined text-[32px] drop-shadow-md hover:scale-110 transition-transform">favorite</button>
+<span class="text-caption font-label-md mt-xs drop-shadow-sm">24.5k</span>
+</div>
+<div class="flex flex-col items-center">
+<button class="material-symbols-outlined text-[32px] drop-shadow-md hover:scale-110 transition-transform">chat_bubble</button>
+<span class="text-caption font-label-md mt-xs drop-shadow-sm">842</span>
+</div>
+<div class="flex flex-col items-center">
+<button class="material-symbols-outlined text-[32px] drop-shadow-md hover:scale-110 transition-transform">bookmark</button>
+<span class="text-caption font-label-md mt-xs drop-shadow-sm">Save</span>
+</div>
+<div class="flex flex-col items-center">
+<button class="material-symbols-outlined text-[32px] drop-shadow-md hover:scale-110 transition-transform">share</button>
+<span class="text-caption font-label-md mt-xs drop-shadow-sm">Share</span>
+</div>
+</div>
+<!-- Caption & Profile (Overlay) -->
+<div class="absolute bottom-6 left-6 right-16 text-white">
+<div class="flex items-center gap-sm mb-md">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="Minimalist headshot avatar of a creator in soft lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZCza4sgCx5itmGdX7S7Zm8beECgwKyMLu-aRKtM51_vlpsPN7xIkDIPOzr68mXTR-Bf4bzg62cRypNefHBoEc_2GMLhWyCXo8biCFP1zXeNyy98TWCZUv31gRoDPu0sQ86lTKnsgrWZ5nxVs3m9eAiPlXWpCLxG1FrXVmT7KZKSKb0EDumFRLtHR_chI4u5WFxynwYBVL34egTYTOk926s6f7YDOhM1lt6Ut4NLkDOf7O_1F1KPVEYCtfKUABB7ay5uiOPronZkM"/>
+<span class="font-bold text-body-md">Elena Voyages</span>
+<button class="bg-white/20 backdrop-blur-md px-sm py-1 rounded-full text-caption font-label-md border border-white/30">Follow</button>
+</div>
+<p class="text-body-md line-clamp-2 drop-shadow-sm mb-xs">Waking up in Venice feels like a dream. Exploring the hidden canals before the crowds arrive... #venice #travel #italy</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">music_note</span>
+<span class="text-caption font-caption italic">Original Audio - Elena Voyages</span>
+</div>
+</div>
+</article>
+<!-- Reel 2 -->
+<article class="snap-start min-w-full md:min-w-0 md:w-[450px] video-container relative my-base md:my-md shadow-2xl rounded-3xl overflow-hidden">
+<div class="absolute inset-0 bg-inverse-surface">
+<img class="w-full h-full object-cover" data-alt="A lush, vibrant vertical view of the Shibuya Crossing in Tokyo from a high vantage point at night. The neon signs are glowing in brilliant blues, pinks, and yellows, creating a futuristic cyberpunk yet clean atmosphere. Rain-slicked streets reflect the dazzling lights, adding a cinematic premium texture to the scene." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSmAFRYo4qE8jWgVMy5z1aUQZzINYxlIH0wwVuZEZDIlGsXWFh30aDsVtcHTmRiXKBmZYGcS7l6HpfLO3rCEsl9N-20QD6Rbcahm4i7xoaSMPRWozP40cDchrjYS8uA8wTwelmri1B2-Ty45cgccGiWPvxtM5Y-dqIJvfSGRiN3RJExBJz70VPGgBZyJN791Top1sIHNKBt3_zw_ZkT8-kqyOHRI1ZzGk1vo3VxToylP8Dv3tpzMBjn4YkDHc5PqkV-yToVKcjWuY"/>
+</div>
+<div class="absolute inset-0 reel-overlay pointer-events-none"></div>
+<!-- Controls and details same as above -->
+</article>
+</section>
+<!-- Right Sidebar: Destination Details & CTA -->
+<aside class="hidden lg:flex flex-col w-[380px] p-md bg-bg-pure border-l border-border-subtle overflow-y-auto no-scrollbar">
+<!-- Dynamic Content based on active Reel -->
+<div class="animate-in fade-in duration-500" id="destination-info">
+<div class="relative h-48 w-full rounded-2xl overflow-hidden mb-md shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A panoramic wide view of the Venice lagoon at dusk, showing the Santa Maria della Salute church. The water is a deep blue, and the sky is filled with soft purple and orange gradient clouds. High-end architectural photography style with clean lines and balanced composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrfLU5jxlygL9MTR_Pb1SM6cWyKEFGKStn32SyhZQv2bA-1jHlIcd6o54CNdV33ongGKDix2kJ-Z10LnGO-aRyFsy2lSR0BKRyMPANq28QoemVotJ47I8YgxsOGTGXDRJNHozsX77oo9WgkSvfxBx_YgsEL6v3LD5jv3NE8Wl9-pZHDihy7Go_7LgocNisb27O8j6z2tgljxEOB5AunDDwWr2CJjpvel2uwETeL6q8viyZAXG0JNhqCOIzkExJxeC29ZKj_iIq9bs"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-map-accent text-[18px]">location_on</span>
+<span class="text-label-md font-label-md text-on-surface">Venice, Italy</span>
+</div>
+</div>
+<div class="space-y-sm mb-lg">
+<h1 class="text-headline-lg font-headline-lg">Venice Discovery</h1>
+<div class="flex items-center gap-base">
+<div class="flex text-tertiary-fixed-dim">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+<span class="text-label-md font-label-md text-text-muted">4.8 (2.1k reviews)</span>
+</div>
+<p class="text-body-md text-on-surface-variant leading-relaxed">
+                        Experience the romantic allure of the Floating City. From the majestic St. Mark's Basilica to secret cicchetti bars, Venice offers a timeless escape into history and art.
+                    </p>
+</div>
+<!-- Highlights Bento-ish Grid -->
+<div class="grid grid-cols-2 gap-sm mb-lg">
+<div class="bg-surface-container-low p-sm rounded-xl">
+<span class="material-symbols-outlined text-primary mb-xs">hotel</span>
+<p class="text-label-md font-label-md">Luxury Stays</p>
+<p class="text-caption font-caption text-text-muted">From $240/nt</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-xl">
+<span class="material-symbols-outlined text-primary mb-xs">restaurant</span>
+<p class="text-label-md font-label-md">Local Dining</p>
+<p class="text-caption font-caption text-text-muted">Avg $45/pp</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-xl">
+<span class="material-symbols-outlined text-primary mb-xs">directions_boat</span>
+<p class="text-label-md font-label-md">Gondola Tour</p>
+<p class="text-caption font-caption text-text-muted">Starts $80</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-xl">
+<span class="material-symbols-outlined text-primary mb-xs">event</span>
+<p class="text-label-md font-label-md">Best Season</p>
+<p class="text-caption font-caption text-text-muted">Apr - June</p>
+</div>
+</div>
+<!-- Main CTA -->
+<button class="w-full bg-primary text-on-primary font-bold py-md rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined">auto_awesome</span>
+                    Plan a trip here
+                </button>
+</div>
+<!-- More Content below the fold of the sidebar -->
+<div class="mt-xl">
+<h3 class="text-label-md font-label-md text-text-muted mb-md">REALTED POSTS</h3>
+<div class="grid grid-cols-3 gap-xs">
+<div class="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-all">
+<img class="w-full h-full object-cover" data-alt="Close up image of an Italian gelato in a cone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZRTv7CL1tY-M0WGHdq3QIn-vHWbgHlnxsrOXeJCqVJJ7-3IwD5OytZLa9C-1hMt208u1__6qyA-2QR60Kl_gJR1rmPo9nfO-uDNhfiJHgT-SlDOqDkEta4U7nCbFBKGqBmwS1b5s9GFyrF7QvdrOfzkJVEHz8fYPEhgl5ZQitNaZM1G2LxjKpftuoMcLdD-VWtqO1j8XN3Z2cMDt50PNlC4EISi1QAfqzxUlL3c3a9aecCJBdz_dQ1ygPzQhO1aKA8P4U9r_XJj4"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-all">
+<img class="w-full h-full object-cover" data-alt="Architecture detail of the Colosseum." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAY7epfxsMAlI-WhEOWeal1TnoKU7x8x6bJa9H_vb08ZlKJwuAHNRmGQb7YvJaLYoE23KSpso1QSvrEpbdsXNIvFMwXJbetICdr1xVwAueDKoiQuiG3Aoc03qv_olNIlKoLmHM2go181_hyVUPusJBFRGpEGed2i3x9E71v9Ht0UZ30FxB9n-7jpDdzs1i0aFaAjY-hu-bxZ4R3cALxtQlVkLnRcj6eRnEqBcJHNaH51KlWmix68tGwFRS7aQL5QkpYAM5OqeFuMI"/>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-80 transition-all">
+<img class="w-full h-full object-cover" data-alt="A beautiful street in Cinque Terre." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcmp70a_V7vaEg-Q9GOwAHVadherAa7JwjkaGwzWD1Tnl4MTn2XIbtst6aIZ0ut8RSkTqkzPU0W8VHyPBX0EMv-ta0IfCHrMIIAA0eWQt0oVWodCq1cBgOcJFv0IxkelpH-CNscYAMtEldDdqUCQNa5MoFUYW-UvtbUFl462M4bM4BFn30riOdppTarxigFE3kVGpKBILMTnxYEU1XIjgSjy88zuX37izHwWdG6mCL47kUybZ6JPjhEEi6RTKlCeXaST8gEj1oqh0"/>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Mobile Navigation Shell -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface/80 backdrop-blur-md flex justify-around items-center h-16 px-md z-50">
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-caption font-label-md">Explore</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-caption font-label-md">Planner</span>
+</button>
+<button class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+<span class="text-caption font-label-md">Reels</span>
+</button>
+<button class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-caption font-label-md">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple observer for scroll snapping effect to "change" sidebar content (Mock logic)
+        const articles = document.querySelectorAll('article');
+        const observerOptions = {
+            root: document.querySelector('section'),
+            threshold: 0.6
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // In a real app, we would update the sidebar with data for the visible reel
+                    console.log('Active Reel Updated');
+                }
+            });
+        }, observerOptions);
+
+        articles.forEach(article => observer.observe(article));
+
+        // Like button toggle micro-interaction
+        document.querySelectorAll('.material-symbols-outlined').forEach(btn => {
+            if(btn.innerText === 'favorite') {
+                btn.addEventListener('click', function() {
+                    const isFilled = this.style.fontVariationSettings.includes("'FILL' 1");
+                    this.style.fontVariationSettings = isFilled ? "'FILL' 0" : "'FILL' 1";
+                    this.style.color = isFilled ? 'white' : '#EF4444';
+                    this.classList.add('scale-125');
+                    setTimeout(() => this.classList.remove('scale-125'), 150);
+                });
+            }
+        });
+    </script>
+</body></html>

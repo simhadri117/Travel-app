@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { api } from '../services/api';
-import { Send, Sparkles, User, Loader2 } from 'lucide-react';
+import { Send, Sparkles, User, Trash2 } from 'lucide-react';
 
 const SUGGESTIONS = [
   { emoji: '✈️', text: 'Suggest a 3-day budget trip to Goa' },
@@ -11,37 +11,137 @@ const SUGGESTIONS = [
   { emoji: '🍜', text: 'Best food spots in Mumbai for foodies' },
 ];
 
+const DEFAULT_WELCOME = {
+  id: 'welcome',
+  role: 'assistant',
+  text: "Hi there! I'm your **TravelSphere AI** assistant. 🌍\n\nI can help you with travel itineraries, visa info, packing checklists, local recommendations and much more. What would you like to explore?",
+};
+
 export default function Assistant() {
-  const [messages, setMessages] = useState<any[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      text: "Hi there! I'm your **TravelSphere AI** assistant. 🌍\n\nI can help you with travel itineraries, visa info, packing checklists, local recommendations and much more. What would you like to explore?",
-    },
-  ]);
+  const [messages, setMessages] = useState<any[]>(() => {
+    const saved = localStorage.getItem('ts_chat_messages');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse saved chat messages:", e);
+      }
+    }
+    return [DEFAULT_WELCOME];
+  });
+
+  const [sessionId, setSessionId] = useState<string>(() => {
+    let id = localStorage.getItem('ts_chat_session_id');
+    if (!id) {
+      id = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem('ts_chat_session_id', id);
+    }
+    return id;
+  });
+
+  const [conversationId, setConversationId] = useState<string>(() => {
+    let id = localStorage.getItem('ts_chat_conv_id');
+    if (!id) {
+      id = 'conv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem('ts_chat_conv_id', id);
+    }
+    return id;
+  });
+
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [queue, setQueue] = useState<string[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   const bottomRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef(messages);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+    localStorage.setItem('ts_chat_messages', JSON.stringify(messages));
+  }, [messages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
-  const sendMessage = async (text: string) => {
-    if (!text.trim()) return;
+  // Queue runner
+  useEffect(() => {
+    if (queue.length > 0 && !isProcessing) {
+      const nextMsg = queue[0];
+      setQueue(prev => prev.slice(1));
+      processMessage(nextMsg);
+    }
+  }, [queue, isProcessing]);
+
+  const processMessage = async (text: string) => {
+    setIsProcessing(true);
+    setLoading(true);
+
+    // Add user message to state immediately for rendering
     const userMsg = { id: Date.now().toString(), role: 'user', text };
     setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setLoading(true);
+
+    // Build context history using the messages Ref (which is up-to-date but does not contain the new userMsg yet)
+    const history = messagesRef.current
+      .filter(m => m.id !== 'welcome' && !m.text.includes("I'm currently having trouble connecting"))
+      .map(m => ({ role: m.role, text: m.text }));
+
     try {
-      const history = messages.filter(m => m.id !== 'welcome').map(m => ({ role: m.role, text: m.text }));
-      const res = await api.post('/assistant/chat', { message: text, chatHistory: history });
+      const res = await api.post('/assistant/chat', {
+        message: text,
+        chatHistory: history,
+        sessionId,
+        conversationId
+      });
+
       if (res.data.success) {
-        setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', text: res.data.message }]);
+        setMessages(prev => [
+          ...prev,
+          {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant',
+            text: res.data.message
+          }
+        ]);
+      } else {
+        throw new Error(res.data.error || 'Failed to reach AI');
       }
-    } catch {
-      setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', text: '⚠️ Unable to reach the AI. Check your connection and try again.' }]);
-    } finally { setLoading(false); }
+    } catch (err: any) {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          text: "⚠️ I'm currently having trouble connecting. Please try again in a few moments."
+        }
+      ]);
+    } finally {
+      setLoading(false);
+      setIsProcessing(false);
+    }
+  };
+
+  const sendMessage = (text: string) => {
+    if (!text.trim()) return;
+    setQueue(prev => [...prev, text]);
+    setInput('');
+  };
+
+  const clearConversation = () => {
+    localStorage.removeItem('ts_chat_messages');
+    localStorage.removeItem('ts_chat_session_id');
+    localStorage.removeItem('ts_chat_conv_id');
+    
+    const newSessId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+    const newConvId = 'conv_' + Date.now() + '_' + Math.random().toString(36).substring(2, 11);
+    
+    localStorage.setItem('ts_chat_session_id', newSessId);
+    localStorage.setItem('ts_chat_conv_id', newConvId);
+    
+    setSessionId(newSessId);
+    setConversationId(newConvId);
+    setMessages([DEFAULT_WELCOME]);
   };
 
   const formatText = (text: string) => {
@@ -66,7 +166,17 @@ export default function Assistant() {
             </div>
           </div>
         </div>
-        <span className="badge badge-blue">Powered by Gemini</span>
+        <div className="flex items-center gap-3">
+          <span className="badge badge-blue">Powered by Gemini</span>
+          <button
+            onClick={clearConversation}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-100 hover:border-rose-100 rounded-xl transition-all duration-200"
+            title="Clear Conversation"
+          >
+            <Trash2 size={13} />
+            <span>Clear Chat</span>
+          </button>
+        </div>
       </div>
 
       {/* Chat area */}
@@ -93,14 +203,15 @@ export default function Assistant() {
         {/* Typing indicator */}
         {loading && (
           <div className="flex gap-3 max-w-[85%]">
-            <div className="w-8 h-8 rounded-2xl bg-slate-100 flex items-center justify-center flex-shrink-0">
-              <Loader2 size={14} className="text-brand-600 animate-spin" />
+            <div className="w-8 h-8 rounded-2xl bg-slate-100 flex items-center justify-center flex-shrink-0 animate-pulse">
+              <Sparkles size={14} className="text-brand-600 animate-spin" style={{ animationDuration: '3s' }} />
             </div>
-            <div className="px-4 py-3 rounded-3xl rounded-tl-lg bg-white border border-slate-100 shadow-sm">
+            <div className="px-4 py-3 rounded-3xl rounded-tl-lg bg-white border border-slate-100 shadow-sm flex items-center gap-3">
+              <span className="text-xs text-slate-500 font-medium animate-pulse">TravelSphere AI is thinking...</span>
               <div className="flex gap-1 items-center h-5">
-                <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 bg-brand-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             </div>
           </div>

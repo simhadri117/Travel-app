@@ -270,8 +270,8 @@ Filters:
 - Themes: ${filters.themes.join(', ')}`;
 
   if (isGemini) {
-    // Gemini API call (using gemini-2.5-flash or pro)
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
+    // Gemini API call (using gemini-2.5-flash-lite)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
     const payload = {
       contents: [{ parts: [{ text: systemPrompt }] }],
       generationConfig: {

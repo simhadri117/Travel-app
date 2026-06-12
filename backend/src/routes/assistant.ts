@@ -1,78 +1,157 @@
 import { Router } from 'express';
-import { authMiddleware, AuthRequest, optionalAuthMiddleware } from '../services/auth';
+import { AuthRequest, optionalAuthMiddleware } from '../services/auth';
 import axios from 'axios';
 
 const router = Router();
 
+// Robust retry logic with exponential backoff
+async function callGeminiWithRetry(
+  url: string,
+  payload: any,
+  sessionId: string,
+  maxRetries = 3
+): Promise<{ text: string; tokenUsage: any; duration: number }> {
+  let attempt = 0;
+  let delay = 1000; // start at 1 second
+
+  while (attempt <= maxRetries) {
+    const startTime = Date.now();
+    try {
+      console.log(`[Assistant] Request Sent | Session ID: ${sessionId} | Attempt: ${attempt + 1}/${maxRetries + 1}`);
+      
+      const response = await axios.post(url, payload, { timeout: 10000 });
+      const duration = Date.now() - startTime;
+      
+      const responseData = response.data;
+      const textResponse = responseData?.candidates?.[0]?.content?.parts?.[0]?.text;
+      
+      if (!textResponse) {
+        throw new Error('Invalid API Response: Text content is missing');
+      }
+
+      const tokenUsage = responseData?.usageMetadata || {
+        promptTokenCount: 0,
+        candidatesTokenCount: 0,
+        totalTokenCount: 0
+      };
+
+      console.log(`[Assistant] Response Received | Session ID: ${sessionId} | Duration: ${duration}ms | Token Usage: ${JSON.stringify(tokenUsage)}`);
+
+      return {
+        text: textResponse,
+        tokenUsage,
+        duration
+      };
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+      attempt++;
+
+      const status = error.response?.status;
+      const errorMessage = error.response?.data ? JSON.stringify(error.response.data) : error.message;
+      const errorType = status ? `HTTP ${status}` : error.code || 'UNKNOWN';
+
+      console.error(`[Assistant] Retry Attempt ${attempt} failed | Session ID: ${sessionId} | Error Type: ${errorType} | Error Msg: ${errorMessage} | Duration: ${duration}ms`);
+
+      // 400/403 are usually invalid key / bad request. We don't retry those as they aren't transient.
+      const isRetriable = !status || [429, 500, 503].includes(status) || error.code === 'ECONNABORTED';
+
+      if (status === 400 || status === 403) {
+        console.error(`[Developer Console Error] Gemini API Key is invalid or unauthorized. Status: ${status}`);
+      }
+
+      if (attempt > maxRetries || !isRetriable) {
+        throw {
+          status: status || 500,
+          message: errorMessage,
+          errorType
+        };
+      }
+
+      console.log(`[Assistant] Waiting ${delay}ms before next retry...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2; // Exponential backoff: 1s -> 2s -> 4s
+    }
+  }
+  throw new Error('Retry limit exceeded');
+}
+
 router.post('/assistant/chat', optionalAuthMiddleware, async (req: AuthRequest, res) => {
-  const { message, chatHistory = [] } = req.body;
+  const { message, chatHistory = [], sessionId = 'default-session', conversationId = 'default-conv' } = req.body;
+  
   if (!message) {
     return res.status(400).json({ success: false, error: 'Message is required' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
+  
+  if (!apiKey) {
+    console.error("[Developer Console Error] GEMINI_API_KEY is missing from environment variables.");
+    return res.status(500).json({
+      success: false,
+      error: "I'm currently having trouble connecting. Please try again in a few moments."
+    });
+  }
 
   try {
-    if (apiKey) {
-      const isGemini = apiKey === process.env.GEMINI_API_KEY;
-      if (isGemini) {
-        const systemInstruction = "You are a TravelSphere AI assistant. Answer the user's travel questions, budget queries, destination ideas, visa queries, and local tips politely and concisely in markdown format.";
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
-        
-        const contents = chatHistory.length > 0 ? [
-          ...chatHistory.map((h: any) => ({
-            role: h.role === 'user' ? 'user' : 'model',
-            parts: [{ text: h.text }]
-          })),
-          { role: 'user', parts: [{ text: message }] }
-        ] : [
-          { role: 'user', parts: [{ text: `${systemInstruction}\n\nUser Question: ${message}` }] }
-        ];
+    const systemInstructionText = "You are a TravelSphere AI assistant. Answer the user's travel questions, budget queries, destination ideas, visa queries, and local tips politely and concisely in markdown format.";
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
-        const response = await axios.post(url, { contents });
-        const textResponse = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (textResponse) {
-          return res.json({ success: true, message: textResponse });
-        }
+    // Clean and alternate roles for Gemini API format
+    const cleanContents: any[] = [];
+    const rawContents = [
+      ...chatHistory.map((h: any) => ({
+        role: h.role === 'user' ? 'user' : 'model',
+        text: h.text
+      })),
+      { role: 'user', text: message }
+    ];
+
+    for (const item of rawContents) {
+      if (!item.text || !item.text.trim()) continue;
+      
+      if (cleanContents.length > 0 && cleanContents[cleanContents.length - 1].role === item.role) {
+        cleanContents[cleanContents.length - 1].parts[0].text += "\n" + item.text;
       } else {
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: 'You are a TravelSphere AI assistant. Answer user travel questions in markdown.' },
-            ...chatHistory.map((h: any) => ({
-              role: h.role === 'user' ? 'user' : 'assistant',
-              content: h.text
-            })),
-            { role: 'user', content: message }
-          ]
-        }, {
-          headers: { Authorization: `Bearer ${apiKey}` }
+        cleanContents.push({
+          role: item.role,
+          parts: [{ text: item.text }]
         });
-        const textResponse = response.data?.choices?.[0]?.message?.content;
-        if (textResponse) {
-          return res.json({ success: true, message: textResponse });
-        }
       }
     }
 
-    let responseText = "I'd be happy to help you with your trip! Since I am in offline mode, here is some general info:\n\n";
-    const msgLower = message.toLowerCase();
-    if (msgLower.includes('visa')) {
-      responseText += "🌍 **Visa Advice**:\n- Indian passport holders can visit countries like Thailand, Sri Lanka, and Mauritius visa-free or with visa-on-arrival.\n- Make sure your passport has at least 6 months validity from date of entry!";
-    } else if (msgLower.includes('pack')) {
-      responseText += "🎒 **Smart Packing list**:\n1. Roll your clothes to save space.\n2. Keep a universal power adapter.\n3. Always carry a small medical kit.\n4. Keep copies of your documents on your phone.";
-    } else if (msgLower.includes('goa')) {
-      responseText += "🏖️ **Goa Highlights**:\n- Best time: November to February.\n- North Goa for party and water sports (Anjuna, Baga).\n- South Goa for quiet heritage stays (Palolem, Agonda).\n- Try local Fish Curry and Feni!";
-    } else if (msgLower.includes('jaipur')) {
-      responseText += "🕌 **Jaipur Highlights**:\n- Pink City heritage sights: Amer Fort, Hawa Mahal, Patrika Gate.\n- Eat Dal Baati Churma at Chokhi Dhani.\n- Great for shopping colorful textiles.";
-    } else {
-      responseText += "I am your TravelSphere AI assistant. Ask me about weather, visa guides, local food, or safety tips, and I'll assist you right away!";
+    // Ensure it starts with user and is not empty
+    while (cleanContents.length > 0 && cleanContents[0].role !== 'user') {
+      cleanContents.shift();
     }
 
-    return res.json({ success: true, message: responseText });
+    if (cleanContents.length === 0) {
+      cleanContents.push({
+        role: 'user',
+        parts: [{ text: message }]
+      });
+    }
+
+    const payload = {
+      contents: cleanContents,
+      systemInstruction: {
+        parts: [{ text: systemInstructionText }]
+      }
+    };
+
+    const result = await callGeminiWithRetry(url, payload, sessionId);
+    
+    return res.json({
+      success: true,
+      message: result.text,
+      sessionId,
+      conversationId
+    });
   } catch (error: any) {
-    console.error("AI assistant error:", error.response?.data || error.message);
-    return res.status(500).json({ success: false, error: "Failed to query AI model. Please try again." });
+    console.error("[Assistant Error] Chat service failed:", error.message || error);
+    return res.status(error.status || 500).json({
+      success: false,
+      error: "I'm currently having trouble connecting. Please try again in a few moments."
+    });
   }
 });
 

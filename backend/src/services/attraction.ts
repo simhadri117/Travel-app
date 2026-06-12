@@ -6,6 +6,7 @@ import { uploadToCloudinary } from './upload';
 const getGoogleApiKey = () => process.env.GOOGLE_MAPS_API_KEY || '';
 const getUnsplashAccessKey = () => process.env.UNSPLASH_ACCESS_KEY || '';
 const getPexelsApiKey = () => process.env.PEXELS_API_KEY || '';
+const getPixabayApiKey = () => process.env.PIXABAY_API_KEY || '';
 
 // Runtime local cache to prevent redundant queries
 const localCache: Record<string, any> = {};
@@ -59,7 +60,7 @@ async function validateImageRelevanceWithAI(
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
     const prompt = `You are an expert travel image validation system.
 Analyze this image and determine if it is a photo of the actual attraction: "${attractionName}" located in ${city}, ${state}, ${country}.
 
@@ -246,17 +247,24 @@ async function fetchUnsplashPhotos(searchQuery: string): Promise<string[]> {
   if (!accessKey) return [];
   try {
     const res = await axios.get('https://api.unsplash.com/search/photos', {
+      headers: {
+        Authorization: `Client-ID ${accessKey}`
+      },
       params: {
         query: searchQuery,
-        client_id: accessKey,
         per_page: 5
       }
     });
+    // Check rate limit headers for logging/monitoring
+    const limit = res.headers['x-ratelimit-limit'];
+    const remaining = res.headers['x-ratelimit-remaining'];
+    console.log(`[Unsplash Rate Limit] Limit: ${limit}, Remaining: ${remaining}`);
+
     if (res.data.results && res.data.results.length > 0) {
       return res.data.results.map((r: any) => r.urls.regular);
     }
-  } catch (err) {
-    console.warn('[Unsplash API] Search failed:', err);
+  } catch (err: any) {
+    console.warn('[Unsplash API] Search failed:', err.response?.data || err.message);
   }
   return [];
 }
@@ -280,6 +288,28 @@ async function fetchPexelsPhotos(searchQuery: string): Promise<string[]> {
     }
   } catch (err) {
     console.warn('[Pexels API] Search failed:', err);
+  }
+  return [];
+}
+
+// 5. Pixabay search
+async function fetchPixabayPhotos(searchQuery: string): Promise<string[]> {
+  const apiKey = getPixabayApiKey();
+  if (!apiKey) return [];
+  try {
+    const res = await axios.get('https://pixabay.com/api/', {
+      params: {
+        key: apiKey,
+        q: searchQuery,
+        image_type: 'photo',
+        per_page: 5
+      }
+    });
+    if (res.data.hits && res.data.hits.length > 0) {
+      return res.data.hits.map((h: any) => h.largeImageURL);
+    }
+  } catch (err) {
+    console.warn('[Pixabay API] Search failed:', err);
   }
   return [];
 }
@@ -383,8 +413,9 @@ export async function enrichAttraction(
   const sources = [
     { name: 'google_places', fetch: async () => googleData.candidatePhotos },
     { name: 'wikimedia_commons', fetch: async () => fetchWikimediaCommonsPhotos(searchQuery) },
-    { name: 'unsplash', fetch: async () => fetchUnsplashPhotos(searchQuery) },
-    { name: 'pexels', fetch: async () => fetchPexelsPhotos(searchQuery) }
+    { name: 'pexels', fetch: async () => fetchPexelsPhotos(searchQuery) },
+    { name: 'pixabay', fetch: async () => fetchPixabayPhotos(searchQuery) },
+    { name: 'unsplash', fetch: async () => fetchUnsplashPhotos(searchQuery) }
   ];
 
   let selectedImageUrl = '';

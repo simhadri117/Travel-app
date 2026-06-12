@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
 import { 
   Train, Calendar, Users, Briefcase, Search, 
-  MapPin, CheckCircle, Clock, AlertTriangle, Download, Mic
+  MapPin, CheckCircle, Clock, AlertTriangle, Download, Mic, ArrowLeftRight, Plane, Building, Bus, Star, Check
 } from 'lucide-react';
 
 interface Station {
@@ -211,7 +211,7 @@ export default function Trains() {
     setStep('berths');
   };
 
-  // 3. Finalize Checkout & Razorpay
+  // 3. Finalize Checkout & Stripe
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     const totalPrice = selectedClass.price * passengersCount;
@@ -271,26 +271,65 @@ export default function Trains() {
 
   const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
+  const renderBookingHubHeader = (activeId: string) => {
+    const tabs = [
+      { id: 'flights', label: 'Flights', path: '/flights', icon: Plane },
+      { id: 'hotels', label: 'Hotels', path: '/hotels', icon: Building },
+      { id: 'trains', label: 'Trains', path: '/trains', icon: Train },
+      { id: 'buses', label: 'Buses', path: '/buses', icon: Bus },
+    ];
+    return (
+      <div className="flex gap-2 mb-6 border-b border-slate-100 pb-2 overflow-x-auto no-scrollbar">
+        {tabs.map((tab) => {
+          const TabIcon = tab.icon;
+          const isActive = tab.id === activeId;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => navigate(tab.path)}
+              className={`flex items-center gap-1.5 pb-2 text-xs font-bold border-b-2 transition-all whitespace-nowrap -mb-px ${
+                isActive 
+                  ? 'border-primary text-primary' 
+                  : 'border-transparent text-slate-400 hover:text-slate-600'
+              }`}
+            >
+              <TabIcon size={14} />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      
-      {/* Navigation Tabs */}
-      <div className="flex gap-4 border-b border-slate-200 pb-2">
+    <div className="max-w-4xl mx-auto space-y-6 pb-xl">
+      {/* Page Title */}
+      <div>
+        <h1 className="font-display-lg text-3xl font-extrabold text-slate-900 flex items-center gap-2">
+          <Train className="text-primary" /> Booking Hub
+        </h1>
+        <p className="text-slate-400 text-xs mt-1">AI-powered train ticket reservations with Indian Railways APIs</p>
+      </div>
+
+      {/* Navigation Sub-Tabs */}
+      <div className="flex gap-4 border-b border-slate-100 pb-2.5 text-xs font-bold">
         <button 
           onClick={() => { setActiveTab('book'); setStep('search'); }}
-          className={`pb-2 text-sm font-bold transition-all ${activeTab === 'book' ? 'text-brand-600 border-b-2 border-brand-600' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`pb-2 transition-all ${activeTab === 'book' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
         >
           Book Train Tickets
         </button>
         <button 
           onClick={() => setActiveTab('pnr')}
-          className={`pb-2 text-sm font-bold transition-all ${activeTab === 'pnr' ? 'text-brand-600 border-b-2 border-brand-600' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`pb-2 transition-all ${activeTab === 'pnr' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
         >
           PNR Status Check
         </button>
         <button 
           onClick={() => setActiveTab('status')}
-          className={`pb-2 text-sm font-bold transition-all ${activeTab === 'status' ? 'text-brand-600 border-b-2 border-brand-600' : 'text-slate-400 hover:text-slate-600'}`}
+          className={`pb-2 transition-all ${activeTab === 'status' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
         >
           Live Train Running Status
         </button>
@@ -301,296 +340,353 @@ export default function Trains() {
         <>
           {/* STEP 1: SEARCH SCREEN */}
           {step === 'search' && (
-            <form onSubmit={handleSearch} className="card p-6 space-y-6 bg-white border-slate-100">
-              {/* Voice search active banner */}
-              {isListening && (
-                <div className="flex items-center justify-center gap-2 p-3 bg-brand-50 text-brand-700 text-xs font-semibold rounded-2xl border border-brand-100 animate-pulse">
-                  <div className="w-2.5 h-2.5 bg-brand-600 rounded-full animate-ping" />
-                  Listening for voice input for {listeningTarget === 'source' ? 'From' : 'To'}... Speak city or station name.
-                </div>
-              )}
+            <div className="space-y-6 animate-fade-in">
+              <div className="bg-white rounded-[28px] border border-slate-100 shadow-[0px_10px_30px_rgba(15,23,42,0.05)] p-5">
+                {renderBookingHubHeader('trains')}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* FROM STATION AUTOCOMPLETE */}
-                <div className="relative space-y-2">
-                  <label className="label">From</label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search from city or station..."
-                      value={sourceSearch}
-                      onChange={(e) => {
-                        setSourceSearch(e.target.value);
-                        setShowSourceDropdown(true);
-                      }}
-                      onFocus={() => {
-                        setShowSourceDropdown(true);
-                        setActiveInput('source');
-                      }}
-                      onBlur={() => setTimeout(() => setShowSourceDropdown(false), 250)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-4 pr-10 py-3 text-sm focus:outline-none focus:border-brand-500 text-slate-900"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => startVoiceSearch('source')}
-                      className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-slate-200/50 transition-colors ${
-                        isListening && listeningTarget === 'source' ? 'text-red-500 animate-pulse bg-red-100' : 'text-slate-400'
-                      }`}
-                      title="Voice Search"
-                    >
-                      <Mic size={16} />
-                    </button>
-                  </div>
-                  
-                  {showSourceDropdown && (
-                    <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
-                      {getSuggestions(sourceSearch).length === 0 ? (
-                        <div className="p-4 text-xs text-slate-400 text-center">No stations found</div>
-                      ) : (
-                        getSuggestions(sourceSearch).map((station) => (
-                          <div
-                            key={station.code}
-                            onMouseDown={() => {
-                              setSource(station.code);
-                              setSourceSearch(station.name);
-                              setShowSourceDropdown(false);
-                            }}
-                            className="flex items-start gap-3 p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition-colors"
-                          >
-                            <div className="text-brand-500 mt-0.5">
-                              <MapPin size={16} />
-                            </div>
-                            <div className="flex-1 min-w-0 text-left">
-                              <p className="text-sm font-bold text-slate-900 truncate">{station.name}</p>
-                              <p className="text-xs text-slate-500">{station.city}</p>
-                            </div>
-                            <div className="text-xs font-semibold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">
-                              {station.code}
-                            </div>
-                          </div>
-                        ))
-                      )}
+                <form onSubmit={handleSearch} className="space-y-4">
+                  {/* Voice search indicator */}
+                  {isListening && (
+                    <div className="flex items-center justify-center gap-2 p-2.5 bg-primary/5 text-primary text-[11px] font-bold rounded-xl border border-primary/15 animate-pulse">
+                      <Mic size={14} className="text-red-500 animate-ping" />
+                      Listening for voice input for {listeningTarget === 'source' ? 'From' : 'To'}... Speak now.
                     </div>
                   )}
-                </div>
 
-                {/* TO STATION AUTOCOMPLETE */}
-                <div className="relative space-y-2">
-                  <label className="label">To</label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Search destination city or station..."
-                      value={destinationSearch}
-                      onChange={(e) => {
-                        setDestinationSearch(e.target.value);
-                        setShowDestinationDropdown(true);
-                      }}
-                      onFocus={() => {
-                        setShowDestinationDropdown(true);
-                        setActiveInput('destination');
-                      }}
-                      onBlur={() => setTimeout(() => setShowDestinationDropdown(false), 250)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-4 pr-10 py-3 text-sm focus:outline-none focus:border-brand-500 text-slate-900"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => startVoiceSearch('destination')}
-                      className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-slate-200/50 transition-colors ${
-                        isListening && listeningTarget === 'destination' ? 'text-red-500 animate-pulse bg-red-100' : 'text-slate-400'
-                      }`}
-                      title="Voice Search"
-                    >
-                      <Mic size={16} />
-                    </button>
-                  </div>
-                  
-                  {showDestinationDropdown && (
-                    <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
-                      {getSuggestions(destinationSearch).length === 0 ? (
-                        <div className="p-4 text-xs text-slate-400 text-center">No stations found</div>
-                      ) : (
-                        getSuggestions(destinationSearch).map((station) => (
-                          <div
-                            key={station.code}
-                            onMouseDown={() => {
-                              setDestination(station.code);
-                              setDestinationSearch(station.name);
-                              setShowDestinationDropdown(false);
-                            }}
-                            className="flex items-start gap-3 p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-0 transition-colors"
-                          >
-                            <div className="text-brand-500 mt-0.5">
-                              <MapPin size={16} />
-                            </div>
-                            <div className="flex-1 min-w-0 text-left">
-                              <p className="text-sm font-bold text-slate-900 truncate">{station.name}</p>
-                              <p className="text-xs text-slate-500">{station.city}</p>
-                            </div>
-                            <div className="text-xs font-semibold text-brand-600 bg-brand-50 px-2 py-0.5 rounded">
-                              {station.code}
-                            </div>
-                          </div>
-                        ))
+                  {/* Route block */}
+                  <div className="grid grid-cols-1 md:grid-cols-9 gap-2 items-center text-left">
+                    {/* From station box */}
+                    <div className="md:col-span-4 relative flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100/80 transition-colors group cursor-pointer">
+                      <MapPin size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                      <div className="flex flex-col flex-grow min-w-0">
+                        <span className="text-[9px] font-bold text-slate-405 uppercase tracking-wider">From Station</span>
+                        <input
+                          type="text"
+                          placeholder="Search city or station..."
+                          value={sourceSearch}
+                          onChange={(e) => {
+                            setSourceSearch(e.target.value);
+                            setShowSourceDropdown(true);
+                          }}
+                          onFocus={() => {
+                            setShowSourceDropdown(true);
+                            setActiveInput('source');
+                          }}
+                          onBlur={() => setTimeout(() => setShowSourceDropdown(false), 250)}
+                          className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full"
+                          required
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => startVoiceSearch('source')}
+                        className={`p-1.5 rounded-full hover:bg-slate-200/50 transition-colors flex-shrink-0 ${
+                          isListening && listeningTarget === 'source' ? 'text-red-500 animate-pulse bg-red-50' : 'text-slate-400'
+                        }`}
+                      >
+                        <Mic size={14} />
+                      </button>
+
+                      {showSourceDropdown && (
+                        <div className="absolute z-50 left-0 right-0 top-14 mt-1 bg-white border border-slate-150 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
+                          {getSuggestions(sourceSearch).length === 0 ? (
+                            <div className="p-3 text-[10px] text-slate-400 text-center font-bold">No stations found</div>
+                          ) : (
+                            getSuggestions(sourceSearch).map((station) => (
+                              <div
+                                key={station.code}
+                                onMouseDown={() => {
+                                  setSource(station.code);
+                                  setSourceSearch(station.name);
+                                  setShowSourceDropdown(false);
+                                }}
+                                className="flex items-start justify-between p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 transition-colors text-xs"
+                              >
+                                <div className="min-w-0">
+                                  <p className="font-bold text-slate-900 truncate leading-tight">{station.name}</p>
+                                  <p className="text-[10px] text-slate-400 mt-0.5">{station.city}</p>
+                                </div>
+                                <span className="text-[9px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded uppercase tracking-wider">{station.code}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
                       )}
                     </div>
-                  )}
-                </div>
-              </div>
 
-              {/* POPULAR CITIES CHIPS */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Popular Cities</label>
-                <div className="flex flex-wrap gap-2">
-                  {POPULAR_CITIES.map((city) => (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => handlePopularCityClick(city)}
-                      className="px-3.5 py-1.5 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-200 rounded-full text-xs font-medium text-slate-700 hover:text-brand-600 transition-all active:scale-95 flex items-center gap-1"
-                    >
-                      📍 {city}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                    {/* Swap indicator */}
+                    <div className="md:col-span-1 flex justify-center">
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          const tempCode = source; const tempSearch = sourceSearch;
+                          setSource(destination); setSourceSearch(destinationSearch);
+                          setDestination(tempCode); setDestinationSearch(tempSearch);
+                        }}
+                        className="w-10 h-10 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-full flex items-center justify-center transition-all text-slate-500 active:scale-90"
+                      >
+                        <ArrowLeftRight size={14} />
+                      </button>
+                    </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <label className="label">Date of Journey</label>
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none"
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="label">Quota Type</label>
-                  <select
-                    value={quota}
-                    onChange={(e) => setQuota(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none select-field"
+                    {/* To station box */}
+                    <div className="md:col-span-4 relative flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100/80 transition-colors group cursor-pointer">
+                      <MapPin size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                      <div className="flex flex-col flex-grow min-w-0">
+                        <span className="text-[9px] font-bold text-slate-405 uppercase tracking-wider">To Station</span>
+                        <input
+                          type="text"
+                          placeholder="Search destination..."
+                          value={destinationSearch}
+                          onChange={(e) => {
+                            setDestinationSearch(e.target.value);
+                            setShowDestinationDropdown(true);
+                          }}
+                          onFocus={() => {
+                            setShowDestinationDropdown(true);
+                            setActiveInput('destination');
+                          }}
+                          onBlur={() => setTimeout(() => setShowDestinationDropdown(false), 250)}
+                          className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full"
+                          required
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => startVoiceSearch('destination')}
+                        className={`p-1.5 rounded-full hover:bg-slate-200/50 transition-colors flex-shrink-0 ${
+                          isListening && listeningTarget === 'destination' ? 'text-red-500 animate-pulse bg-red-50' : 'text-slate-400'
+                        }`}
+                      >
+                        <Mic size={14} />
+                      </button>
+
+                      {showDestinationDropdown && (
+                        <div className="absolute z-50 left-0 right-0 top-14 mt-1 bg-white border border-slate-150 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
+                          {getSuggestions(destinationSearch).length === 0 ? (
+                            <div className="p-3 text-[10px] text-slate-400 text-center font-bold">No stations found</div>
+                          ) : (
+                            getSuggestions(destinationSearch).map((station) => (
+                              <div
+                                key={station.code}
+                                onMouseDown={() => {
+                                  setDestination(station.code);
+                                  setDestinationSearch(station.name);
+                                  setShowDestinationDropdown(false);
+                                }}
+                                className="flex items-start justify-between p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 transition-colors text-xs"
+                              >
+                                <div className="min-w-0">
+                                  <p className="font-bold text-slate-900 truncate leading-tight">{station.name}</p>
+                                  <p className="text-[10px] text-slate-400 mt-0.5">{station.city}</p>
+                                </div>
+                                <span className="text-[9px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded uppercase tracking-wider">{station.code}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Popular Cities Chips */}
+                  <div className="space-y-1.5 text-left">
+                    <label className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Popular Hubs</label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {POPULAR_CITIES.map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => handlePopularCityClick(city)}
+                          className="px-3 py-1.5 bg-slate-50 hover:bg-brand-50 border border-slate-200 rounded-full text-[10px] font-bold text-slate-600 hover:text-primary transition-colors flex items-center gap-0.5 active:scale-95"
+                        >
+                          📍 {city}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Date, Quota, Passengers */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-left">
+                    {/* Date */}
+                    <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl hover:bg-slate-100/80 border border-slate-100 transition-colors group">
+                      <Calendar size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                      <div className="flex flex-col flex-grow">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Date of Journey</span>
+                        <input
+                          type="date"
+                          value={date}
+                          onChange={(e) => setDate(e.target.value)}
+                          className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full cursor-pointer"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* Quota */}
+                    <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl hover:bg-slate-100/80 border border-slate-100 transition-colors group">
+                      <Briefcase size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                      <div className="flex flex-col flex-grow">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Quota Type</span>
+                        <select
+                          value={quota}
+                          onChange={(e) => setQuota(e.target.value)}
+                          className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full cursor-pointer"
+                        >
+                          <option value="General">General</option>
+                          <option value="Ladies">Ladies Quota</option>
+                          <option value="Tatkal">Tatkal</option>
+                          <option value="Premium Tatkal">Premium Tatkal</option>
+                          <option value="Senior Citizen">Senior Citizen</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Passengers */}
+                    <div className="flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl hover:bg-slate-100/80 border border-slate-100 transition-colors group">
+                      <Users size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
+                      <div className="flex flex-col flex-grow">
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Passengers Count</span>
+                        <input
+                          type="number"
+                          min={1}
+                          max={6}
+                          value={passengersCount}
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            setPassengersCount(val);
+                            const arr = Array.from({ length: val }, (_, i) => passengersDetails[i] || { name: '', age: '', gender: 'Male', berth_preference: 'Lower' });
+                            setPassengersDetails(arr);
+                          }}
+                          className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Submit Search CTA */}
+                  <button
+                    type="submit"
+                    className="w-full h-12 bg-primary text-white hover:bg-on-primary-fixed-variant rounded-2xl font-bold flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition-all active:scale-98"
                   >
-                    <option value="General">General</option>
-                    <option value="Ladies">Ladies Quota</option>
-                    <option value="Tatkal">Tatkal</option>
-                    <option value="Premium Tatkal">Premium Tatkal</option>
-                    <option value="Senior Citizen">Senior Citizen</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="label">Passengers Count</label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={6}
-                    value={passengersCount}
-                    onChange={(e) => {
-                      const val = Number(e.target.value);
-                      setPassengersCount(val);
-                      const arr = Array.from({ length: val }, (_, i) => passengersDetails[i] || { name: '', age: '', gender: 'Male', berth_preference: 'Lower' });
-                      setPassengersDetails(arr);
-                    }}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none"
-                    required
-                  />
-                </div>
+                    <Search size={15} /> Find Available Trains
+                  </button>
+                </form>
               </div>
-
-              <button
-                type="submit"
-                className="w-full bg-brand-600 hover:bg-brand-700 text-white font-extrabold py-3.5 rounded-2xl transition-all shadow-sm"
-              >
-                Find Available Trains
-              </button>
-            </form>
+            </div>
           )}
 
           {/* STEP 2: RESULTS */}
           {step === 'results' && (
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-sm font-bold text-slate-500 uppercase">Available Trains on {date}</h3>
-                <button onClick={() => setStep('search')} className="text-xs text-brand-600 font-bold hover:underline">Modify Search</button>
+            <div className="space-y-4 animate-fade-in text-left">
+              <div className="flex justify-between items-center bg-white px-4 py-3 rounded-2xl border border-slate-100 shadow-sm">
+                <div>
+                  <h3 className="text-xs font-extrabold text-slate-900 uppercase">Available Trains</h3>
+                  <p className="text-[10px] text-slate-400 font-semibold">{getStationName(source)} ({source}) → {getStationName(destination)} ({destination}) · {date}</p>
+                </div>
+                <button 
+                  onClick={() => setStep('search')} 
+                  className="px-3.5 py-1.5 border border-slate-200 hover:bg-slate-50 rounded-xl text-[10px] font-bold text-slate-600 transition-all"
+                >
+                  Modify Search
+                </button>
               </div>
 
-              {trainsList.map((train) => (
-                <div key={train.train_id} className="card p-5 border border-slate-100 space-y-4 bg-white">
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                      <h4 className="font-bold text-base text-slate-900">{train.train_name}</h4>
-                      <p className="text-xs text-slate-500">Train #{train.train_number}</p>
-                    </div>
-
-                    <div className="flex items-center gap-6 text-xs text-slate-700">
-                      <div>
-                        <p className="font-extrabold text-slate-900">{train.departure_time}</p>
-                        <p className="text-[10px] text-slate-700 font-semibold">{getStationName(train.source)}</p>
-                        <p className="text-[9px] text-slate-400">({train.source})</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-[10px] text-slate-500">{train.duration}</p>
-                        <div className="w-12 h-[1px] bg-slate-200 my-0.5" />
-                      </div>
-                      <div>
-                        <p className="font-extrabold text-slate-900">{train.arrival_time}</p>
-                        <p className="text-[10px] text-slate-700 font-semibold">{getStationName(train.destination)}</p>
-                        <p className="text-[9px] text-slate-400">({train.destination})</p>
-                      </div>
-                    </div>
-
-                    <div className="flex gap-1 text-[10px]">
-                      {weekdays.map((w, idx) => {
-                        const runs = train.runs_on.includes(idx);
-                        return (
-                          <span 
-                            key={idx} 
-                            className={`w-5 h-5 rounded-full flex items-center justify-center font-bold ${runs ? 'bg-brand-50 text-brand-600 border border-brand-200' : 'bg-slate-50 border border-slate-200 text-slate-400'}`}
-                          >
-                            {w}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Classes tags */}
-                  <div className="flex flex-wrap gap-3 pt-2 border-t border-slate-100">
-                    {train.classes.map((cls: any) => (
-                      <button
-                        key={cls.class_name}
-                        onClick={() => handleSelectClass(train, cls)}
-                        className="bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-3.5 text-left w-32 flex flex-col justify-between transition-all"
-                      >
-                        <span className="text-xs font-bold text-brand-600">{cls.class_name}</span>
-                        <span className="text-[10px] text-success font-semibold mt-1">{cls.available_seats}</span>
-                        <span className="text-sm font-black text-slate-900 mt-1">₹{cls.price}</span>
-                      </button>
-                    ))}
-                  </div>
+              {trainsList.length === 0 ? (
+                <div className="bg-white rounded-3xl p-10 text-center border border-slate-100">
+                  <Train size={36} className="text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-400 text-xs font-medium">No available trains found on this route and date.</p>
+                  <button onClick={() => setStep('search')} className="btn btn-sm btn-primary mt-4 font-bold">Modify Cities</button>
                 </div>
-              ))}
+              ) : (
+                trainsList.map((train) => (
+                  <div key={train.train_id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-4 hover:shadow-card transition-all group">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                      {/* Train Title */}
+                      <div className="sm:w-1/4">
+                        <h4 className="font-bold text-xs text-slate-900 group-hover:text-primary transition-colors leading-tight">{train.train_name}</h4>
+                        <p className="text-[10px] text-slate-400 font-semibold mt-1">Train #{train.train_number}</p>
+                      </div>
+
+                      {/* Travel Details Route */}
+                      <div className="flex items-center gap-6 text-xs text-slate-700 flex-1 w-full">
+                        <div>
+                          <p className="font-extrabold text-slate-900 leading-tight">{train.departure_time}</p>
+                          <p className="text-[10px] text-slate-550 font-bold mt-0.5">{getStationName(train.source)}</p>
+                          <p className="text-[9px] text-slate-400">({train.source})</p>
+                        </div>
+                        <div className="flex-grow flex flex-col items-center">
+                          <span className="text-[9px] text-slate-400 font-semibold">{train.duration}</span>
+                          <div className="w-full flex items-center gap-1 my-0.5">
+                            <div className="flex-grow h-[1px] bg-slate-100" />
+                            <Train size={11} className="text-slate-300 group-hover:text-primary transition-colors" />
+                            <div className="flex-grow h-[1px] bg-slate-100" />
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-extrabold text-slate-900 leading-tight">{train.arrival_time}</p>
+                          <p className="text-[10px] text-slate-550 font-bold mt-0.5">{getStationName(train.destination)}</p>
+                          <p className="text-[9px] text-slate-400">({train.destination})</p>
+                        </div>
+                      </div>
+
+                      {/* Weekdays calendar */}
+                      <div className="flex gap-1 text-[9px] flex-shrink-0">
+                        {weekdays.map((w, idx) => {
+                          const runs = train.runs_on.includes(idx);
+                          return (
+                            <span 
+                              key={idx} 
+                              className={`w-5 h-5 rounded-full flex items-center justify-center font-bold ${
+                                runs 
+                                  ? 'bg-primary/5 text-primary border border-primary/10' 
+                                  : 'bg-slate-50 border border-slate-200 text-slate-350'
+                              }`}
+                            >
+                              {w}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Classes options */}
+                    <div className="flex flex-wrap gap-2 pt-3 border-t border-slate-50">
+                      {train.classes.map((cls: any) => (
+                        <button
+                          key={cls.class_name}
+                          onClick={() => handleSelectClass(train, cls)}
+                          className="bg-slate-50 hover:bg-slate-100/80 border border-slate-100 rounded-xl p-3 text-left w-28 flex flex-col justify-between transition-colors cursor-pointer group/btn"
+                        >
+                          <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{cls.class_name}</span>
+                          <span className="text-[9px] text-emerald-600 font-bold mt-1">{cls.available_seats} left</span>
+                          <span className="text-xs font-extrabold text-slate-900 mt-1.5">₹{cls.price?.toLocaleString('en-IN')}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           )}
 
           {/* STEP 3: BERTH SELECTION */}
           {step === 'berths' && selectedTrain && (
-            <form onSubmit={handleCheckout} className="card p-6 space-y-6 bg-white border-slate-100">
-              <div className="text-center border-b border-slate-100 pb-4">
-                <h3 className="text-lg font-bold text-slate-900">Configure Passenger Details & Berths</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Train: {selectedTrain.train_name} | Route: {getStationName(selectedTrain.source)} → {getStationName(selectedTrain.destination)} | Class: {selectedClass.class_name}
+            <form onSubmit={handleCheckout} className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm max-w-xl mx-auto space-y-6 animate-slide-up text-left">
+              <div className="text-center border-b border-slate-50 pb-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Configure Passenger Details & Berths</h3>
+                <p className="text-[10px] text-slate-400 font-semibold mt-1">
+                  Train: {selectedTrain.train_name} (#{selectedTrain.train_number}) | Class: {selectedClass.class_name}
                 </p>
               </div>
 
               {passengersDetails.map((details, idx) => (
-                <div key={idx} className="space-y-4 border-t border-slate-100 pt-4 first:border-0 first:pt-0">
-                  <p className="text-xs font-bold text-brand-600">Passenger #{idx + 1}</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div key={idx} className="space-y-3 pt-4 border-t border-slate-100 first:border-0 first:pt-0">
+                  <span className="inline-block bg-primary/10 text-primary text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Passenger #{idx + 1}
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <input
                       type="text"
                       placeholder="Passenger Name"
@@ -600,7 +696,7 @@ export default function Trains() {
                         copy[idx].name = e.target.value;
                         setPassengersDetails(copy);
                       }}
-                      className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none"
+                      className="input-field py-2"
                       required
                     />
                     <div className="grid grid-cols-3 gap-2">
@@ -613,7 +709,7 @@ export default function Trains() {
                           copy[idx].age = e.target.value;
                           setPassengersDetails(copy);
                         }}
-                        className="bg-slate-50 border border-slate-200 rounded-2xl px-2 py-2.5 text-xs text-slate-900 col-span-1 focus:outline-none"
+                        className="input-field py-2"
                         required
                       />
                       <select
@@ -623,7 +719,7 @@ export default function Trains() {
                           copy[idx].gender = e.target.value;
                           setPassengersDetails(copy);
                         }}
-                        className="bg-slate-50 border border-slate-200 rounded-2xl px-2 py-2.5 text-xs text-slate-900 focus:outline-none select-field"
+                        className="select-field py-2"
                       >
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -635,7 +731,7 @@ export default function Trains() {
                           copy[idx].berth_preference = e.target.value;
                           setPassengersDetails(copy);
                         }}
-                        className="bg-slate-50 border border-slate-200 rounded-2xl px-2 py-2.5 text-xs text-slate-900 focus:outline-none select-field"
+                        className="select-field py-2 font-semibold"
                       >
                         <option value="Lower">Lower</option>
                         <option value="Middle">Middle</option>
@@ -646,7 +742,7 @@ export default function Trains() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                     <input
                       type="text"
                       placeholder="Aadhaar or Passport Number"
@@ -656,21 +752,21 @@ export default function Trains() {
                         copy[idx].id_number = e.target.value;
                         setPassengersDetails(copy);
                       }}
-                      className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-xs text-slate-900 focus:outline-none"
+                      className="input-field py-2 font-semibold"
                       required
                     />
                   </div>
                 </div>
               ))}
 
-              <div className="pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
-                <span className="font-bold text-slate-500">Total Price ({passengersCount} Ticket(s)):</span>
-                <span className="text-lg font-black text-brand-600">₹{selectedClass.price * passengersCount}</span>
+              <div className="pt-4 border-t border-slate-50 flex justify-between items-center text-xs font-bold text-slate-700">
+                <span>Total Price ({passengersCount} Ticket(s)):</span>
+                <span className="text-sm font-extrabold text-primary">₹{(selectedClass.price * passengersCount)?.toLocaleString('en-IN')}</span>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-2xl transition-all shadow-sm"
+                className="w-full h-11 bg-primary text-white hover:bg-on-primary-fixed-variant rounded-xl font-bold text-xs flex items-center justify-center gap-1 shadow-sm transition-all"
               >
                 Proceed & Pay
               </button>
@@ -679,42 +775,63 @@ export default function Trains() {
 
           {/* STEP 4: SUCCESS TICKET */}
           {step === 'ticket' && bookingConfirmation && (
-            <div className="max-w-xl mx-auto card p-8 rounded-3xl space-y-6 text-center border-2 border-success/30 bg-white">
-              <div className="w-16 h-16 rounded-full bg-success/20 text-success flex items-center justify-center mx-auto mb-2">
-                <CheckCircle size={36} />
+            <div className="max-w-md mx-auto bg-white rounded-3xl border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.05)] text-center space-y-5 animate-scale-in">
+              <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mx-auto shadow-sm">
+                <CheckCircle size={32} />
               </div>
               
-              <h2 className="text-2xl font-heading font-black text-slate-900">Train Ticket Booked!</h2>
-              <p className="text-sm text-slate-500">Your IRCTC simulated ticket has been successfully registered.</p>
-
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-left space-y-2 font-mono text-slate-700">
-                <p><strong>PNR Reference:</strong> <span className="text-brand-600 font-bold">{bookingConfirmation.booking_reference}</span></p>
-                <p><strong>Train:</strong> {bookingConfirmation.journey_details.train_name} (#{bookingConfirmation.journey_details.train_number})</p>
-                <p><strong>Route:</strong> {getStationName(bookingConfirmation.journey_details.source)} ({bookingConfirmation.journey_details.source}) → {getStationName(bookingConfirmation.journey_details.destination)} ({bookingConfirmation.journey_details.destination})</p>
-                <p><strong>Journey Date:</strong> {bookingConfirmation.journey_details.date}</p>
-                <p><strong>Class & Quota:</strong> {bookingConfirmation.journey_details.class_name} | {bookingConfirmation.journey_details.quota}</p>
-                <p><strong>Seat Berth Assignments:</strong></p>
-                <ul className="list-disc pl-5">
-                  {bookingConfirmation.passengers.map((p: any, idx: number) => (
-                    <li key={idx}>{p.name}: {p.seat_number} ({p.berth_preference})</li>
-                  ))}
-                </ul>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">Train Ticket Booked!</h2>
+                <p className="text-slate-405 text-xs mt-1">Your IRCTC simulated ticket has been successfully registered.</p>
               </div>
 
-              <div className="flex gap-4">
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-left space-y-2 font-mono text-slate-700">
+                <div className="flex justify-between">
+                  <span className="text-slate-400 font-sans font-semibold">PNR Reference</span>
+                  <span className="text-primary font-extrabold">{bookingConfirmation.booking_reference}</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-200/50 pt-1.5">
+                  <span className="text-slate-400 font-sans font-semibold">Train</span>
+                  <span className="text-slate-900 font-bold">{bookingConfirmation.journey_details.train_name} (#{bookingConfirmation.journey_details.train_number})</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-200/50 pt-1.5">
+                  <span className="text-slate-400 font-sans font-semibold">Route</span>
+                  <span className="text-slate-900 font-bold">{getStationName(bookingConfirmation.journey_details.source)} ({bookingConfirmation.journey_details.source}) → {getStationName(bookingConfirmation.journey_details.destination)} ({bookingConfirmation.journey_details.destination})</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-200/50 pt-1.5">
+                  <span className="text-slate-400 font-sans font-semibold">Journey Date</span>
+                  <span className="text-slate-900 font-bold">{bookingConfirmation.journey_details.date}</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-200/50 pt-1.5">
+                  <span className="text-slate-400 font-sans font-semibold">Class / Quota</span>
+                  <span className="text-slate-900 font-bold">{bookingConfirmation.journey_details.class_name} | {bookingConfirmation.journey_details.quota}</span>
+                </div>
+                <div className="border-t border-slate-200/50 pt-1.5">
+                  <span className="text-slate-400 font-sans font-semibold block mb-1">Berth Assignments</span>
+                  <ul className="space-y-1 font-sans text-[11px] font-semibold text-slate-655 pl-2">
+                    {bookingConfirmation.passengers.map((p: any, idx: number) => (
+                      <li key={idx} className="flex justify-between">
+                        <span>Passenger {idx + 1}: {p.name}</span>
+                        <span className="text-primary">{p.seat_number} ({p.berth_preference})</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="flex gap-2 text-xs">
                 <a 
-                  href={`http://127.0.0.1:5001/api/v1/tickets/download/${bookingConfirmation._id}`} 
+                  href={`http://127.0.0.1:5002/api/v1/tickets/download/${bookingConfirmation._id}`} 
                   target="_blank" 
                   rel="noreferrer" 
-                  className="flex-1 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl text-xs flex items-center justify-center gap-1.5 shadow-sm"
+                  className="flex-grow h-10 bg-primary text-white hover:bg-on-primary-fixed-variant rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
                 >
-                  <Download size={14} /> Download Ticket PDF
+                  <Download size={13} /> Download Ticket
                 </a>
                 <button 
                   onClick={() => navigate('/trips')}
-                  className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 font-bold rounded-2xl text-xs"
+                  className="flex-grow h-10 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-all"
                 >
-                  View In My Trips
+                  View My Trips
                 </button>
               </div>
             </div>
@@ -724,38 +841,42 @@ export default function Trains() {
 
       {/* ================= TAB 2: PNR CHECK ================= */}
       {activeTab === 'pnr' && (
-        <div className="card p-6 border border-slate-100 bg-white shadow-sm space-y-6">
-          <h2 className="text-lg font-bold text-slate-800">Check Indian Railways PNR Status</h2>
-          <form onSubmit={handleCheckPnr} className="flex gap-4">
+        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm space-y-6 text-left animate-fade-in">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Check Indian Railways PNR Status</h2>
+            <p className="text-xs text-slate-400 mt-1">Check charts preparations and berth status inputs</p>
+          </div>
+          
+          <form onSubmit={handleCheckPnr} className="flex gap-3 text-xs">
             <input
               type="text"
               placeholder="Enter 10-Digit PNR"
               value={pnrQuery}
               onChange={(e) => setPnrQuery(e.target.value)}
-              className="flex-1 input-field font-mono"
+              className="flex-grow input-field font-mono font-bold"
               required
             />
-            <button type="submit" className="btn btn-primary px-6">
+            <button type="submit" className="bg-primary text-white hover:bg-on-primary-fixed-variant px-6 font-bold rounded-xl shadow-sm transition-colors">
               Get Status
             </button>
           </form>
 
           {pnrResult && (
             <div className="border-t border-slate-100 pt-4 space-y-4 text-xs font-mono text-slate-700">
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center text-sans font-bold text-slate-800">
                 <span>PNR Number: {pnrResult.pnr}</span>
-                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded text-[9px] font-bold">
                   {pnrResult.chart_status}
                 </span>
               </div>
-              <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2">
-                <p><strong>Train:</strong> {pnrResult.train_name} ({pnrResult.train_number})</p>
-                <p><strong>Date:</strong> {pnrResult.date}</p>
-                <p className="mt-4 font-bold border-b border-slate-200 pb-1 text-slate-800">Passenger Statuses</p>
+              <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl space-y-2 text-sans text-xs">
+                <p><strong>Train Name:</strong> {pnrResult.train_name} ({pnrResult.train_number})</p>
+                <p><strong>Journey Date:</strong> {pnrResult.date}</p>
+                <p className="mt-4 font-bold border-t border-slate-200/50 pt-2 text-slate-800 uppercase tracking-wider text-[9px]">Passenger Booked Statuses</p>
                 {pnrResult.passengers.map((p: any, i: number) => (
-                  <div key={i} className="flex justify-between text-slate-500">
+                  <div key={i} className="flex justify-between text-slate-600 font-semibold py-1 border-b border-slate-100/50 last:border-0">
                     <span>{p.name}</span>
-                    <span>{p.seat} ({p.status})</span>
+                    <span className="text-primary">{p.seat} ({p.status})</span>
                   </div>
                 ))}
               </div>
@@ -766,18 +887,22 @@ export default function Trains() {
 
       {/* ================= TAB 3: RUNNING STATUS ================= */}
       {activeTab === 'status' && (
-        <div className="card p-6 border border-slate-100 bg-white shadow-sm space-y-6">
-          <h2 className="text-lg font-bold text-slate-800">Live Train Running Status</h2>
-          <form onSubmit={handleCheckRunningStatus} className="flex gap-4">
+        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm space-y-6 text-left animate-fade-in">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Live Train Running Status</h2>
+            <p className="text-xs text-slate-400 mt-1">Locate active trains positions and schedules</p>
+          </div>
+          
+          <form onSubmit={handleCheckRunningStatus} className="flex gap-3 text-xs">
             <input
               type="text"
               placeholder="Enter 5-Digit Train Number (e.g. 12952)"
               value={trainNoQuery}
               onChange={(e) => setTrainNoQuery(e.target.value)}
-              className="flex-1 input-field font-mono"
+              className="flex-grow input-field font-mono font-bold"
               required
             />
-            <button type="submit" className="btn btn-primary px-6">
+            <button type="submit" className="bg-primary text-white hover:bg-on-primary-fixed-variant px-6 font-bold rounded-xl shadow-sm transition-colors">
               Track Train
             </button>
           </form>
@@ -785,23 +910,23 @@ export default function Trains() {
           {runningStatusResult && (
             <div className="border-t border-slate-100 pt-4 space-y-4 text-slate-700">
               <div className="flex justify-between items-center text-xs">
-                <span>Train: {runningStatusResult.train_number}</span>
-                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${runningStatusResult.delay_minutes > 0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                <span className="font-bold">Train: {runningStatusResult.train_number}</span>
+                <span className={`px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase ${runningStatusResult.delay_minutes > 0 ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-250'}`}>
                   {runningStatusResult.status} ({runningStatusResult.delay_minutes}m delay)
                 </span>
               </div>
 
               <div className="relative pl-6 border-l border-slate-200 space-y-6 text-xs mt-4">
                 <div className="relative">
-                  <span className="absolute left-[-29px] top-0 w-3 h-3 rounded-full bg-brand-600 flex items-center justify-center text-[8px] text-white">✓</span>
-                  <p className="font-bold text-slate-800">Last Station: {runningStatusResult.current_station}</p>
-                  <p className="text-slate-400 text-[10px]">{runningStatusResult.last_updated}</p>
+                  <span className="absolute left-[-29px] top-0.5 w-3 h-3 rounded-full bg-primary flex items-center justify-center text-[7px] text-white font-black">✓</span>
+                  <p className="font-extrabold text-slate-800">Last Station: {runningStatusResult.current_station}</p>
+                  <p className="text-slate-400 text-[10px] font-semibold mt-0.5">{runningStatusResult.last_updated}</p>
                 </div>
                 {runningStatusResult.upcoming_stations.map((s: any, i: number) => (
                   <div key={i} className="relative">
-                    <span className="absolute left-[-29px] top-1 w-2.5 h-2.5 rounded-full bg-slate-200" />
+                    <span className="absolute left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-slate-200 border border-white" />
                     <p className="font-bold text-slate-700">Upcoming: {s.name}</p>
-                    <p className="text-slate-400 text-[10px]">ETA: {s.ETA} | Distance: {s.distance_km} km</p>
+                    <p className="text-slate-400 text-[10px] mt-0.5">ETA: {s.ETA} | Distance: {s.distance_km} km</p>
                   </div>
                 ))}
               </div>
@@ -809,7 +934,6 @@ export default function Trains() {
           )}
         </div>
       )}
-
     </div>
   );
 }

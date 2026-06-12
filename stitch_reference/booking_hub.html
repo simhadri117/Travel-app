@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Hub | TravelSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary": "#375ca8",
+                    "primary-container": "#2563eb",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#8aacfe",
+                    "text-muted": "#64748B",
+                    "tertiary-fixed": "#ffdea4",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "surface-container-highest": "#e0e3e5",
+                    "error-container": "#ffdad6",
+                    "on-background": "#191c1e",
+                    "on-secondary-container": "#113e89",
+                    "on-primary-fixed": "#00174b",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#004ac6",
+                    "outline-variant": "#c3c6d7",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-container": "#ffefd6",
+                    "surface-container": "#eceef0",
+                    "on-primary": "#ffffff",
+                    "outline": "#737686",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed": "#d9e2ff",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#8e6700",
+                    "on-tertiary": "#ffffff",
+                    "bg-pure": "#FFFFFF",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-bright": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#001945",
+                    "on-surface-variant": "#434655",
+                    "text-main": "#0F172A",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "border-subtle": "#E2E8F0",
+                    "on-secondary-fixed-variant": "#1a438e",
+                    "on-tertiary-fixed-variant": "#5d4200",
+                    "on-primary-container": "#eeefff",
+                    "tertiary": "#6f5000",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#febb02",
+                    "surface-dim": "#d8dadc",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-fixed": "#261900",
+                    "map-accent": "#006CE4",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "base": "8px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "xl": "80px",
+                    "md": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .shadow-level-1 { box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05); }
+        .shadow-level-2 { box-shadow: 0px 10px 30px rgba(15, 23, 42, 0.12); }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 glass-effect shadow-sm">
+<div class="max-w-container-max mx-auto px-md h-20 flex justify-between items-center">
+<div class="flex items-center gap-base">
+<span class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">TravelSphere AI</span>
+</div>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Explore</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Planner</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md text-label-md" href="#">Reels</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md text-label-md" href="#">Bookings</a>
+</nav>
+<div class="flex items-center gap-md">
+<div class="hidden lg:flex items-center bg-surface-container-low px-sm py-xs rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface w-40" placeholder="Search..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-xl font-label-md text-label-md hover:bg-on-primary-fixed-variant transition-all active:scale-95">Login</button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Search Section -->
+<section class="relative py-xl px-md bg-bg-pure overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-secondary/5 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto">
+<div class="mb-lg">
+<h1 class="font-display-lg text-display-lg text-text-main mb-xs">Where to next?</h1>
+<p class="font-body-lg text-body-lg text-text-muted">AI-powered bookings for the modern lifestyle traveler.</p>
+</div>
+<!-- Unified Booking Hub Search Bar -->
+<div class="bg-surface-container-lowest rounded-[32px] shadow-level-2 p-base md:p-sm">
+<!-- Tabs -->
+<div class="flex gap-base mb-sm px-sm border-b border-border-subtle overflow-x-auto no-scrollbar">
+<button class="flex items-center gap-xs pb-sm border-b-2 border-primary text-primary font-semibold transition-all" id="tab-flights" onclick="switchTab('flights')">
+<span class="material-symbols-outlined">flight</span>
+<span class="font-label-md text-label-md">Flights</span>
+</button>
+<button class="flex items-center gap-xs pb-sm border-b-2 border-transparent text-text-muted hover:text-primary transition-all" id="tab-hotels" onclick="switchTab('hotels')">
+<span class="material-symbols-outlined">hotel</span>
+<span class="font-label-md text-label-md">Hotels</span>
+</button>
+<button class="flex items-center gap-xs pb-sm border-b-2 border-transparent text-text-muted hover:text-primary transition-all" id="tab-trains" onclick="switchTab('trains')">
+<span class="material-symbols-outlined">train</span>
+<span class="font-label-md text-label-md">Trains</span>
+</button>
+<button class="flex items-center gap-xs pb-sm border-b-2 border-transparent text-text-muted hover:text-primary transition-all" id="tab-buses" onclick="switchTab('buses')">
+<span class="material-symbols-outlined">directions_bus</span>
+<span class="font-label-md text-label-md">Buses</span>
+</button>
+</div>
+<!-- Search Inputs -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-base items-center">
+<div class="md:col-span-4 flex items-center gap-sm px-md py-sm bg-surface-container-low rounded-2xl hover:bg-surface-container transition-colors group cursor-pointer">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">location_on</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-text-muted">Destination</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-body-md font-body-md font-semibold text-on-surface" placeholder="Where to?" type="text"/>
+</div>
+</div>
+<div class="md:col-span-3 flex items-center gap-sm px-md py-sm bg-surface-container-low rounded-2xl hover:bg-surface-container transition-colors group cursor-pointer border-l-0 md:border-l border-border-subtle">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">calendar_today</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-text-muted">Dates</span>
+<span class="text-body-md font-body-md font-semibold text-on-surface">Dec 12 — Dec 19</span>
+</div>
+</div>
+<div class="md:col-span-3 flex items-center gap-sm px-md py-sm bg-surface-container-low rounded-2xl hover:bg-surface-container transition-colors group cursor-pointer border-l-0 md:border-l border-border-subtle">
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">person</span>
+<div class="flex flex-col">
+<span class="font-caption text-caption text-text-muted">Travelers</span>
+<span class="text-body-md font-body-md font-semibold text-on-surface">2 Adults, 1 Room</span>
+</div>
+</div>
+<div class="md:col-span-2">
+<button class="w-full bg-primary text-on-primary h-[64px] rounded-2xl font-label-md text-label-md flex items-center justify-center gap-xs hover:bg-on-primary-fixed-variant transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined">search</span>
+                                Search
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="bg-surface py-md border-y border-border-subtle">
+<div class="max-w-container-max mx-auto px-md flex items-center gap-sm overflow-x-auto no-scrollbar">
+<button class="flex items-center gap-xs px-md py-xs bg-bg-pure border border-border-subtle rounded-full font-label-md text-label-md hover:border-primary transition-all">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+                    Filters
+                </button>
+<div class="h-6 w-[1px] bg-outline-variant mx-xs"></div>
+<button class="px-md py-xs bg-primary text-on-primary rounded-full font-label-md text-label-md">All Luxury</button>
+<button class="px-md py-xs bg-bg-pure border border-border-subtle rounded-full font-label-md text-label-md hover:bg-surface-container transition-all">5-star</button>
+<button class="px-md py-xs bg-bg-pure border border-border-subtle rounded-full font-label-md text-label-md hover:bg-surface-container transition-all">Infinity Pool</button>
+<button class="px-md py-xs bg-bg-pure border border-border-subtle rounded-full font-label-md text-label-md hover:bg-surface-container transition-all">Free Breakfast</button>
+<button class="px-md py-xs bg-bg-pure border border-border-subtle rounded-full font-label-md text-label-md hover:bg-surface-container transition-all">Price: $0 - $500</button>
+</div>
+</section>
+<!-- Recommended Luxury Hotels -->
+<section class="py-xl bg-surface">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-text-main mb-xs">Recommended for You</h2>
+<p class="font-body-md text-body-md text-text-muted">Handpicked luxury stays based on your travel style.</p>
+</div>
+<button class="text-primary font-label-md text-label-md flex items-center gap-xs hover:underline">
+                        View all stays <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Hotel Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden rounded-[24px] shadow-level-1 transition-all group-hover:shadow-level-2 group-hover:-translate-y-1">
+<img alt="The Ritz Parisian" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A luxurious boutique hotel in the heart of Paris at dusk. The warm glow of amber lights emanates from elegant arched windows, reflecting on the pristine white stone facade. Lush green vines climb the iron balconies, and the atmosphere is one of timeless European elegance and quiet sophistication under a deep blue twilight sky." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxHbT7p5z77YmqHs72IvV4_lG6ejCxAYSTsUH7dgyhIWnII7O5HGyktX_yi96_BrozNEjQSd91DWU0iRt25SC88hwUvITh5cIsPd5jgMkhMKFYf4LlRWn9fLpWBuprcQcXiIDtjEStuv4p6GwglOHTGQ0lYvSh3PyAhC-g7LGt4n8TX8FI5L9106GBbxBjI7OJGNDyXlkYDdecrk9o1wnsfm5qc38_CqFHLRzJhGizqAMsUgpoDgtjYeFtyewaIUUrZiC6tykToSQ"/>
+<div class="absolute top-md right-md bg-white/90 glass-effect px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-bold">4.9</span>
+</div>
+</div>
+<div class="mt-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-headline-md text-text-main">The Ritz Parisian</h3>
+<span class="font-headline-md text-headline-md text-primary">$450<span class="text-body-md font-normal text-text-muted">/night</span></span>
+</div>
+<p class="text-body-md font-body-md text-text-muted">1st Arrondissement, Paris</p>
+</div>
+</div>
+<!-- Hotel Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden rounded-[24px] shadow-level-1 transition-all group-hover:shadow-level-2 group-hover:-translate-y-1">
+<img alt="Azure Sands Resort" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A stunning overwater villa in the Maldives, surrounded by vibrant turquoise lagoons. The architecture features natural wood and thatched roofs, seamlessly blending with the tropical paradise. Crystal clear water reveals colorful coral reefs beneath the deck, while a warm golden sun casts a serene, dreamy glow across the entire ocean landscape." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRXQ6_vKFrMnNyaH4YrtSFuAY3Q4LnpBmV-NngGlZksxqO044WJSndVCInPDhYmh1SgL4tSPIoo9mKhXiC6scJGdOSIrRejCH8bz5mXm3cuPnrY_sEA6EkyeRNfey26bMt9Vf-8z8_gYjcXB1E28gf6NBK1ujFf1Kd4HIjH9eDlBDPxak17SzelEso5amd27oPElbqA_QU4XqG6MIP-ky2yz9bZxLDPgAg5l5ww50UyF9cJmr4o9js-6OmYP5CBlXWaAXa_VviuBw"/>
+<div class="absolute top-md right-md bg-white/90 glass-effect px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-bold">5.0</span>
+</div>
+</div>
+<div class="mt-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-headline-md text-text-main">Azure Sands Resort</h3>
+<span class="font-headline-md text-headline-md text-primary">$890<span class="text-body-md font-normal text-text-muted">/night</span></span>
+</div>
+<p class="text-body-md font-body-md text-text-muted">Maafushi, Maldives</p>
+</div>
+</div>
+<!-- Hotel Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] overflow-hidden rounded-[24px] shadow-level-1 transition-all group-hover:shadow-level-2 group-hover:-translate-y-1">
+<img alt="Santorini Sky Villa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A minimalist, modern villa nestled on a cliffside in Santorini, Greece. The building features crisp white walls and smooth curved edges, overlooking the deep blue Aegean Sea. A private infinity pool reflects the cloudless sky, creating a sense of calm and expansive space. The lighting is high-key and bright, embodying a luxury lifestyle aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXirnUUstYbX0Qrs4JrrSscsBqnjnk4lj7O01LP0tMSm1E30gc9ZFN0y5YPS9meca1RR8BM7A2FXSAS0P-hcyvM81NPQmuBE9THM73yWivE_btSm0OjKWDeNkDrcW6FewMtODGS0frASePD0dSwDMQWPiqjh1XS4huCE9RDT4Ulb1xStEkcj2siA5y_k6k6ZSPEdbQNsPvxAj1AS4-FJekSTznplclM-8k0FlwgbbyMTURNI2jSSi3yVMeZrPwsAAfTNgORv2A0hw"/>
+<div class="absolute top-md right-md bg-white/90 glass-effect px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md font-bold">4.8</span>
+</div>
+</div>
+<div class="mt-md">
+<div class="flex justify-between items-start mb-xs">
+<h3 class="font-headline-md text-headline-md text-text-main">Santorini Sky Villa</h3>
+<span class="font-headline-md text-headline-md text-primary">$620<span class="text-body-md font-normal text-text-muted">/night</span></span>
+</div>
+<p class="text-body-md font-body-md text-text-muted">Oia, Santorini</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Flight Deals (Stripe-inspired clean layout) -->
+<section class="py-xl bg-bg-pure border-t border-border-subtle">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-text-main mb-xs">Trending Flight Deals</h2>
+<p class="font-body-md text-body-md text-text-muted">Lowest fares tracked in the last 24 hours.</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-low p-sm rounded-full text-text-muted hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="bg-surface-container-low p-sm rounded-full text-text-muted hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Stripe-style Horizontal List -->
+<div class="space-y-base">
+<!-- Deal 1 -->
+<div class="group flex flex-col md:flex-row items-center justify-between p-md bg-surface-container-lowest border border-border-subtle rounded-2xl hover:border-primary/30 hover:shadow-level-1 transition-all cursor-pointer">
+<div class="flex items-center gap-lg w-full md:w-auto mb-md md:mb-0">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">flight_takeoff</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-none">LHR <span class="text-outline mx-xs">→</span> JFK</h4>
+<span class="text-caption font-caption text-text-muted">London to New York • Non-stop</span>
+</div>
+</div>
+<div class="hidden lg:block border-l border-border-subtle h-10"></div>
+<div class="hidden lg:block">
+<span class="font-caption text-caption text-text-muted uppercase tracking-wider block mb-xs">Airline</span>
+<span class="font-label-md text-label-md font-semibold">British Airways</span>
+</div>
+</div>
+<div class="flex items-center gap-lg w-full md:w-auto justify-between md:justify-end">
+<div class="text-right">
+<span class="font-caption text-caption text-text-muted block">From</span>
+<span class="font-headline-md text-headline-md text-on-primary-fixed-variant">$382</span>
+</div>
+<button class="bg-surface-container text-text-main px-md py-sm rounded-xl font-label-md text-label-md group-hover:bg-primary group-hover:text-on-primary transition-all">Book Now</button>
+</div>
+</div>
+<!-- Deal 2 -->
+<div class="group flex flex-col md:flex-row items-center justify-between p-md bg-surface-container-lowest border border-border-subtle rounded-2xl hover:border-primary/30 hover:shadow-level-1 transition-all cursor-pointer">
+<div class="flex items-center gap-lg w-full md:w-auto mb-md md:mb-0">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">flight_takeoff</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-none">HND <span class="text-outline mx-xs">→</span> LAX</h4>
+<span class="text-caption font-caption text-text-muted">Tokyo to Los Angeles • 1 Stop</span>
+</div>
+</div>
+<div class="hidden lg:block border-l border-border-subtle h-10"></div>
+<div class="hidden lg:block">
+<span class="font-caption text-caption text-text-muted uppercase tracking-wider block mb-xs">Airline</span>
+<span class="font-label-md text-label-md font-semibold">Japan Airlines</span>
+</div>
+</div>
+<div class="flex items-center gap-lg w-full md:w-auto justify-between md:justify-end">
+<div class="text-right">
+<span class="font-caption text-caption text-text-muted block">From</span>
+<span class="font-headline-md text-headline-md text-on-primary-fixed-variant">$645</span>
+</div>
+<button class="bg-surface-container text-text-main px-md py-sm rounded-xl font-label-md text-label-md group-hover:bg-primary group-hover:text-on-primary transition-all">Book Now</button>
+</div>
+</div>
+<!-- Deal 3 -->
+<div class="group flex flex-col md:flex-row items-center justify-between p-md bg-surface-container-lowest border border-border-subtle rounded-2xl hover:border-primary/30 hover:shadow-level-1 transition-all cursor-pointer">
+<div class="flex items-center gap-lg w-full md:w-auto mb-md md:mb-0">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-primary/5 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">flight_takeoff</span>
+</div>
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-none">DXB <span class="text-outline mx-xs">→</span> CDG</h4>
+<span class="text-caption font-caption text-text-muted">Dubai to Paris • Non-stop</span>
+</div>
+</div>
+<div class="hidden lg:block border-l border-border-subtle h-10"></div>
+<div class="hidden lg:block">
+<span class="font-caption text-caption text-text-muted uppercase tracking-wider block mb-xs">Airline</span>
+<span class="font-label-md text-label-md font-semibold">Emirates</span>
+</div>
+</div>
+<div class="flex items-center gap-lg w-full md:w-auto justify-between md:justify-end">
+<div class="text-right">
+<span class="font-caption text-caption text-text-muted block">From</span>
+<span class="font-headline-md text-headline-md text-on-primary-fixed-variant">$519</span>
+</div>
+<button class="bg-surface-container text-text-main px-md py-sm rounded-xl font-label-md text-label-md group-hover:bg-primary group-hover:text-on-primary transition-all">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / CTA -->
+<section class="py-xl bg-primary relative overflow-hidden">
+<div class="absolute top-0 right-0 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[400px] leading-none" style="font-variation-settings: 'wght' 700;">public</span>
+</div>
+<div class="max-w-container-max mx-auto px-md text-center relative z-10">
+<h2 class="text-on-primary font-display-lg text-display-lg mb-sm">Unlock Exclusive Itineraries</h2>
+<p class="text-on-primary-container font-body-lg text-body-lg mb-lg max-w-2xl mx-auto">Join our inner circle of travelers and get AI-curated travel deals sent straight to your inbox.</p>
+<div class="flex flex-col sm:flex-row gap-base max-w-lg mx-auto">
+<input class="flex-grow px-md py-sm rounded-2xl bg-white border-none focus:ring-2 focus:ring-primary-fixed-dim text-on-surface" placeholder="Enter your email" type="email"/>
+<button class="bg-inverse-surface text-inverse-on-surface px-lg py-sm rounded-2xl font-label-md text-label-md hover:bg-on-surface-variant transition-all">Join Pulse</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-bg-pure py-xl border-t border-border-subtle">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<div class="col-span-2 md:col-span-1 mb-lg md:mb-0">
+<span class="text-headline-md font-headline-md font-bold text-on-surface mb-md block">TravelSphere AI</span>
+<p class="text-text-muted font-body-md text-body-md">Redefining luxury travel through advanced artificial intelligence and seamless booking experiences.</p>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-semibold mb-md">Company</h4>
+<ul class="space-y-sm text-text-muted font-body-md text-body-md">
+<li><a class="hover:text-primary transition-all" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Press</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Partnerships</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-semibold mb-md">Destinations</h4>
+<ul class="space-y-sm text-text-muted font-body-md text-body-md">
+<li><a class="hover:text-primary transition-all" href="#">Europe</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Asia Pacific</a></li>
+<li><a class="hover:text-primary transition-all" href="#">North America</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Luxury Retreats</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-semibold mb-md">Support</h4>
+<ul class="space-y-sm text-text-muted font-body-md text-body-md">
+<li><a class="hover:text-primary transition-all" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Safety Center</a></li>
+<li><a class="hover:text-primary transition-all" href="#">Cancellation Options</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-md mt-xl pt-lg border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-md">
+<span class="text-text-muted font-body-md text-body-md">© 2024 TravelSphere AI. All rights reserved.</span>
+<div class="flex gap-lg">
+<a class="text-text-muted hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">face_nod</span></a>
+<a class="text-text-muted hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-text-muted hover:text-primary transition-all" href="#"><span class="material-symbols-outlined">language</span></a>
+</div>
+</div>
+</footer>
+<script>
+        function switchTab(type) {
+            const tabs = ['flights', 'hotels', 'trains', 'buses'];
+            tabs.forEach(tab => {
+                const element = document.getElementById(`tab-${tab}`);
+                if (tab === type) {
+                    element.classList.remove('border-transparent', 'text-text-muted');
+                    element.classList.add('border-primary', 'text-primary', 'font-semibold');
+                } else {
+                    element.classList.add('border-transparent', 'text-text-muted');
+                    element.classList.remove('border-primary', 'text-primary', 'font-semibold');
+                }
+            });
+            // Additional logic for changing search fields could be added here
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body></html>

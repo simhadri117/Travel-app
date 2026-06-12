@@ -95,7 +95,7 @@ async function downloadImageAsBase64(url: string): Promise<{ data: string; mimeT
   }
 }
 
-// Validate image relevance using Gemini Multimodal API (gemini-2.5-flash)
+// Validate image relevance using Gemini Multimodal API (gemini-2.5-flash-lite)
 async function validateImageRelevanceWithAI(
   base64Data: string,
   mimeType: string,
@@ -111,7 +111,7 @@ async function validateImageRelevanceWithAI(
   }
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
     const prompt = `You are an expert travel image validation system.
 Analyze this image and determine if it is an iconic photo representing the destination: "${destinationName}" located in ${state}, ${country}.
 
@@ -213,17 +213,24 @@ async function fetchUnsplashPhotos(query: string): Promise<string[]> {
   if (!accessKey) return [];
   try {
     const res = await axios.get('https://api.unsplash.com/search/photos', {
+      headers: {
+        Authorization: `Client-ID ${accessKey}`
+      },
       params: {
         query: query,
-        client_id: accessKey,
         per_page: 5
       }
     });
+    // Check rate limit headers for logging/monitoring
+    const limit = res.headers['x-ratelimit-limit'];
+    const remaining = res.headers['x-ratelimit-remaining'];
+    console.log(`[Unsplash Rate Limit] Limit: ${limit}, Remaining: ${remaining}`);
+
     if (res.data.results && res.data.results.length > 0) {
       return res.data.results.map((r: any) => r.urls.regular);
     }
-  } catch (err) {
-    console.warn('[Unsplash API] Search failed:', err);
+  } catch (err: any) {
+    console.warn('[Unsplash API] Search failed:', err.response?.data || err.message);
   }
   return [];
 }
@@ -356,9 +363,9 @@ export async function resolveDestinationImage(name: string): Promise<string> {
   // Pipeline sources in priority order
   const sources = [
     { name: 'google_places', fetch: async () => googleResult.candidatePhotos },
-    { name: 'unsplash', fetch: async () => fetchUnsplashPhotos(searchQuery) },
     { name: 'pexels', fetch: async () => fetchPexelsPhotos(searchQuery) },
-    { name: 'pixabay', fetch: async () => fetchPixabayPhotos(searchQuery) }
+    { name: 'pixabay', fetch: async () => fetchPixabayPhotos(searchQuery) },
+    { name: 'unsplash', fetch: async () => fetchUnsplashPhotos(searchQuery) }
   ];
 
   let selectedImageUrl = '';

@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/useAuthStore';
 
 // We target the local port 5000 of our Express backend
 export const api = axios.create({
-  baseURL: 'http://127.0.0.1:5001/api/v1',
+  baseURL: 'http://127.0.0.1:5002/api/v1',
   headers: {
     'Content-Type': 'application/json'
   }

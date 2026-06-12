@@ -5,7 +5,7 @@ import {
   Map, LogOut, Search, Activity, Trash, RefreshCw, Undo2
 } from 'lucide-react';
 
-const API_BASE = 'http://127.0.0.1:5001/api/v1';
+const API_BASE = 'http://127.0.0.1:5002/api/v1';
 
 export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('ww_admin_token'));

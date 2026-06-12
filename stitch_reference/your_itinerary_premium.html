@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelSphere AI - Your Itinerary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-nav { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .timeline-line { background: linear-gradient(to bottom, #E2E8F0 0%, #E2E8F0 80%, transparent 100%); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* New Animations */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .shimmer-ai {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer-ai::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer {
+            100% { left: 200%; }
+        }
+
+        .draw-stroke {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s ease-out forwards;
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .day-active {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .reveal-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#dbe1ff",
+                      "on-error-container": "#93000a",
+                      "text-main": "#0F172A",
+                      "surface-dim": "#d8dadc",
+                      "surface-container-lowest": "#ffffff",
+                      "text-muted": "#64748B",
+                      "secondary-fixed-dim": "#b0c6ff",
+                      "outline": "#737686",
+                      "on-secondary-fixed-variant": "#1a438e",
+                      "surface-variant": "#e0e3e5",
+                      "surface-container-low": "#f2f4f6",
+                      "on-tertiary-fixed": "#261900",
+                      "on-tertiary-fixed-variant": "#5d4200",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary-container": "#eeefff",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e0e3e5",
+                      "surface-bright": "#f7f9fb",
+                      "outline-variant": "#c3c6d7",
+                      "bg-pure": "#FFFFFF",
+                      "on-background": "#191c1e",
+                      "secondary": "#375ca8",
+                      "on-secondary-fixed": "#001945",
+                      "on-error": "#ffffff",
+                      "surface-container": "#eceef0",
+                      "secondary-container": "#8aacfe",
+                      "surface": "#f7f9fb",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "primary-container": "#2563eb",
+                      "secondary-fixed": "#d9e2ff",
+                      "on-surface": "#191c1e",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "surface-container-high": "#e6e8ea",
+                      "primary": "#004ac6",
+                      "surface-tint": "#0053db",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "map-accent": "#006CE4",
+                      "tertiary-fixed-dim": "#febb02",
+                      "on-surface-variant": "#434655",
+                      "on-secondary": "#ffffff",
+                      "border-subtle": "#E2E8F0",
+                      "tertiary-container": "#8e6700",
+                      "inverse-primary": "#b4c5ff",
+                      "background": "#f7f9fb",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-tertiary-container": "#ffefd6",
+                      "on-secondary-container": "#113e89",
+                      "tertiary": "#6f5000",
+                      "tertiary-fixed": "#ffdea4",
+                      "on-primary-fixed": "#00174b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "container-max": "1280px",
+                      "xs": "4px",
+                      "sm": "12px",
+                      "xl": "80px",
+                      "lg": "48px",
+                      "md": "24px",
+                      "base": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Inter"],
+                      "caption": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-text-main">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-inverse-surface/80 glass-nav shadow-sm">
+<div class="flex justify-between items-center h-20 px-md max-w-container-max mx-auto">
+<div class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface tracking-tight">
+                TravelSphere AI
+            </div>
+<div class="hidden md:flex items-center space-x-lg">
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Explore</a>
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1" href="#">Planner</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Reels</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Bookings</a>
+</div>
+<div class="flex items-center space-x-md">
+<div class="relative flex items-center bg-surface-container-low rounded-full px-sm py-xs border border-outline-variant">
+<span class="material-symbols-outlined text-text-muted mr-xs">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48" placeholder="Search destinations..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-xl font-label-md transition-all active:scale-95 shadow-sm hover:shadow-md" onclick="toggleLogin()">Login</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section / Header -->
+<header class="pt-32 pb-lg bg-bg-pure">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md">
+<div>
+<nav class="flex items-center gap-xs mb-sm">
+<span class="text-caption text-text-muted">My Trips</span>
+<span class="material-symbols-outlined text-xs text-text-muted">chevron_right</span>
+<span class="text-caption text-primary font-semibold">Tokyo &amp; Kyoto Expedition</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-text-main mb-xs">Tokyo &amp; Kyoto Expedition</h1>
+<p class="font-body-lg text-body-lg text-text-muted flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                        Oct 12 - Oct 20, 2024 • 8 Days • 2 Travelers
+                    </p>
+</div>
+<div class="flex gap-sm">
+<button class="px-lg py-sm border border-outline-variant rounded-xl font-label-md hover:bg-surface-container-low transition-all" onclick="toggleLogin()">Save to My Trips</button>
+<button class="px-lg py-sm bg-primary-container text-on-primary-container rounded-xl font-label-md hover:opacity-90 transition-all flex items-center gap-xs" onclick="toggleLogin()">
+<span class="material-symbols-outlined">payments</span>
+                        Book All Items
+                    </button>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-md grid grid-cols-12 gap-gutter py-lg relative">
+<!-- Left Sidebar: Day Picker -->
+<aside class="col-span-2 sticky top-28 h-fit">
+<div class="flex flex-col gap-sm" id="day-picker">
+<button class="day-active flex items-center justify-between p-sm bg-primary text-on-primary rounded-xl transition-all shadow-md transform hover:scale-[1.02]" data-day="1">
+<span class="font-label-md">Day 1</span>
+<span class="text-caption opacity-80">Arrival</span>
+</button>
+<button class="day-active flex items-center justify-between p-sm bg-bg-pure hover:bg-surface-container-low rounded-xl text-text-main transition-all border border-border-subtle transform hover:scale-[1.02]" data-day="2">
+<span class="font-label-md">Day 2</span>
+<span class="text-caption text-text-muted">Shibuya</span>
+</button>
+<button class="day-active flex items-center justify-between p-sm bg-bg-pure hover:bg-surface-container-low rounded-xl text-text-main transition-all border border-border-subtle transform hover:scale-[1.02]" data-day="3">
+<span class="font-label-md">Day 3</span>
+<span class="text-caption text-text-muted">Cultural</span>
+</button>
+<button class="day-active flex items-center justify-between p-sm bg-bg-pure hover:bg-surface-container-low rounded-xl text-text-main transition-all border border-border-subtle transform hover:scale-[1.02]" data-day="4">
+<span class="font-label-md">Day 4</span>
+<span class="text-caption text-text-muted">Nikko Trip</span>
+</button>
+<div class="pt-md mt-md border-t border-border-subtle">
+<button class="w-full flex items-center gap-sm p-sm text-primary hover:bg-primary/5 rounded-xl transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-md">Add Day</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Center Content: Timeline -->
+<section class="col-span-7">
+<div class="relative pl-md">
+<!-- Vertical Timeline Line -->
+<div class="absolute left-0 top-4 bottom-0 w-1 timeline-line"></div>
+<!-- Day 1 Content Wrapper -->
+<div class="reveal-section visible">
+<!-- Time Block: Morning -->
+<div class="mb-xl relative">
+<div class="flex items-center gap-md mb-lg">
+<div class="absolute -left-[14px] w-7 h-7 rounded-full bg-primary flex items-center justify-center text-on-primary z-10 shadow-md">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
+</div>
+<h2 class="font-headline-md text-headline-md ml-lg">Morning</h2>
+<span class="text-caption text-text-muted bg-surface-container-low px-sm py-1 rounded-full uppercase tracking-widest">08:00 - 12:00</span>
+</div>
+<!-- Activity Card -->
+<div class="ml-lg bg-bg-pure rounded-[24px] overflow-hidden shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300 group border border-border-subtle mb-md">
+<div class="flex h-64">
+<div class="w-1/3 h-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" data-alt="A sweeping morning view of Tokyo's city skyline featuring the Tokyo Tower, with soft golden sunlight illuminating the glass skyscrapers and a clear blue sky. The visual style is premium travel photography with clean lines and high-contrast light, emphasizing the modern and serene atmosphere of the early city hours." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwqXWsNGRqv9qZTu4eqXFcW4-ycUPnm4LXd3h7JdwSc0mXr0cArsRpjLSp2_nHcrbv2j02q2pN4PBiiA3tRiCtGpxngY7hwEGkz7Ff5eA-gfhJNNFUYQw33v3Znd-Y54VuyfIlcA-CuDdQn8lqCesfg9Fh8zaWqPA0jPAAv5MTpTuYn7LK5HUr0qruxhDzO3AwLrmMImxB475IoJ8iEBIEDeWVG6iGtyXV-aOAlgMQsCwrZNLjwEp8gmvPc_zLgMR-0sXMLLN7qJc"/>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-caption text-primary font-bold uppercase tracking-wider mb-xs block">Top Attraction</span>
+<h3 class="font-headline-md text-headline-md">Senso-ji Temple Visit</h3>
+</div>
+<button class="material-symbols-outlined text-text-muted hover:text-primary transition-colors">more_vert</button>
+</div>
+<p class="font-body-md text-body-md text-text-muted line-clamp-2">Explore Tokyo's oldest temple, enter through the massive Kaminarimon Gate, and walk along Nakamise-dori for traditional snacks.</p>
+</div>
+<div class="flex items-center justify-between border-t border-border-subtle pt-sm mt-sm">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">schedule</span>
+<span class="text-caption font-semibold">2 Hours</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">star</span>
+<span class="text-caption font-semibold">4.8 (24k)</span>
+</div>
+</div>
+<button class="text-primary font-label-md flex items-center gap-xs hover:underline">
+                                        View Details
+                                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Travel Indicator with Stroke Effect -->
+<div class="ml-lg py-sm flex items-center gap-sm text-text-muted italic text-caption relative group">
+<svg class="absolute -left-[56px] top-0 h-full w-4 overflow-visible pointer-events-none" viewbox="0 0 16 60">
+<path class="draw-stroke" d="M 8 0 L 8 60" fill="none" stroke="#2563eb" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+<span class="material-symbols-outlined text-[18px]">directions_subway</span>
+<span>15 min travel via Ginza Line to Ueno Park</span>
+</div>
+</div>
+<!-- Time Block: Afternoon -->
+<div class="mb-xl relative">
+<div class="flex items-center gap-md mb-lg">
+<div class="absolute -left-[14px] w-7 h-7 rounded-full bg-secondary flex items-center justify-center text-on-secondary z-10 shadow-md">
+<span class="material-symbols-outlined text-[16px]">lunch_dining</span>
+</div>
+<h2 class="font-headline-md text-headline-md ml-lg">Afternoon</h2>
+<span class="text-caption text-text-muted bg-surface-container-low px-sm py-1 rounded-full uppercase tracking-widest">12:00 - 17:00</span>
+</div>
+<div class="ml-lg bg-bg-pure rounded-[24px] overflow-hidden shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300 group border border-border-subtle">
+<div class="flex h-64">
+<div class="w-1/3 h-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" data-alt="A vibrant and detailed close-up of a premium sushi set arranged on a dark slate plate, featuring glossy tuna, salmon, and uni. The lighting is focused and warm, typical of a high-end Tokyo omakase restaurant. The background is softly blurred, showing the wooden textures of a traditional sushi bar, maintaining a clean and minimalist culinary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCKoZnqEUIvXGc5YaasoxExDp33WF5PkGpZ7PMJPtr6ndq9IGPCQBcSYP54TMKpkbyDNcme44OaUJ36mY6p3vCh4wUtbE99XuGU-f5ed_rXsHgaWtVdOTTG-tep11uXx0NCvU7JP9L3wxOAGvMXb2yk7qVk2oAlkR_FNUE-RtyXHck08aFsGggz21NkGurGb-mSl47IdN2YZuH4AEtan-zEc3pvhCuXnatzkRUH7RqyLIGX0azD72KOCpO6Dp7BBkAK7XTWtbqZI8"/>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-caption text-secondary font-bold uppercase tracking-wider mb-xs block">Dining Experience</span>
+<h3 class="font-headline-md text-headline-md">Ueno Market Food Tour</h3>
+</div>
+<button class="material-symbols-outlined text-text-muted hover:text-primary transition-colors">more_vert</button>
+</div>
+<p class="font-body-md text-body-md text-text-muted line-clamp-2">Taste authentic Japanese street food and fresh seafood at the bustling Ameyoko market street. Includes a reserved table at 'Sushiro'.</p>
+</div>
+<div class="flex items-center justify-between border-t border-border-subtle pt-sm mt-sm">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">restaurant</span>
+<span class="text-caption font-semibold">1.5 Hours</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">confirmation_number</span>
+<span class="text-caption font-semibold">Reserved</span>
+</div>
+</div>
+<button class="text-secondary font-label-md flex items-center gap-xs hover:underline">
+                                        Menu Preview
+                                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Travel Indicator with Stroke Effect -->
+<div class="ml-lg py-sm flex items-center gap-sm text-text-muted italic text-caption relative group">
+<svg class="absolute -left-[56px] top-0 h-full w-4 overflow-visible pointer-events-none" viewbox="0 0 16 60">
+<path class="draw-stroke" d="M 8 0 L 8 60" fill="none" stroke="#375ca8" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+<span class="material-symbols-outlined text-[18px]">directions_walk</span>
+<span>8 min walk through Ueno Park</span>
+</div>
+</div>
+<!-- Time Block: Evening -->
+<div class="mb-xl relative">
+<div class="flex items-center gap-md mb-lg">
+<div class="absolute -left-[14px] w-7 h-7 rounded-full bg-inverse-surface flex items-center justify-center text-inverse-on-surface z-10 shadow-md">
+<span class="material-symbols-outlined text-[16px]">nightlight</span>
+</div>
+<h2 class="font-headline-md text-headline-md ml-lg">Evening</h2>
+<span class="text-caption text-text-muted bg-surface-container-low px-sm py-1 rounded-full uppercase tracking-widest">18:00 - 22:00</span>
+</div>
+<div class="ml-lg bg-bg-pure rounded-[24px] overflow-hidden shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300 group border border-border-subtle">
+<div class="flex h-64">
+<div class="w-1/3 h-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out" data-alt="The famous Shibuya Crossing at night, captured from a high vantage point. Vibrant neon signs in blues, pinks, and yellows reflect off the pavement, with hundreds of people crossing in motion blur. The aesthetic is high-energy, cinematic, and modern, using deep shadows and bright electric highlights to convey the pulse of Tokyo's nightlife." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByq5os1QizEloY1wx5WuU9Kdq1g3wRgIQi7wIGNfN2dj1C1b5P6PI7PEAkeZ_-bx5PB4Tz6w6ipOkT0eMGHFbpk1YEQ45gSXugNdtuOKkLUDR3y6ywaGW2J1iMNSQaLN-sZMz2RvSV8vO0xvtfBXqpbqi5N-dP_eTdNQDg76ZzDgMPyXPUXUJXllEGf4_nNvic7bz92fSjBVEhBOSmrEvRYRiC07KE7LpnPz4jBLYRVTuZ5yIJgipfln3qCBWsx3v31555LyYLQx4"/>
+</div>
+<div class="w-2/3 p-md flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-caption text-text-main font-bold uppercase tracking-wider mb-xs block">Iconic View</span>
+<h3 class="font-headline-md text-headline-md">Shibuya Sky Observatory</h3>
+</div>
+<button class="material-symbols-outlined text-text-muted hover:text-primary transition-colors">more_vert</button>
+</div>
+<p class="font-body-md text-body-md text-text-muted line-clamp-2">Witness the 360-degree panoramic view of Tokyo from the rooftop of Shibuya Scramble Square. Best during sunset and early nightfall.</p>
+</div>
+<div class="flex items-center justify-between border-t border-border-subtle pt-sm mt-sm">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">visibility</span>
+<span class="text-caption font-semibold">1 Hour</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">airplane_ticket</span>
+<span class="text-caption font-semibold">Instant Pass</span>
+</div>
+</div>
+<button class="text-primary font-label-md flex items-center gap-xs hover:underline">
+                                        Get Tickets
+                                        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Sidebar: AI Assistant & Map Preview -->
+<aside class="col-span-3 sticky top-28 h-[calc(100vh-140px)] flex flex-col gap-md">
+<!-- Map Mini-View -->
+<div class="glass-card rounded-[24px] border border-border-subtle overflow-hidden shadow-sm h-48 relative group transition-all duration-300 hover:shadow-lg">
+<div class="absolute inset-0 bg-surface-container-high animate-pulse flex items-center justify-center" id="map-placeholder">
+<span class="material-symbols-outlined text-text-muted">map</span>
+</div>
+<img class="w-full h-full object-cover" data-alt="A stylized, minimalist vector map of central Tokyo featuring clean lines, pastel tones, and small icons representing landmarks like Tokyo Tower and Senso-ji. The visual style is modern and high-utility, following a Google Maps aesthetic with a restricted, sophisticated color palette of blues and greys." data-location="Tokyo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXXOyWPt1FWqqQ-XfpyaD_yioRg52AM-2cHk1hLBT1WvVP8EzKWZIG3oBPxQPhHzgJz1phVdV381UGsUavPyBuAIhg1Rj_hKsy0PeyWpj8LidHXHTTW9PPis9ba2BHwCh9uEi22EZcrKpZt-wB0LZMFDvY1e4WMTOr02UC9A3jSR_irqT0Atto1XUpfCH2iuRp2suJsRVSTRcVnsFlwiNR0PMb-Ghe5lvg1HUy5VLfX8tJLv8Bl1WWESSwVW-AnCGCTEeHVr7QVk0"/>
+<button class="absolute bottom-sm right-sm bg-bg-pure/80 backdrop-blur-md p-xs rounded-lg shadow-md hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined">zoom_out_map</span>
+</button>
+</div>
+<!-- AI Assistant Chat -->
+<div class="flex-1 glass-card rounded-[24px] border border-border-subtle shadow-sm flex flex-col overflow-hidden transition-all duration-300">
+<div class="p-md border-b border-border-subtle flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<span class="font-label-md">Sphere AI</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+</div>
+<div class="flex-1 p-md overflow-y-auto custom-scrollbar flex flex-col gap-md text-sm">
+<div class="bg-surface-container-low/50 backdrop-blur-sm p-sm rounded-xl rounded-tl-none">
+                        Hello! I've optimized your Day 1 route to avoid the peak crowds at Senso-ji. Would you like me to book your Shibuya Sky tickets for 19:30?
+                    </div>
+<div class="bg-primary-container text-on-primary-container p-sm rounded-xl rounded-tr-none self-end max-w-[80%] shadow-sm">
+                        Yes, please book the tickets for two.
+                    </div>
+<div class="bg-surface-container-low/50 backdrop-blur-sm p-sm rounded-xl rounded-tl-none">
+                        Done! I've added them to your itinerary. Anything else? I can also suggest some hidden cocktail bars in Shibuya for late night.
+                    </div>
+</div>
+<div class="p-sm bg-surface-container-low/30 backdrop-blur-md border-t border-border-subtle">
+<div class="shimmer-ai flex gap-xs items-center bg-bg-pure/60 backdrop-blur-sm rounded-xl px-sm py-xs border border-outline-variant focus-within:border-primary transition-all">
+<input class="bg-transparent border-none focus:ring-0 text-sm flex-1" placeholder="Ask Sphere AI..." type="text"/>
+<button class="material-symbols-outlined text-primary">send</button>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl bg-bg-pure border-t border-border-subtle dark:border-outline-variant">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1 md:col-span-1">
+<div class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface mb-md">TravelSphere AI</div>
+<p class="text-body-md text-text-muted mb-md">Crafting intelligence-driven journeys for the modern lifestyle traveler.</p>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-md text-on-surface dark:text-inverse-on-surface">Company</span>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">About Us</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Careers</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Press</a>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-md text-on-surface dark:text-inverse-on-surface">Destinations</span>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Asia Pacific</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Europe</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Americas</a>
+</div>
+<div class="flex flex-col gap-sm">
+<span class="font-label-md text-on-surface dark:text-inverse-on-surface">Support</span>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Help Center</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Safety Information</a>
+<a class="text-body-md text-text-muted hover:text-primary transition-all" href="#">Contact</a>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-md pt-lg mt-lg border-t border-outline-variant flex justify-between items-center">
+<p class="text-body-md text-text-muted">© 2024 TravelSphere AI. All rights reserved.</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-text-muted cursor-pointer hover:text-primary">public</span>
+<span class="material-symbols-outlined text-text-muted cursor-pointer hover:text-primary">share</span>
+</div>
+</div>
+</footer>
+<!-- Login Prompt Modal (Hidden by Default) -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-md" id="login-modal">
+<div class="bg-bg-pure rounded-[32px] p-xl max-w-md w-full shadow-2xl">
+<div class="flex justify-between items-center mb-lg">
+<h2 class="text-headline-md font-headline-md">Welcome Back</h2>
+<button class="material-symbols-outlined" onclick="toggleLogin()">close</button>
+</div>
+<p class="text-body-md text-text-muted mb-lg">Please log in to save your itinerary and secure your bookings with TravelSphere AI.</p>
+<div class="flex flex-col gap-sm">
+<button class="w-full py-sm bg-primary text-on-primary rounded-xl font-label-md hover:opacity-90 transition-all">Continue with Email</button>
+<button class="w-full py-sm border border-outline-variant rounded-xl font-label-md flex items-center justify-center gap-sm hover:bg-surface-container-low transition-all">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEarUvFGBaxay8cmNMQ4onYv0QMQq-9EfZCy9ol6jkAcLMxQndaQdvB8Vv4TNz2_F0hgYM02OQHEo-4bU4-1GOrwKiVMQ6GQesajPbxCHe3mSoWYm090xbu47qgnuAInuMiyPvca137xr3nYouZVaZXyHI4odoaRTrsKm-tOvU7b8KAq1cSaqw5fD6hPC0tTlFYIQ8WexaMvDtKWC6ctsuAhmZIbNl8caTxoItSYAk48iYSJTsCoAELWkOqxYyCWNMA2PL_yf1XLA"/>
+                    Continue with Google
+                </button>
+</div>
+<p class="text-caption text-center mt-lg text-text-muted">Don't have an account? <a class="text-primary font-bold" href="#">Sign up</a></p>
+</div>
+</div>
+<script>
+        function toggleLogin() {
+            const modal = document.getElementById('login-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Day picker switching animation
+        const dayButtons = document.querySelectorAll('#day-picker button[data-day]');
+        dayButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dayButtons.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary', 'shadow-md');
+                    b.classList.add('bg-bg-pure', 'text-text-main', 'border-border-subtle');
+                });
+                btn.classList.add('bg-primary', 'text-on-primary', 'shadow-md');
+                btn.classList.remove('bg-bg-pure', 'text-text-main', 'border-border-subtle');
+            });
+        });
+
+        // Reveal animations for sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Find any paths inside and trigger stroke animation
+                    const paths = entry.target.querySelectorAll('.draw-stroke');
+                    paths.forEach(p => {
+                        p.style.animation = 'none';
+                        p.offsetHeight; // trigger reflow
+                        p.style.animation = null;
+                    });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Ensure first section is visible initially
+        setTimeout(() => {
+            document.querySelectorAll('.reveal-section').forEach(s => {
+                const rect = s.getBoundingClientRect();
+                if (rect.top < window.innerHeight) s.classList.add('visible');
+            });
+        }, 100);
+    </script>
+</body></html>

@@ -9,7 +9,7 @@ interface PlacePhotoProps {
   fallbackCategory?: 'attraction' | 'restaurant' | 'hotel' | 'destination';
 }
 
-const API_BASE = 'http://localhost:5001/api/v1';
+const API_BASE = 'http://localhost:5002/api/v1';
 
 // Curated Unsplash topic fallbacks by category
 const FALLBACK_TOPICS: Record<string, string> = {

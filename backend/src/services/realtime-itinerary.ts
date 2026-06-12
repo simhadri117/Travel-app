@@ -1205,7 +1205,7 @@ Return ONLY a valid JSON object with this exact schema (no markdown, no explanat
 }`;
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_KEY}`;
     const payload = {
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { responseMimeType: 'application/json' }

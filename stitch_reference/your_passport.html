@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Travel Passport | TravelSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .passport-texture {
+            background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .custom-shadow {
+            box-shadow: 0px 4px 20px rgba(15, 23, 42, 0.05);
+        }
+        .floating-shadow {
+            box-shadow: 0px 10px 30px rgba(15, 23, 42, 0.12);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#003ea8",
+                      "secondary": "#375ca8",
+                      "primary-container": "#2563eb",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#8aacfe",
+                      "text-muted": "#64748B",
+                      "tertiary-fixed": "#ffdea4",
+                      "inverse-primary": "#b4c5ff",
+                      "surface-tint": "#0053db",
+                      "surface-container-highest": "#e0e3e5",
+                      "error-container": "#ffdad6",
+                      "on-background": "#191c1e",
+                      "on-secondary-container": "#113e89",
+                      "on-primary-fixed": "#00174b",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "surface-container-high": "#e6e8ea",
+                      "primary": "#004ac6",
+                      "outline-variant": "#c3c6d7",
+                      "inverse-surface": "#2d3133",
+                      "on-tertiary-container": "#ffefd6",
+                      "surface-container": "#eceef0",
+                      "on-primary": "#ffffff",
+                      "outline": "#737686",
+                      "surface": "#f7f9fb",
+                      "secondary-fixed": "#d9e2ff",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#8e6700",
+                      "on-tertiary": "#ffffff",
+                      "bg-pure": "#FFFFFF",
+                      "surface-container-low": "#f2f4f6",
+                      "surface-bright": "#f7f9fb",
+                      "surface-variant": "#e0e3e5",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed": "#001945",
+                      "on-surface-variant": "#434655",
+                      "text-main": "#0F172A",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#b0c6ff",
+                      "border-subtle": "#E2E8F0",
+                      "on-secondary-fixed-variant": "#1a438e",
+                      "on-tertiary-fixed-variant": "#5d4200",
+                      "on-primary-container": "#eeefff",
+                      "tertiary": "#6f5000",
+                      "background": "#f7f9fb",
+                      "tertiary-fixed-dim": "#febb02",
+                      "surface-dim": "#d8dadc",
+                      "primary-fixed": "#dbe1ff",
+                      "on-surface": "#191c1e",
+                      "on-tertiary-fixed": "#261900",
+                      "map-accent": "#006CE4",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "4px",
+                      "base": "8px",
+                      "container-max": "1280px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "gutter": "24px",
+                      "xl": "80px",
+                      "md": "24px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              }
+            }
+          }
+        }
+      </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-20 px-md max-w-container-max mx-auto">
+<div class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">TravelSphere AI</div>
+<nav class="hidden md:flex items-center space-x-gutter">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Explore</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Planner</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Reels</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#">Bookings</a>
+</nav>
+<div class="flex items-center gap-sm">
+<div class="hidden md:block bg-surface-container-high px-base py-xs rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<span class="text-label-md text-on-surface-variant ml-xs">Search...</span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary bg-primary-fixed overflow-hidden ring-2 ring-white">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A sophisticated close-up portrait of a modern male traveler with a confident smile, set against a blurred background of a luxury airport lounge. The lighting is soft and cinematic, emphasizing a high-end travel lifestyle. The aesthetic is clean, professional, and corporate modern, reflecting the premium identity of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-4jIUJfaGApfSshcnlA-3lveeh6yvqnfSeqofzZLFOCPZlb-DCsbZzqWD2inY-Sz3V21BREI26Xg0IcA4FJFWbCXt_4rFGGUsBCGEmojt7ydBILCDJG4CH6EiwZNG0lYRDbDR8BNFEkaUc3sIG7uOeEQ7ulGEArYJUJlCLBBv0ADwc5RyBbz0GG-XMYOy72XMfK0iRqX4UmFrqTwEiNBFl6S7MWKsJ1wXFW2hLxoktr8APykH-FhN0mhZic4lLk_qhexRCfPv-5Y"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-xl max-w-container-max mx-auto px-md">
+<!-- Digital Passport Header Section -->
+<section class="mt-lg relative">
+<div class="bg-bg-pure rounded-[24px] overflow-hidden border border-border-subtle custom-shadow passport-texture flex flex-col md:flex-row min-h-[400px]">
+<!-- Passport Left: The Visual Identity -->
+<div class="w-full md:w-1/3 bg-primary relative p-gutter flex flex-col justify-between text-on-primary">
+<div class="absolute top-0 right-0 p-gutter opacity-10">
+<span class="material-symbols-outlined !text-[120px]" style="font-variation-settings: 'FILL' 1;">public</span>
+</div>
+<div>
+<div class="text-label-md font-label-md uppercase tracking-[0.2em] mb-base opacity-80">Electronic Passport</div>
+<h1 class="font-headline-lg text-headline-lg leading-tight">Alexander<br/>Vanguard</h1>
+</div>
+<div class="z-10 bg-white/10 glass-effect p-sm rounded-xl border border-white/20">
+<p class="text-label-md font-label-md mb-xs">PASSPORT NO.</p>
+<p class="font-mono text-headline-md font-bold tracking-widest">TS-8842-AV</p>
+</div>
+</div>
+<!-- Passport Right: The Data & Photo -->
+<div class="flex-1 p-gutter flex flex-col md:flex-row gap-gutter">
+<div class="w-full md:w-48">
+<div class="aspect-[3/4] rounded-xl overflow-hidden grayscale contrast-125 border-4 border-surface-container-highest shadow-inner">
+<img alt="Passport Photo" class="w-full h-full object-cover" data-alt="A professional passport-style headshot of a refined man in a dark blazer, presented in a high-contrast black and white aesthetic. The lighting is direct but flattering, creating a sharp, prestigious look. The image is framed as if part of a high-security digital identification card within a luxury travel application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYyzgvsLVrlj5fOXC8gms7-YdwOD-fzp1MEvah64uSF1P2TbGzwXOzdH74eRCg_mrO1cw3l_Cdh4BNntQpf0DBsGiOdYTb4Whhc5q0x-2gfJFMMu4LAYPcSk_Rdsn_-D6caNuAkdrtC6kv8YjVUPD-ks4n_Zmzu4suvXWZLNYNmu0ft6yW27ohEHltBWDehwcGHz00KnhKgb4plMbZDQqm3rk3x4UawpBN8-UNMU9E5vGWW6Lnw_bZ6tMYlwCNQjd4IxN1bX3rANg"/>
+</div>
+</div>
+<div class="flex-1 grid grid-cols-2 gap-y-gutter gap-x-gutter">
+<div>
+<p class="text-label-md font-label-md text-text-muted">NATIONALITY</p>
+<p class="font-headline-md text-text-main">United World</p>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">DATE OF BIRTH</p>
+<p class="font-headline-md text-text-main">14 MAY 1992</p>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">SEX</p>
+<p class="font-headline-md text-text-main">M</p>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">AUTHORITY</p>
+<p class="font-headline-md text-text-main">TRAVELSPHERE AI</p>
+</div>
+<div class="col-span-2 pt-base">
+<div class="border-t border-border-subtle pt-base">
+<p class="text-label-md font-label-md text-text-muted mb-xs">PASSPORT HOLDER SIGNATURE</p>
+<p class="font-serif italic text-headline-md opacity-70">A. Vanguard</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats & Achievements Bento Grid -->
+<section class="mt-lg grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Travel Statistics -->
+<div class="md:col-span-4 bg-bg-pure rounded-[24px] p-gutter border border-border-subtle custom-shadow flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-text-main mb-gutter">Travel Statistics</h3>
+<div class="space-y-gutter">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">TOTAL KM</p>
+<p class="font-headline-md text-headline-md text-text-main">142,500 <span class="text-label-md">KM</span></p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">hotel</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">NIGHTS AWAY</p>
+<p class="font-headline-md text-headline-md text-text-main">218</p>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<p class="text-label-md font-label-md text-text-muted">COUNTRIES</p>
+<p class="font-headline-md text-headline-md text-text-main">34</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-lg p-sm bg-surface-container-low rounded-xl border border-outline-variant flex justify-between items-center">
+<span class="text-label-md font-label-md text-on-surface">Tier: Platinum Explorer</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<!-- Countries Visited Interactive Map Placeholder -->
+<div class="md:col-span-8 bg-bg-pure rounded-[24px] border border-border-subtle overflow-hidden custom-shadow relative group">
+<div class="absolute top-gutter left-gutter z-10">
+<h3 class="font-headline-md text-headline-md text-text-main">Countries Visited</h3>
+<div class="flex gap-xs mt-base">
+<span class="px-base py-xs bg-primary text-on-primary rounded-full text-label-md font-label-md">Interactive Map</span>
+<span class="px-base py-xs bg-surface-container text-on-surface-variant rounded-full text-label-md font-label-md">List View</span>
+</div>
+</div>
+<div class="w-full h-full min-h-[400px] bg-surface-container relative overflow-hidden">
+<img alt="Global Map" class="w-full h-full object-cover opacity-30 grayscale hover:grayscale-0 transition-all duration-700" data-alt="A highly detailed and minimalist world map graphic with glowing blue nodes representing visited locations. The style is clean, modern, and data-driven, using a soft white and cool gray background. Subtle light rays illuminate the continents, creating a premium and tech-forward atmosphere that reflects global connectivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcRaiodwJzwaKa0ld9U9N5vaiPNmVbe2-yt8S0j4oTO9psm_GM6x5Yk1jqzGRvsW7Q-mMcLd86BK6Eqi3wlIYF7ZYsBMtNPdfEPAn7w3TL3kZBVEwgZHWD-m1aOMWUe7QuJVhA_E7uDm4awm6D4GrcxwwnMPf-ZG8abAhGPjk2uMAtaUHwBcDINyfLbZJVhtHoDNR2iLq5xqa9eNDcgN4PzngpqfHRKTCEG1HUgDzaiJuAB3Zg7YvOdQv8vvTXy3nabMFZpE_kbBo"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="flex gap-gutter flex-wrap justify-center p-xl">
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">JP</div>
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">CH</div>
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">IT</div>
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">NO</div>
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">CA</div>
+<div class="w-12 h-8 rounded shadow-sm border border-border-subtle bg-white overflow-hidden flex items-center justify-center font-bold text-xs">NZ</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Travel Achievements -->
+<section class="mt-lg">
+<div class="flex justify-between items-end mb-gutter">
+<div>
+<h3 class="font-headline-md text-headline-md text-text-main">Travel Achievements</h3>
+<p class="text-body-md text-text-muted">Personal milestones unlocked across the globe</p>
+</div>
+<button class="text-primary font-semibold hover:underline">View All Badges</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-gutter">
+<!-- Achievement 1 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center hover:scale-105 transition-transform">
+<div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center mb-base text-primary">
+<span class="material-symbols-outlined !text-[32px]" style="font-variation-settings: 'FILL' 1;">language</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Globe Trotter</p>
+<p class="text-caption text-text-muted mt-xs">5+ Continents</p>
+</div>
+<!-- Achievement 2 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center hover:scale-105 transition-transform">
+<div class="w-16 h-16 rounded-full bg-secondary-container/10 flex items-center justify-center mb-base text-secondary">
+<span class="material-symbols-outlined !text-[32px]" style="font-variation-settings: 'FILL' 1;">landscape</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Mountain Peak</p>
+<p class="text-caption text-text-muted mt-xs">10+ Alpine Hikes</p>
+</div>
+<!-- Achievement 3 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center hover:scale-105 transition-transform">
+<div class="w-16 h-16 rounded-full bg-tertiary-container/10 flex items-center justify-center mb-base text-tertiary">
+<span class="material-symbols-outlined !text-[32px]" style="font-variation-settings: 'FILL' 1;">waves</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Island Hopper</p>
+<p class="text-caption text-text-muted mt-xs">Archipelago Expert</p>
+</div>
+<!-- Achievement 4 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center opacity-40 grayscale">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center mb-base">
+<span class="material-symbols-outlined !text-[32px]">nightlight</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Aurora Chaser</p>
+<p class="text-caption text-text-muted mt-xs">Locked</p>
+</div>
+<!-- Achievement 5 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center hover:scale-105 transition-transform">
+<div class="w-16 h-16 rounded-full bg-error-container/10 flex items-center justify-center mb-base text-error">
+<span class="material-symbols-outlined !text-[32px]" style="font-variation-settings: 'FILL' 1;">diamond</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Lux Voyager</p>
+<p class="text-caption text-text-muted mt-xs">5-Star Elite</p>
+</div>
+<!-- Achievement 6 -->
+<div class="flex flex-col items-center p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow text-center hover:scale-105 transition-transform">
+<div class="w-16 h-16 rounded-full bg-secondary-fixed-dim/20 flex items-center justify-center mb-base text-secondary">
+<span class="material-symbols-outlined !text-[32px]" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<p class="font-label-md text-label-md text-text-main">Cuisine Critic</p>
+<p class="text-caption text-text-muted mt-xs">Global Foodie</p>
+</div>
+</div>
+</section>
+<!-- Saved Itineraries & Recent Bookings -->
+<section class="mt-xl grid grid-cols-1 lg:grid-cols-2 gap-xl">
+<!-- Saved Itineraries -->
+<div>
+<div class="flex justify-between items-center mb-gutter">
+<h3 class="font-headline-md text-headline-md text-text-main">Saved Itineraries</h3>
+<span class="material-symbols-outlined text-text-muted cursor-pointer">arrow_forward</span>
+</div>
+<div class="grid grid-cols-1 gap-gutter">
+<div class="group bg-bg-pure rounded-[24px] border border-border-subtle overflow-hidden custom-shadow hover:floating-shadow transition-all flex">
+<div class="w-1/3 aspect-[4/5] overflow-hidden">
+<img alt="London Itinerary" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A picturesque view of London featuring Big Ben and a red double-decker bus, captured in soft evening twilight. The colors are warm and inviting, with a focus on luxury city travel. The image has a clean, premium travel magazine aesthetic with high detail and a serene mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqEGKJfXpv2hVKxLdeC6DvzSEUlZJpJ_hA_8Ie_4FTQyl4OQSCq3vedgVm0mrWVl-Ban9q4EVUCnia7fqeoP2MtZSLc41iY28ZBlnC9IH4C6k-sG8Pg7hze8JF8tQus8hCcGA6xFidhTJvz9GEIf9jHiUnOiLs9JhHC_uvlCsg3Z_aWx-GILHFYCIMGKdHy8g8k68jgw1HXBjSGm2Z44CIiUNdPpBAuxjJ8KclVgkyDVwqBKOxl4WiWcBVyYG1WIumComLqaEpvfg"/>
+</div>
+<div class="flex-1 p-gutter flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="text-caption font-label-md text-primary bg-primary/10 px-base py-xs rounded-full uppercase tracking-wider">7 Days</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+<h4 class="font-headline-md text-headline-md mt-sm">London Fog &amp; Finery</h4>
+<p class="text-body-md text-text-muted line-clamp-2 mt-xs">Explore the historic landmarks and contemporary art scene of the UK capital.</p>
+</div>
+<div class="flex items-center gap-base">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border border-white bg-slate-200"></div>
+<div class="w-6 h-6 rounded-full border border-white bg-slate-300"></div>
+<div class="w-6 h-6 rounded-full border border-white bg-slate-400"></div>
+</div>
+<span class="text-caption text-text-muted">Shared with 3 others</span>
+</div>
+</div>
+</div>
+<div class="group bg-bg-pure rounded-[24px] border border-border-subtle overflow-hidden custom-shadow hover:floating-shadow transition-all flex">
+<div class="w-1/3 aspect-[4/5] overflow-hidden">
+<img alt="Kyoto Itinerary" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A serene traditional Japanese temple in Kyoto surrounded by vibrant autumn maple leaves in shades of red and orange. The lighting is soft morning sun, creating a peaceful and spiritual ambiance. The visual style is crisp and elegant, embodying the essence of high-end cultural exploration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9SLRjqJEEjK4hQLqYf3Pn1J4al4k07M8K51EiuV0-_ty4CXcQ4HkS_d6mlxesG0N7FthqJHHTiDxcgqT6kOdCYeYwYaWnw3tI00Uj1qUSu2Sh36zFOEMoF-BS2rjBT7AexvqufhvsGVuBixXSGUrWBI9VJ2cKchwNAeAApm8Q0mZzLJw-ZmyMOP6X3mpcGQlwR6muXCYAC9tcH8KYf6rmy4-F-gpjuh1vqUVO3kn4X-YHhC5UaPbSKVXQnn29Qj97wJ4Nlj6ZO3I"/>
+</div>
+<div class="flex-1 p-gutter flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<span class="text-caption font-label-md text-primary bg-primary/10 px-base py-xs rounded-full uppercase tracking-wider">12 Days</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+<h4 class="font-headline-md text-headline-md mt-sm">Zen &amp; Neon Kyoto</h4>
+<p class="text-body-md text-text-muted line-clamp-2 mt-xs">A perfect blend of ancient tradition and futuristic technology in Japan's cultural heart.</p>
+</div>
+<div class="flex items-center gap-base">
+<span class="text-caption text-text-muted">Updated 2 days ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Bookings -->
+<div>
+<div class="flex justify-between items-center mb-gutter">
+<h3 class="font-headline-md text-headline-md text-text-main">Recent Bookings</h3>
+<button class="text-label-md font-label-md text-primary">Manage All</button>
+</div>
+<div class="space-y-gutter">
+<!-- Booking 1 -->
+<div class="p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow flex items-center gap-gutter">
+<div class="w-20 h-20 rounded-xl bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined !text-[40px] text-primary">apartment</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-tight">The Ritz-Carlton</h4>
+<p class="text-body-md text-text-muted">New York, NY • Dec 12-18</p>
+</div>
+<span class="px-base py-xs bg-on-secondary-fixed-variant/10 text-on-secondary-fixed-variant rounded-full text-caption font-label-md">CONFIRMED</span>
+</div>
+<div class="mt-base flex items-center justify-between">
+<p class="text-label-md font-label-md text-primary">View E-Ticket</p>
+<p class="text-headline-md font-headline-md text-text-main">$4,250.00</p>
+</div>
+</div>
+</div>
+<!-- Booking 2 -->
+<div class="p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow flex items-center gap-gutter">
+<div class="w-20 h-20 rounded-xl bg-secondary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined !text-[40px] text-secondary">flight</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-tight">Emirates Flight EK201</h4>
+<p class="text-body-md text-text-muted">Dubai (DXB) to New York (JFK)</p>
+</div>
+<span class="px-base py-xs bg-on-secondary-fixed-variant/10 text-on-secondary-fixed-variant rounded-full text-caption font-label-md">UPCOMING</span>
+</div>
+<div class="mt-base flex items-center justify-between">
+<p class="text-label-md font-label-md text-primary">Check-in Open</p>
+<p class="text-headline-md font-headline-md text-text-main">First Class</p>
+</div>
+</div>
+</div>
+<!-- Booking 3 -->
+<div class="p-gutter bg-bg-pure rounded-[24px] border border-border-subtle custom-shadow flex items-center gap-gutter opacity-60">
+<div class="w-20 h-20 rounded-xl bg-surface-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined !text-[40px] text-text-muted">directions_car</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-headline-md text-headline-md text-text-main leading-tight">Private Transfer</h4>
+<p class="text-body-md text-text-muted">JFK Airport to Manhattan</p>
+</div>
+<span class="px-base py-xs bg-surface-variant text-on-surface-variant rounded-full text-caption font-label-md">COMPLETED</span>
+</div>
+<div class="mt-base flex items-center justify-between">
+<p class="text-label-md font-label-md text-text-muted">Trip History</p>
+<p class="text-headline-md font-headline-md text-text-main">$180.00</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full py-xl bg-bg-pure border-t border-border-subtle">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1">
+<div class="text-headline-md font-headline-md font-bold text-on-surface mb-gutter">TravelSphere AI</div>
+<p class="text-body-md text-text-muted">Your personal AI-powered travel concierge. Seamless planning, extraordinary journeys.</p>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-text-main mb-gutter">Destinations</h4>
+<ul class="space-y-base text-body-md text-text-muted">
+<li><a class="hover:text-primary transition-colors" href="#">Europe</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Asia Pacific</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Americas</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Africa &amp; Middle East</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-text-main mb-gutter">Support</h4>
+<ul class="space-y-base text-body-md text-text-muted">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Safety Information</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Travel Advisory</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-text-main mb-gutter">Company</h4>
+<ul class="space-y-base text-body-md text-text-muted">
+<li><a class="hover:text-primary transition-colors" href="#">About Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Sustainability</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-md mt-xl pt-lg border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-md">
+<p class="text-body-md text-text-muted">© 2024 TravelSphere AI. All rights reserved.</p>
+<div class="flex gap-gutter">
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer">face_nod</span>
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer">insert_photo</span>
+<span class="material-symbols-outlined text-text-muted hover:text-primary cursor-pointer">1k</span>
+</div>
+</div>
+</footer>
+<!-- Mobile Navigation Shell -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex justify-around items-center h-20 z-50">
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-caption font-label-md">Explore</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-caption font-label-md">Planner</span>
+</div>
+<div class="flex flex-col items-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="text-caption font-label-md">Passport</span>
+</div>
+<div class="flex flex-col items-center text-on-surface-variant">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-caption font-label-md">Saved</span>
+</div>
+</nav>
+</body></html>

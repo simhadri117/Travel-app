@@ -13,6 +13,7 @@ import adminRouter from './routes/admin';
 import destinationRouter from './routes/destination';
 import notificationRouter from './routes/notification';
 import assistantRouter from './routes/assistant';
+import mapsRouter from './routes/maps';
 import gamificationRouter from './routes/gamification';
 import { User } from './models/User';
 import { Post } from './models/Post';
@@ -42,6 +43,7 @@ app.use('/api/v1', destinationRouter);
 app.use('/api/v1', notificationRouter);
 app.use('/api/v1', assistantRouter);
 app.use('/api/v1', gamificationRouter);
+app.use('/api/v1', mapsRouter);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -144,4 +146,4 @@ async function seedInitialData() {
     console.error('Seeder execution error:', error);
   }
 }
-// Touched for nodemon restart once again
+// Touched for nodemon restart once again - verified port 5001 free

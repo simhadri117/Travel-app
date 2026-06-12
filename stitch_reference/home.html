@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TravelSphere AI - Effortless Exploration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#dbe1ff",
+                    "on-error-container": "#93000a",
+                    "text-main": "#0F172A",
+                    "surface-dim": "#d8dadc",
+                    "surface-container-lowest": "#ffffff",
+                    "text-muted": "#64748B",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "outline": "#737686",
+                    "on-secondary-fixed-variant": "#1a438e",
+                    "surface-variant": "#e0e3e5",
+                    "surface-container-low": "#f2f4f6",
+                    "on-tertiary-fixed": "#261900",
+                    "on-tertiary-fixed-variant": "#5d4200",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-primary-container": "#eeefff",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-bright": "#f7f9fb",
+                    "outline-variant": "#c3c6d7",
+                    "bg-pure": "#FFFFFF",
+                    "on-background": "#191c1e",
+                    "secondary": "#375ca8",
+                    "on-secondary-fixed": "#001945",
+                    "on-error": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "secondary-container": "#8aacfe",
+                    "surface": "#f7f9fb",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "secondary-fixed": "#d9e2ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2d3133",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#004ac6",
+                    "surface-tint": "#0053db",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "map-accent": "#006CE4",
+                    "tertiary-fixed-dim": "#febb02",
+                    "on-surface-variant": "#434655",
+                    "on-secondary": "#ffffff",
+                    "border-subtle": "#E2E8F0",
+                    "tertiary-container": "#8e6700",
+                    "inverse-primary": "#b4c5ff",
+                    "background": "#f7f9fb",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#ffefd6",
+                    "on-secondary-container": "#113e89",
+                    "tertiary": "#6f5000",
+                    "tertiary-fixed": "#ffdea4",
+                    "on-primary-fixed": "#00174b"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "16px",
+                    "3xl": "24px",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "xl": "80px",
+                    "lg": "48px",
+                    "md": "24px",
+                    "base": "8px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .scrim-bottom {
+            background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-bg-pure text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm">
+<div class="max-w-container-max mx-auto h-20 px-md flex justify-between items-center">
+<div class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface tracking-tight">
+                TravelSphere AI
+            </div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Explore</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Planner</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Reels</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Bookings</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="text-label-md font-label-md px-md py-sm bg-primary-container text-on-primary-container rounded-full hover:shadow-lg transition-all active:scale-95">Login</button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative h-[600px] w-full px-md mt-sm overflow-hidden">
+<div class="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
+<img alt="Coastal Paradise" class="w-full h-full object-cover" data-alt="A breathtaking aerial view of a pristine tropical coastline with turquoise waters gently lapping against a crescent of white sand. Lush green palm trees line the beach, and the soft golden light of a late afternoon sun creates long, elegant shadows. The atmosphere is tranquil and luxurious, embodying a premium Mediterranean travel aesthetic with high clarity and a soft, warm glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFiABQJ6gcUMPRm0gdRcxlbLphttNTf_SbwXYdKWaIendp0g__MkANuxPrgU4ECSMSZiqOmB3BWQBApzDwoJCqeBL_Tob6ngn81smx40NG7JDiS8J9ih5snN6BTUKfYx7XT-gRxxv-efzR5knoSgnkvIv_xcNpX2ZHqJZruFe8uk-TQ3RM907gCvV68yS7JalnmZwl_-ZdL-msAECr44e-dTJ2R3otzzz-f_caHKWiAZdTwbtGOqvHB0LQRJ3IxAwTuqEiRtIhQbg"/>
+<div class="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-white px-md">
+<h1 class="font-display-lg text-display-lg text-center mb-md drop-shadow-lg">Where will AI take you today?</h1>
+<!-- Integrated Search Bar -->
+<div class="w-full max-w-4xl bg-white rounded-full p-2 flex items-center shadow-[0px_10px_30px_rgba(15,23,42,0.12)] text-on-surface">
+<div class="flex-1 flex items-center px-6 border-r border-border-subtle">
+<span class="material-symbols-outlined text-primary mr-3" data-icon="location_on">location_on</span>
+<div class="flex flex-col">
+<span class="text-caption font-bold uppercase tracking-wider text-text-muted">Where to?</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-body-md font-semibold placeholder:text-outline-variant" placeholder="Search destinations" type="text"/>
+</div>
+</div>
+<div class="flex-1 flex items-center px-6 border-r border-border-subtle">
+<span class="material-symbols-outlined text-primary mr-3" data-icon="calendar_month">calendar_month</span>
+<div class="flex flex-col">
+<span class="text-caption font-bold uppercase tracking-wider text-text-muted">Dates</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-body-md font-semibold placeholder:text-outline-variant" placeholder="Add dates" type="text"/>
+</div>
+</div>
+<div class="flex-1 flex items-center px-6">
+<span class="material-symbols-outlined text-primary mr-3" data-icon="group">group</span>
+<div class="flex flex-col">
+<span class="text-caption font-bold uppercase tracking-wider text-text-muted">Travelers</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-body-md font-semibold placeholder:text-outline-variant" placeholder="Add guests" type="text"/>
+</div>
+</div>
+<button class="bg-primary-container text-on-primary-container p-4 rounded-full flex items-center justify-center hover:bg-primary transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Shortcuts -->
+<section class="max-w-container-max mx-auto px-md py-lg flex justify-center gap-md">
+<button class="flex flex-col items-center gap-sm group">
+<div class="w-16 h-16 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed shadow-sm group-hover:shadow-md transition-all group-hover:-translate-y-1">
+<span class="material-symbols-outlined text-[32px]" data-icon="smart_toy" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<span class="text-label-md font-semibold">AI Trip Planner</span>
+</button>
+<button class="flex flex-col items-center gap-sm group">
+<div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all group-hover:-translate-y-1">
+<span class="material-symbols-outlined text-[32px]" data-icon="flight">flight</span>
+</div>
+<span class="text-label-md font-semibold text-on-surface-variant">Flights</span>
+</button>
+<button class="flex flex-col items-center gap-sm group">
+<div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all group-hover:-translate-y-1">
+<span class="material-symbols-outlined text-[32px]" data-icon="hotel">hotel</span>
+</div>
+<span class="text-label-md font-semibold text-on-surface-variant">Hotels</span>
+</button>
+<button class="flex flex-col items-center gap-sm group">
+<div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-primary shadow-sm group-hover:shadow-md transition-all group-hover:-translate-y-1">
+<span class="material-symbols-outlined text-[32px]" data-icon="train">train</span>
+</div>
+<span class="text-label-md font-semibold text-on-surface-variant">Trains</span>
+</button>
+</section>
+<!-- Popular Destinations (Airbnb Style) -->
+<section class="max-w-container-max mx-auto px-md py-lg">
+<div class="flex justify-between items-end mb-md">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Popular Destinations</h2>
+<p class="text-body-md text-text-muted">Handpicked by our AI based on global travel trends.</p>
+</div>
+<a class="text-label-md text-primary font-bold hover:underline flex items-center gap-xs" href="#">
+                    View all <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-3xl overflow-hidden mb-sm shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all group-hover:shadow-xl">
+<img alt="Venice, Italy" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A cinematic, sun-drenched view of a Venetian canal during the golden hour. Historical architecture with ornate balconies lines the waterway where a traditional gondola glides through shimmering, emerald-green water. The lighting is warm and evocative, creating a romantic and high-end travel mood that emphasizes architectural detail and serene water reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg20dr-jwIVzpfiZzCH56itaiC2dXMvk1rBoj4se2L-6hZ1AfXdMkKUedNbmLpByq4kpobywmX0HYJ7qjAglfYaCL0GGuKioXeO1M9DLfDAnzDXf0osEP7Owc-Af4Qo9Vu4-LfwOkPoNRUu1tOtNOzwMNxax5TqQmA070eCBtHwUEJZbTGqRsYf37rjIPZyr7g_EVoc0kKqtY031jPWNyWSlIt03RvZlflCL8WvCktMot-rUynXW0I-ZClgIwUfUxmiy2m7O6BjcU"/>
+<button class="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white hover:bg-white hover:text-red-500 transition-all">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md">Venice, Italy</h3>
+<p class="text-body-md text-text-muted">734 km away</p>
+<p class="text-body-md font-semibold mt-1">Oct 12 - 17</p>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-semibold">4.92</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-3xl overflow-hidden mb-sm shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all group-hover:shadow-xl">
+<img alt="Kyoto, Japan" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A peaceful evening scene in a Kyoto temple garden during autumn. Vibrant red maple leaves frame a traditional wooden structure illuminated by soft paper lanterns. A stone path leads through moss-covered grounds, and the lighting is soft, moody, and sophisticated. The image captures a sense of Zen calm and cultural richness, rendered in a modern, high-contrast photographic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJV5EgvihOAkdHfBpXp1Q-TH-dhdNBQ-JcSyl91RCTlzdcp-VhUzPkTScXRZN7kQR2QL2qu9WRdthndl28uYfEV7wuI_zKgAN2eW54AmX0kerINvvmb6g9PknJRQ037PJF12Ljbjs_jsoTvHQY-ttKv3rFin6ijM0Tff4nrGXrQLHrVgyzhreOXvjnh42IOG9C5si4k9Tl21Q7AJOM7hZvYS09HdBn1aAidmTeo2NNZpD_nsrV50gPhMe_Xqic3IgQ8_jCL9HFIKM"/>
+<button class="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white hover:bg-white hover:text-red-500 transition-all">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md">Kyoto, Japan</h3>
+<p class="text-body-md text-text-muted">9,210 km away</p>
+<p class="text-body-md font-semibold mt-1">Nov 5 - 12</p>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-semibold">4.88</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-3xl overflow-hidden mb-sm shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all group-hover:shadow-xl">
+<img alt="Paris, France" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="An elegant wide-angle shot of the Eiffel Tower viewed through the classic Haussmann-style architecture of a Parisian street. The morning light is cool and crisp, highlighting the intricate ironwork of the tower against a pale blue sky. The scene is chic and timeless, with soft shadows and a pristine, high-key aesthetic that conveys the sophisticated charm of the French capital." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqtpln4KMiYA2-kU40NYIhHiF4qxbL0-cM-pzhewuitAv_4HJOfpvZKeAMTZlq5EkOBNGC6rxbFg9scj8Zrjor4ffTWa9PnE4n5-_OfYjFOhMoVGid-Qy7amjpqYpGcSFswNxphQ3i_sFPDXVktm05J16mmIxx07QOXAUtfpXC87dkyYGsHQwomYNCFY5X6lTauPT1bUZ3ffG9Zi-PKqXVgGk_yYqtbLyeDAVPb95Ju-OLqQFIKKhhsHoVGSCxf_Qx-uGEwgzbTRo"/>
+<button class="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white hover:bg-white hover:text-red-500 transition-all">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md">Paris, France</h3>
+<p class="text-body-md text-text-muted">1,102 km away</p>
+<p class="text-body-md font-semibold mt-1">Dec 20 - 27</p>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-semibold">4.95</span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-3xl overflow-hidden mb-sm shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all group-hover:shadow-xl">
+<img alt="Santorini, Greece" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A brilliant, high-contrast image of Santorini's iconic blue-domed churches perched on a volcanic cliffside overlooking the Aegean Sea. The bright white walls reflect intense Mediterranean sunlight, while the deep blue of the domes and the sea creates a striking visual harmony. The style is ultra-modern and minimalist, with sharp focus and a vibrant, life-affirming color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX115aMenQGnw3AQJe1V_mXNjeyMKJSR-Hmra8qawuELYRCdgqtChc9OEQLdgepPmr-tN5nszDFOcfFjXljn5R9L-mBvLxxWUvuDpxP2fvmAhyULqqNi6-yFChanxORSTEqUzhxs0mrBd4-Xz56-Fn3UUgfc9uG7uH_GF5tmaWZTzRsbqtOom8SIAOKawKVqvTdeQCs1WxIKU22UHLBoBx8gRpJobmRt0WccJ0TeS8ya8A1zUUE6r4T7VXiuEI7vaWawECm2osE6U"/>
+<button class="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white hover:bg-white hover:text-red-500 transition-all">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md">Oia, Greece</h3>
+<p class="text-body-md text-text-muted">1,845 km away</p>
+<p class="text-body-md font-semibold mt-1">Sep 15 - 22</p>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-semibold">4.98</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Now (Horizontal Scroll) -->
+<section class="max-w-container-max mx-auto px-md py-lg overflow-hidden">
+<h2 class="font-headline-lg text-headline-lg mb-md">Trending Now</h2>
+<div class="flex gap-md overflow-x-auto hide-scrollbar pb-md snap-x">
+<!-- Trend Card 1 -->
+<div class="flex-none w-[350px] snap-start bg-surface-container-low rounded-3xl p-sm flex items-center gap-md group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-24 h-24 rounded-2xl overflow-hidden">
+<img alt="Iceland" class="w-full h-full object-cover" data-alt="A close-up shot of a majestic waterfall in Iceland, with crystalline water cascading over dark volcanic basalt columns. The air is filled with a soft mist, and a faint rainbow is visible in the spray. The lighting is ethereal and soft-focused, capturing the raw, cold beauty of the Arctic landscape in a premium travel photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7lPaWfx8AZS5FJsnDrkQFTsrAZH5RpMg3Pb7CBJuB4Z2l4aqhibhtiR2fuMVJu4EjV6m6pm40M41tgkGQ865xLD_5H8b3_vELM8IQtunYLpVCfgmTEZqKXdBirwb3ODL2nxegYuJAJwmwaubGUtX66O0n26pd9wBYbIIydxlKOo8rtS-KWo_1ANyLVv0YFFoB25HIvNECVLGE8-j0fRRIuQrJX1Cl4PnGkPTWC_TcQv1zJFyHOmc6gUqYMvrBEQYSJK11DVomgKE"/>
+</div>
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-primary-container text-on-primary-container text-caption font-bold mb-1">AI CHOICE</span>
+<h4 class="font-headline-md text-[18px]">Northern Lights Hunt</h4>
+<p class="text-caption text-text-muted uppercase font-bold tracking-widest mt-1">Reykjavik, Iceland</p>
+</div>
+</div>
+<!-- Trend Card 2 -->
+<div class="flex-none w-[350px] snap-start bg-surface-container-low rounded-3xl p-sm flex items-center gap-md group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-24 h-24 rounded-2xl overflow-hidden">
+<img alt="Tokyo" class="w-full h-full object-cover" data-alt="A vibrant night scene in Tokyo's Shibuya crossing, captured with long exposure to create dynamic light trails from traffic. The neon signs and massive screens cast a colorful, futuristic glow over the bustling streets. The atmosphere is energetic and technologically advanced, echoing a 'Blade Runner' aesthetic but with the clean, polished finish of a modern travel interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn_mSctDipZokx0qcbHHqImqlxvrlpg8VBc8BmkniPaaK4KKXpY_qMbud0inK7pJNBAK-K49dbtT_Rmbi2zS06GLXoRIQjeyYsCJsturz-5JYeR2K4WxzfVliVuKvAmR9dqcEDFD5YJv73oQE3OX9bewHI3TvOA7r_W0AjjoIuzocxnIbodJ2lIXKvXmsid0MQIg6CIBPFug82GpCgm8eplHGCibYtLpXZZvU6pBFVwfE4v-kow5NgPpuCoSSK1rh_C5cUnfF0IsE"/>
+</div>
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed text-caption font-bold mb-1">FOODIE</span>
+<h4 class="font-headline-md text-[18px]">Night Market Tour</h4>
+<p class="text-caption text-text-muted uppercase font-bold tracking-widest mt-1">Tokyo, Japan</p>
+</div>
+</div>
+<!-- Trend Card 3 -->
+<div class="flex-none w-[350px] snap-start bg-surface-container-low rounded-3xl p-sm flex items-center gap-md group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-24 h-24 rounded-2xl overflow-hidden">
+<img alt="Dubai" class="w-full h-full object-cover" data-alt="A luxurious view of the Dubai skyline at twilight, featuring the Burj Khalifa soaring into a deep purple and orange sky. The city lights below begin to twinkle like jewels, reflecting on the calm surface of a massive fountain. The overall feel is one of opulence, modern ambition, and pristine architectural achievement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVtSXiH4TkgmBNhADMQGZ427HNTnStvNlNniXnS3Ur6JjI8tYmzJWh26gqLfZvTg8C7IWbODCTJ6j41SSPt1QTKTaMfepKfoxITgUIJLbKSor5G7hIVXEtN3y3wPcEtVL6xEx6cDUQFDdVmc7V94k_OUqUA_CguXEztuwgC4pVa4i7uq5FX3QOG4eMkkX_vA5rqTq1kXILIRDPlDfVXLSdqLaR6YeUNcboZ6cnoPvWibMJ1qdTnb9ya8oHFg25DpmFx7cuPB_JShc"/>
+</div>
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-outline-variant text-on-surface text-caption font-bold mb-1">LUXURY</span>
+<h4 class="font-headline-md text-[18px]">Desert Safari Oasis</h4>
+<p class="text-caption text-text-muted uppercase font-bold tracking-widest mt-1">Dubai, UAE</p>
+</div>
+</div>
+<!-- Trend Card 4 -->
+<div class="flex-none w-[350px] snap-start bg-surface-container-low rounded-3xl p-sm flex items-center gap-md group cursor-pointer hover:bg-surface-container-high transition-all">
+<div class="w-24 h-24 rounded-2xl overflow-hidden">
+<img alt="Swiss Alps" class="w-full h-full object-cover" data-alt="A serene landscape of the Swiss Alps in winter, with snow-capped peaks rising sharply against a clear, deep blue sky. A tiny, cozy wooden chalet is nestled in a vast valley of untouched white snow. The lighting is bright and high-contrast, conveying a sense of crisp mountain air and exclusive, tranquil seclusion in a premium European winter style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWtRL6b92Zfr41zMB6E6KeZGWEg_0s0sy2c0-cK1O_DMIq4wqEXgclVR2t5qy1MnqfhRSqEnaMCodvHs4e1ZpGGAf4SwRbUqMEu7RhoKXuCJwJbuoHN9CD2oL955sg1Y9X5tg-XRICi1UVE8G5Hv5nTbQy4SpYGmNaZMqXV6j8hSGBhYip8lmKKhT8qWlgf-LgpCw5uurh-esjJgsTqrwTB0aMZaWpUksmVhcUDS5CWDT0Dvq-n9QLHQa3LF3SuL9Rg9eNjrSehNo"/>
+</div>
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant text-caption font-bold mb-1">NATURE</span>
+<h4 class="font-headline-md text-[18px]">Alpine Ski Retreat</h4>
+<p class="text-caption text-text-muted uppercase font-bold tracking-widest mt-1">Zermatt, Switzerland</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Travel Reels Section -->
+<section class="bg-surface-container-lowest py-xl">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col items-center mb-lg text-center">
+<h2 class="font-display-lg text-[40px] mb-xs">Travel Reels</h2>
+<p class="text-body-lg text-text-muted max-w-2xl">Get inspired by real journeys from our community. Short, immersive, and 100% authentic.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-md">
+<!-- Reel 1 -->
+<div class="relative aspect-[9/16] rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+<img alt="Reel Vietnam" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vertical frame showing a traveler's perspective while riding a motorbike through the lush, terraced rice fields of Northern Vietnam. The early morning sun filters through low clouds, casting a soft, misty light over the deep green landscape. The shot feels dynamic and intimate, capturing a moment of raw, adventurous travel in a high-quality cinematic video style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDidsnfnBt01X8Eq5Iq8AT3tBJDA8xq2o47BEwmOrCU7jIDIDSl_ySr6H9rWoS0bi5LtBxpteUNF8o0aUP6sjXR3PFNmZUF-DXt-It1U9g9UBT-ocEXsBN3LdKY-xOuUmIMSkYNBwlMADnijaNT5wNcUyUFYXmRWrGYHBZSNw4OJpp89LfYPEqmP8eLFBacBMOPTWj4zMA04zGzBORVD1_L_2Ybacm6kuvcL_IcWjYqG-YP8Hh8NHnSn6tA48EnLHL4Gs6tC_AOnj0"/>
+<div class="absolute inset-0 scrim-bottom flex flex-col justify-end p-4 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="text-caption font-bold">1.2M Views</span>
+</div>
+<p class="text-label-md leading-tight">Hidden gems of Sapa</p>
+</div>
+</div>
+<!-- Reel 2 -->
+<div class="relative aspect-[9/16] rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+<img alt="Reel India" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vertical close-up of the Taj Mahal at sunrise, with a warm orange glow reflecting off the pristine white marble. A flock of birds takes flight in the foreground, creating a poetic and majestic sense of scale. The style is highly polished, with a warm color temperature and professional-grade clarity, perfect for a high-end social travel feed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNKWD9fQT9B1aN42_fCICzaYqCNEY4um1On_2CaCHfGH327KUd_3ZN2qSskXU0BX8fjJSGJMaXtDwvinzCZptilHrunWmPYIfNQnVQZYZNZhltxhP5w1PuIIWvRHQ3Hz9W70B8TvFhXiyfjeUpyh22Z6GGdJUDPa8UXsFlwYm_3fx56VV4o4B3u1OD6gZwxyiLN7KVbajEPKDFPmBtZ59Kj2SLcwzJe578W_-k_O-wOzs7OyrXS6aAzcmQLZISaYUo5BijdW2bVFE"/>
+<div class="absolute inset-0 scrim-bottom flex flex-col justify-end p-4 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="text-caption font-bold">850k Views</span>
+</div>
+<p class="text-label-md leading-tight">Agra Sunrise Magic</p>
+</div>
+</div>
+<!-- Reel 3 -->
+<div class="relative aspect-[9/16] rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+<img alt="Reel Portugal" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vibrant vertical shot from a moving historic tram in Lisbon, looking down a narrow cobblestone street lined with colorful tiled buildings and blooming flowers. The scene is full of life and texture, with a bright midday light that emphasizes the rich oranges and blues of the architecture, conveying a joyful and authentic Mediterranean city experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOUTVVFcmxpt1u7NHSOSE3VyGNutaEl4aBYV0K3EJulDoxzJsSp7BhjQDlwDWuedT_Q0S0iC1WgKpQwkxBdezK9cbc3R1AfHoBVz_M4re4z9j56woWiBEMcJc97ICXXNFGsarVvGtqW5kxVeC6n49e9IIV1NikqsGrfahLLa_XDpdBgXY8y5mTmLtBafR6T57ifUBHuYGCkCfNQzJ7_YqD0hSSs8JPcdjj12cEIX8bzJRKbUZID3yNFL9JiO7uD7DajBc4Cm8c8L0"/>
+<div class="absolute inset-0 scrim-bottom flex flex-col justify-end p-4 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="text-caption font-bold">2.4M Views</span>
+</div>
+<p class="text-label-md leading-tight">Lisbon Tram Vibes</p>
+</div>
+</div>
+<!-- Reel 4 -->
+<div class="relative aspect-[9/16] rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+<img alt="Reel Canada" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vertical drone shot descending towards a crystal-clear turquoise lake in the Canadian Rockies, surrounded by dense pine forests and snow-tipped peaks. The water is so still it perfectly mirrors the sky and the mountains. The lighting is high-key and natural, emphasizing the vast, untouched wilderness and premium nature-focused aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCixmUDe0YtmslQeEkHbZpP2PENQ-_56_TbCKNTJ7R4H0k5N6Mje7nmmt68vqyLmMQH8nly-xV4Ba4q6AVljg5Yg1t4c6tMzdmpEBM5UFMBunQBcB-wYtJ6RmCiUsHWt6o_dkOs_ZUPm0-v38XfM4JXBxAaud-PiW3y1bmsIZtIL1gYm29UMum8LpW1upqN6tfxeDNAxvXEdRnOPeW1sNA9nLniLkmHu-qkD03GyJyYQ8wtGeYyBenzvMzPwtPzsCbgOp9hQGyFlaU"/>
+<div class="absolute inset-0 scrim-bottom flex flex-col justify-end p-4 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="text-caption font-bold">500k Views</span>
+</div>
+<p class="text-label-md leading-tight">Rocky Mountain High</p>
+</div>
+</div>
+<!-- Reel 5 -->
+<div class="relative aspect-[9/16] rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+<img alt="Reel Morocco" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A vertical perspective walking through a bustling souk in Marrakech, with sunlight filtering through wicker roofs and creating patterns of light and shadow. Stalls are filled with colorful spices, intricate lanterns, and hand-woven textiles. The scene is rich in detail and vibrant colors, capturing the immersive and exotic sensory experience of a Moroccan marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEapz_i9niTGu6D_nGOoNFVp2LNR7gbhESxJY6JnRnn08mGB4fvKdw0xYOm5Fpaq8-PMU_AXDnkki7iWBSZZwo8yyL7cN0U6tj2W88XVt3L8kXdlW1jWhesRDIkeQqZho_xv-LeA62pxGPMbXvB7_sSe6mNToKnwZ6xRGnjWuH6RgLJl50cIg3NVC83lTPyCxlQYbxxLJutIszvf7keq7IpjUkcTb7NfChW0YqhiM4r4mCGqnufybywQWMrFiJ_TCHwjiuVsCjTYQ"/>
+<div class="absolute inset-0 scrim-bottom flex flex-col justify-end p-4 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="text-caption font-bold">1.1M Views</span>
+</div>
+<p class="text-label-md leading-tight">Marrakech Spice Trails</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl bg-bg-pure dark:bg-inverse-surface border-t border-border-subtle dark:border-outline-variant">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1">
+<div class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface mb-md">TravelSphere AI</div>
+<p class="text-body-md text-text-muted">Personalized travel experiences powered by advanced intelligence.</p>
+</div>
+<div>
+<h5 class="text-label-md font-bold text-on-surface dark:text-inverse-on-surface mb-md uppercase tracking-widest">Company</h5>
+<ul class="flex flex-col gap-sm">
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">About Us</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Careers</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">AI Tech</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-label-md font-bold text-on-surface dark:text-inverse-on-surface mb-md uppercase tracking-widest">Destinations</h5>
+<ul class="flex flex-col gap-sm">
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Europe</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Asia</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Americas</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-label-md font-bold text-on-surface dark:text-inverse-on-surface mb-md uppercase tracking-widest">Support</h5>
+<ul class="flex flex-col gap-sm">
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Help Center</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Privacy Policy</a></li>
+<li><a class="text-text-muted dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed underline transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-md mt-xl pt-md border-t border-border-subtle flex justify-between items-center">
+<p class="text-body-md text-text-muted">© 2024 TravelSphere AI. All rights reserved.</p>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="language">language</span>
+<span class="text-body-md font-semibold text-on-surface-variant">English (US)</span>
+</div>
+</div>
+</footer>
+<!-- Simple Atmospheric Interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('shadow-md');
+                } else {
+                    header.classList.remove('shadow-md');
+                }
+            });
+
+            // Input focus animations
+            const searchInputs = document.querySelectorAll('input');
+            searchInputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.parentElement.classList.add('bg-surface-container-low');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.parentElement.classList.remove('bg-surface-container-low');
+                });
+            });
+        });
+    </script>
+</body></html>

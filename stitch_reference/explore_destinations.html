@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Destinations | TravelSphere AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 24px;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 24px;
+        }
+        .glass-blur {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary": "#375ca8",
+                    "primary-container": "#2563eb",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#8aacfe",
+                    "text-muted": "#64748B",
+                    "tertiary-fixed": "#ffdea4",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-tint": "#0053db",
+                    "surface-container-highest": "#e0e3e5",
+                    "error-container": "#ffdad6",
+                    "on-background": "#191c1e",
+                    "on-secondary-container": "#113e89",
+                    "on-primary-fixed": "#00174b",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "surface-container-high": "#e6e8ea",
+                    "primary": "#004ac6",
+                    "outline-variant": "#c3c6d7",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-container": "#ffefd6",
+                    "surface-container": "#eceef0",
+                    "on-primary": "#ffffff",
+                    "outline": "#737686",
+                    "surface": "#f7f9fb",
+                    "secondary-fixed": "#d9e2ff",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#8e6700",
+                    "on-tertiary": "#ffffff",
+                    "bg-pure": "#FFFFFF",
+                    "surface-container-low": "#f2f4f6",
+                    "surface-bright": "#f7f9fb",
+                    "surface-variant": "#e0e3e5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#001945",
+                    "on-surface-variant": "#434655",
+                    "text-main": "#0F172A",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#b0c6ff",
+                    "border-subtle": "#E2E8F0",
+                    "on-secondary-fixed-variant": "#1a438e",
+                    "on-tertiary-fixed-variant": "#5d4200",
+                    "on-primary-container": "#eeefff",
+                    "tertiary": "#6f5000",
+                    "background": "#f7f9fb",
+                    "tertiary-fixed-dim": "#febb02",
+                    "surface-dim": "#d8dadc",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary-fixed": "#261900",
+                    "map-accent": "#006CE4",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "base": "8px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "xl": "80px",
+                    "md": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center h-20 px-md max-w-container-max mx-auto">
+<div class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">TravelSphere AI</div>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center gap-xl">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md transition-all duration-150" href="#">Explore</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md" href="#">Planner</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md" href="#">Reels</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-label-md" href="#">Bookings</a>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden lg:flex items-center bg-surface-container rounded-full px-base py-xs border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant px-xs" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-48" placeholder="Where next?" type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-gutter py-xs rounded-xl font-label-md hover:opacity-90 active:scale-95 transition-all">Login</button>
+</div>
+</div>
+</nav>
+<!-- Hero Content & Filter Bar -->
+<header class="pt-32 pb-xl px-md max-w-container-max mx-auto text-center">
+<h1 class="font-display-lg text-display-lg text-text-main mb-gutter">Discover your next horizon.</h1>
+<p class="font-body-lg text-body-lg text-text-muted max-w-2xl mx-auto mb-xl">AI-curated destinations tailored to your travel persona. From secluded peaks to vibrant city centers.</p>
+<!-- Glassmorphic Filter Bar -->
+<div class="sticky top-24 z-40 py-sm">
+<div class="inline-flex items-center p-base bg-surface-container-highest/60 glass-blur rounded-full shadow-lg border border-white/40 gap-xs">
+<button class="px-gutter py-base rounded-full bg-primary text-on-primary font-label-md shadow-sm transition-all">Adventure</button>
+<button class="px-gutter py-base rounded-full text-on-surface-variant hover:bg-surface-container font-label-md transition-all">Beach</button>
+<button class="px-gutter py-base rounded-full text-on-surface-variant hover:bg-surface-container font-label-md transition-all">Culture</button>
+<button class="px-gutter py-base rounded-full text-on-surface-variant hover:bg-surface-container font-label-md transition-all">Hidden Gems</button>
+<div class="w-px h-6 bg-outline-variant mx-xs"></div>
+<button class="p-base rounded-full text-on-surface-variant hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Explore Grid -->
+<main class="px-md max-w-container-max mx-auto pb-xl">
+<div class="masonry-grid">
+<!-- Card 1 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[450px] group-hover:scale-105 transition-transform duration-500" data-alt="A breathtaking panoramic view of a serene glacial lake in the Swiss Alps during the golden hour. The water reflects the towering, snow-capped mountain peaks with crystal clarity. The sky is a soft blend of pastel oranges and deep blues, creating a calm and prestigious travel atmosphere. The photography is sharp and cinematic, emphasizing the vastness and pristine nature of the alpine landscape." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdzeVnQx301_fo2yiY9WxjpNglwvfBj6HazBNbGJRKcLMmxqh9Tk0gwr6vbJw8O61mFS_uvIa1_AHTEhU19Sgltk1HfzAXMr9y1f3dMIvF0KUZuaAFA9xfGMErlGpFRFNVcWQHCKOKKgJdZawBATM49WYRjqq5Z_qrN3cUolKtbGIqzhumAQ0FPSROUPzvNjKjZRWIkZpMRZc7fyGbhIHxhq0SlfWoPyHrJJTOFNQnuSh8ZUhtjF6mkYqFxByf3mwgXV1iDpxlGWQ"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="light_mode">light_mode</span>
+<span class="font-label-md text-on-surface">22°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$$$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Lauterbrunnen</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.9 (1.2k reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[320px] group-hover:scale-105 transition-transform duration-500" data-alt="A lush, tropical villa nestled in the jungles of Bali, featuring an infinity pool that overlooks a deep green valley. The architecture is modern yet organic, with wooden accents and open-air spaces. Soft morning sunlight filters through the palm fronds, creating a dappled light effect. The mood is luxurious, private, and deeply relaxing, fitting a high-end travel aesthetic with rich greens and warm wood tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcPnFvrAoLJlZFoRI-k_BPSAVO0mhE2hxtJWYlLtIr3BE0OZMxisu76wGtutXwKnFZG00vWrFN7h52jWR1f5N0xFucSAY8Fw2aw79s6sGtGstI8kLI9s5oAgxjM6br8gqVNWz66wkquVmQw66UMYCI8D3FcszMdGA3yC_G0I4oliCHQCYnSb09yaSt0NKjqisXn6zlTiyUSRyEkiTelRyvn8npbmogmzsddwEMuRLzPB7umii9cJ5NuR8GDBZRJudgmqg1qANG3Ro"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="cloud">cloud</span>
+<span class="font-label-md text-on-surface">28°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Ubud Sanctuary</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.8 (850 reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[580px] group-hover:scale-105 transition-transform duration-500" data-alt="The vibrant streets of Shinjuku, Tokyo, at night, captured with a long-exposure shot that blurs the neon lights into streaks of pink, blue, and yellow. Modern skyscrapers rise into the dark sky, while the street-level view is packed with futuristic energy and bustling activity. The color palette is high-contrast and electric, reflecting a sophisticated urban adventure mood in a high-key digital style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4bWsNvW0rndCjaxuFHyyR1x-s5qXYUXeJebgVgSAH93P_cRnFiOQXuqPd66Men-waOUFinVAO1pYHqMbeWmKxSivEfEQRfKV85j4mFr2BLYQcVizhbej3SXbCwkh-ED9cG6m7-wYUpWmmiya0TNRM0UFSs318OINVxPHcQTcDXUmmctuRmCiJ8HRMkxn9-qXQsiQUZ2RFWSyhDieZ-MvoSq3m3Bf_BNdG8EIo4mY7zJ8A0qunyI-LPepfwNKoUOIzCOdUb8vQGa8"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="nights_stay">nights_stay</span>
+<span class="font-label-md text-on-surface">14°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$$$$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Tokyo Neon</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.9 (2.4k reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[400px] group-hover:scale-105 transition-transform duration-500" data-alt="A minimalist architectural detail of a Mediterranean villa in Santorini, Greece. The white-washed walls are smooth and curved, contrasting sharply with the deep cobalt blue of the Aegean Sea in the background. The lighting is bright and direct, casting clean geometric shadows that emphasize the minimalist aesthetic. The mood is airy, high-fashion, and pristine, using a palette of pure white and Mediterranean blue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSd0MPTT965TOLe5PX8xmAD-2fCghp_K-LioKZX9c9bxUxI3pfw7X1r-M7mhPFvHp-kDV3Nhi6JvhoSH_f_5FmXs9KqO2a0DgYWKkchS1yKloYG4FGPy79kR_Ydz8pXUawFcUrUU9RBcNLUrRiyrJbbZLK9BKs15M4DdgnfDt56O04UFEbOHYPLEYOtCAehCojjm77jRRbtyC9bPu58BuZa-cR-KgnKDn5EM5ubGuMDXN8Aaeuja-Y-x8lyFApQ9M7YjJHbREuDNY"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="sunny">sunny</span>
+<span class="font-label-md text-on-surface">31°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$$$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Santorini White</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.7 (3.1k reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[520px] group-hover:scale-105 transition-transform duration-500" data-alt="A solitary hiker standing on a jagged ridge in Patagonia at dawn. The Fitz Roy peaks are silhouetted against a dramatic sky of burning orange and deep purple. The foreground is rugged and rocky, showing the raw textures of the wilderness. The lighting is low-key and evocative, emphasizing a sense of epic scale and solitude. The aesthetic is professional adventure photography with high dynamic range." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSPiijsRwctWD5br5lDq9b7HlnbuYF_ZiHvgHz2aU4bRZ4yyjLglsTvR0xQvgcZJe25mXgSSB95xUJaHOnW5rB4GUKdpJ0XXB48kezdeTZVykvbTXbOtZKjXb3nA4Wx6JHQ7-Euaau05IPQfBPKd4C3Hkwc7XAdik7wwZprBcTWjSkExuON39ICOcGzXT_JBVpDuZZ76c1tzInczdOUbuMJJkWEVbx6nJQpbQocMIv1K2RQkHBhtylGdtvKeG9nXQsm7n-acrfiBE"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="ac_unit">ac_unit</span>
+<span class="font-label-md text-on-surface">4°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Patagonia Peaks</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">5.0 (520 reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="masonry-item group cursor-pointer">
+<div class="relative overflow-hidden rounded-[24px] bg-surface-container shadow-[0px_4px_20px_rgba(15,23,42,0.05)] hover:shadow-[0px_10px_30px_rgba(15,23,42,0.12)] transition-all duration-300">
+<img class="w-full object-cover h-[380px] group-hover:scale-105 transition-transform duration-500" data-alt="A cozy, high-end mountain cabin interior with large floor-to-ceiling windows looking out onto a snow-covered forest in Iceland. The interior is decorated in a Scandi-minimalist style with soft furs, natural wood, and a warm fireplace glowing in the corner. The lighting is warm and golden, contrasting with the cold, blueish winter twilight outside. The mood is hygge, intimate, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ1CRIgI440BWPCUWYVUMnPX5B_T9R2UH6sbBeKajnyChiSqzrxx2zxQxXdfKlr_jdvmn4PRMV_0CvrpXrHM4SEOVqZ8ZUKp9Ee9wdVBkOD0TN7tO2pI8C5mxbKOwvCZPkPgGQ7DkDcoP1JN_qmara1_czl5ActNpo9BniOXd2Yj3OXgdxqey6vKvyKWg4idambDCcbRrJRqHMMOQ7CCR5Zc9eUbOn7R8wc7MqhuDfcrRQbgwm4uiq7hZG5wH7Ai5EiQvOb0OCZZo"/>
+<div class="absolute top-md right-md flex flex-col gap-xs items-end">
+<div class="bg-white/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary" data-icon="ac_unit">ac_unit</span>
+<span class="font-label-md text-on-surface">-2°C</span>
+</div>
+<div class="bg-primary/90 backdrop-blur-md px-sm py-xs rounded-full flex items-center gap-xs shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-on-primary" data-icon="payments">payments</span>
+<span class="font-label-md text-on-primary">$$$</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-gutter bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-white mb-xs">Icelandic Cabin</h3>
+<div class="flex items-center gap-xs text-white/90">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.9 (410 reviews)</span>
+</div>
+</div>
+<div class="bg-white p-sm rounded-full text-primary shadow-lg group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="arrow_outward">arrow_outward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-gutter right-gutter bg-primary-container text-on-primary shadow-xl p-gutter rounded-full hover:scale-110 active:scale-95 transition-all flex items-center gap-base z-40">
+<span class="material-symbols-outlined" data-icon="edit_calendar">edit_calendar</span>
+<span class="font-label-md hidden md:inline">Plan with AI</span>
+</button>
+<!-- Footer -->
+<footer class="bg-bg-pure border-t border-border-subtle w-full py-xl">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1">
+<div class="text-headline-md font-headline-md font-bold text-on-surface mb-gutter">TravelSphere AI</div>
+<p class="text-text-muted font-body-md">Redefining luxury travel through intelligent curation and cinematic exploration.</p>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-gutter">Company</h4>
+<ul class="flex flex-col gap-base">
+<li><a class="text-text-muted hover:text-primary underline transition-all font-body-md" href="#">About Us</a></li>
+<li><a class="text-text-muted hover:text-primary underline transition-all font-body-md" href="#">Careers</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-gutter">Destinations</h4>
+<ul class="flex flex-col gap-base">
+<li><a class="text-text-muted hover:text-primary underline transition-all font-body-md" href="#">Europe</a></li>
+<li><a class="text-text-muted hover:text-primary underline transition-all font-body-md" href="#">Asia</a></li>
+<li><a class="text-text-muted hover:text-primary underline transition-all font-body-md" href="#">Americas</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-gutter">Support</h4>
+<div class="flex gap-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="public">public</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="mail">mail</span>
+</div>
+<p class="mt-xl text-caption text-text-muted">© 2024 TravelSphere AI. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<!-- Bottom Navigation for Mobile -->
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-md flex justify-around items-center h-16 z-50">
+<button class="flex flex-col items-center gap-xs text-primary">
+<span class="material-symbols-outlined" data-icon="explore" data-weight="fill" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-[10px] font-label-md">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="text-[10px] font-label-md">Planner</span>
+</button>
+<button class="flex flex-col items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="movie">movie</span>
+<span class="text-[10px] font-label-md">Reels</span>
+</button>
+<button class="flex flex-col items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-label-md">Profile</span>
+</button>
+</div>
+<script>
+        // Simple micro-interaction for active filter states
+        const filters = document.querySelectorAll('.filter-bar button');
+        filters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                filters.forEach(f => {
+                    f.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+                    f.classList.add('text-on-surface-variant');
+                });
+                filter.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+                filter.classList.remove('text-on-surface-variant');
+            });
+        });
+
+        // Parallax-lite for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('header');
+            hero.style.transform = `translateY(${scrolled * 0.1}px)`;
+            hero.style.opacity = 1 - (scrolled / 500);
+        });
+    </script>
+</body></html>

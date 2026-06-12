@@ -338,11 +338,30 @@ input[type="range"] {
 
 /* ═══════════════════════════════════════════════════════════
    TIMELINE — Trip Day Timeline
-═══════════════════════════════════════════════════════════ */
+   ═══════════════════════════════════════════════════════════ */
 .timeline-line {
-  @apply absolute left-3.5 top-8 bottom-0 w-px bg-slate-100;
+  @apply absolute left-3.5 top-8 bottom-0 w-px;
+  background: linear-gradient(to bottom, #E2E8F0 0%, #E2E8F0 80%, transparent 100%);
 }
 
 .timeline-dot {
   @apply absolute left-0 top-1 w-7 h-7 rounded-full border-2 border-white shadow-sm flex items-center justify-center;
+}
+
+/* === DESIGN SYSTEM GLASS NAVIGATION === */
+.glass-nav {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* === CUSTOM SCROLLBAR === */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
 }

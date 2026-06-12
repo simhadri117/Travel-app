@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#dbe1ff",
+                        "on-error-container": "#93000a",
+                        "text-main": "#0F172A",
+                        "surface-dim": "#d8dadc",
+                        "surface-container-lowest": "#ffffff",
+                        "text-muted": "#64748B",
+                        "secondary-fixed-dim": "#b0c6ff",
+                        "outline": "#737686",
+                        "on-secondary-fixed-variant": "#1a438e",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-low": "#f2f4f6",
+                        "on-tertiary-fixed": "#261900",
+                        "on-tertiary-fixed-variant": "#5d4200",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-container": "#eeefff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "outline-variant": "#c3c6d7",
+                        "bg-pure": "#FFFFFF",
+                        "on-background": "#191c1e",
+                        "secondary": "#375ca8",
+                        "on-secondary-fixed": "#001945",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "secondary-container": "#8aacfe",
+                        "surface": "#f7f9fb",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "secondary-fixed": "#d9e2ff",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "primary": "#004ac6",
+                        "surface-tint": "#0053db",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "map-accent": "#006CE4",
+                        "tertiary-fixed-dim": "#febb02",
+                        "on-surface-variant": "#434655",
+                        "on-secondary": "#ffffff",
+                        "border-subtle": "#E2E8F0",
+                        "tertiary-container": "#8e6700",
+                        "inverse-primary": "#b4c5ff",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#ffefd6",
+                        "on-secondary-container": "#113e89",
+                        "tertiary": "#6f5000",
+                        "tertiary-fixed": "#ffdea4",
+                        "on-primary-fixed": "#00174b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "container-max": "1280px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "xl": "80px",
+                        "lg": "48px",
+                        "md": "24px",
+                        "base": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "caption": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .map-gradient {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-md shadow-sm h-20 px-md">
+<div class="max-w-container-max mx-auto flex justify-between items-center h-full">
+<div class="flex items-center gap-xl">
+<span class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface tracking-tight">TravelSphere AI</span>
+<div class="hidden md:flex items-center gap-md">
+<a class="text-primary dark:text-primary-fixed font-bold border-b-2 border-primary dark:border-primary-fixed pb-1 hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Explore</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Planner</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Reels</a>
+<a class="text-on-surface-variant dark:text-surface-variant font-medium hover:text-primary dark:hover:text-primary-fixed transition-colors duration-200" href="#">Bookings</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="relative hidden lg:block w-72">
+<input class="w-full bg-surface-container-low border-none rounded-full px-md py-sm text-body-md focus:ring-2 focus:ring-primary-container transition-all" placeholder="Where to?" type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+</div>
+<button class="text-label-md font-label-md px-md py-sm rounded-full bg-primary-container text-on-primary-container active:scale-95 opacity-80 transition-all duration-150">Login</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-grow pt-20 flex overflow-hidden">
+<!-- Sidebar: Destination Listings -->
+<aside class="w-[420px] bg-bg-pure border-r border-border-subtle flex flex-col z-40">
+<!-- Filter Header -->
+<div class="p-md border-b border-border-subtle space-y-md">
+<div class="flex items-center justify-between">
+<h1 class="text-headline-md font-headline-md text-text-main">Explore London</h1>
+<button class="p-xs rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">tune</span>
+</button>
+</div>
+<div class="flex gap-xs overflow-x-auto pb-xs custom-scrollbar no-scrollbar">
+<button class="flex-shrink-0 px-md py-base bg-primary-container text-on-primary-container rounded-full text-label-md transition-all active:scale-95">Attractions</button>
+<button class="flex-shrink-0 px-md py-base bg-surface-container-low border border-border-subtle text-on-surface-variant rounded-full text-label-md hover:bg-surface-container-high transition-all">Hotels</button>
+<button class="flex-shrink-0 px-md py-base bg-surface-container-low border border-border-subtle text-on-surface-variant rounded-full text-label-md hover:bg-surface-container-high transition-all">Restaurants</button>
+<button class="flex-shrink-0 px-md py-base bg-surface-container-low border border-border-subtle text-on-surface-variant rounded-full text-label-md hover:bg-surface-container-high transition-all">Hidden Gems</button>
+</div>
+</div>
+<!-- List of Results -->
+<div class="flex-grow overflow-y-auto p-md custom-scrollbar space-y-md">
+<!-- Listing Card 1 -->
+<div class="group cursor-pointer rounded-xl overflow-hidden bg-bg-pure border border-border-subtle hover:shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-angle cinematic shot of the Tower Bridge in London during a golden hour sunset. The architecture is bathed in soft orange light, while the Thames river reflects a warm glow. The overall aesthetic is clean, premium, and serene, representing an upscale travel destination." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcmlo1Ey91z-Yv9KW8fBbMiRXtOZl7ySK3HB1QWfQGaR0GcNzmzD41ZzqMD8Xr9DMnfhyxBe0iMKtkLgD5jTBlUAxD4IkHadG-l16CYqJVXe82pJFJQWJtyFGZ2D4Ofiq4HdluznkxkuOxFnEEbyNywKDuR5BXuTJK5z766O28gfaLMbKQAYZGFbZ_UGkAxeJcVb9lcGqjQGGAy8cLPrPCgdelhn0rG3yz71GnuJWFHjuVe60_pHPswJU0r32ApWYSySpKRiJVIs4"/>
+<div class="absolute top-sm right-sm bg-bg-pure/90 backdrop-blur px-sm py-xs rounded-lg shadow-sm">
+<span class="text-label-md text-primary font-bold">£24.00</span>
+</div>
+</div>
+<div class="p-md space-y-xs">
+<div class="flex justify-between items-start">
+<h3 class="text-body-lg font-bold text-text-main">Tower of London</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-md text-text-muted">4.8</span>
+</div>
+</div>
+<p class="text-caption text-text-muted">Historic royal castle on the north bank of the River Thames in central London.</p>
+<div class="flex items-center gap-sm pt-sm">
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Historic</span>
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Landmark</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 2 -->
+<div class="group cursor-pointer rounded-xl overflow-hidden bg-bg-pure border border-border-subtle hover:shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A focused perspective shot of Big Ben and the Westminster clock tower against a clear blue sky. The morning light is crisp and bright, highlighting the intricate Gothic details of the building. The scene feels modern, professional, and captures the iconic energy of central London." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGpF4-AkpHfVxmL3-oelo-Bnc_gDUt8sZ8bcT4wOQvAnyBbkqdmqri3LAUiInM34KZh_fUpffbRn3SkXNNXueJD-AaxIw7cvYOD4JBxe6XH4T2UecOi0UrhtIs9CV_6kdqs8tkfC2H8HMBfFMqFH5QB7xtFEX1XVHQbTAlRgHRPPmRsl5QD8HY4u97hFJCejljNf5Gb-UFt8ktjLf00GM4_FJ-IiS_KzmdhzFO9QbpdLQQpjNzc7TgK5oQOMLAjiThJSDYMtvtiA8"/>
+<div class="absolute top-sm right-sm bg-bg-pure/90 backdrop-blur px-sm py-xs rounded-lg shadow-sm">
+<span class="text-label-md text-primary font-bold">Free</span>
+</div>
+</div>
+<div class="p-md space-y-xs">
+<div class="flex justify-between items-start">
+<h3 class="text-body-lg font-bold text-text-main">Westminster Abbey</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-md text-text-muted">4.9</span>
+</div>
+</div>
+<p class="text-caption text-text-muted">One of the world's great churches, with a history stretching back over a thousand years.</p>
+<div class="flex items-center gap-sm pt-sm">
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Religious</span>
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Museum</span>
+</div>
+</div>
+</div>
+<!-- Listing Card 3 -->
+<div class="group cursor-pointer rounded-xl overflow-hidden bg-bg-pure border border-border-subtle hover:shadow-[0px_4px_20px_rgba(15,23,42,0.05)] transition-all">
+<div class="relative h-48 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A lush landscape photo of Hyde Park in London during early autumn. The trees have vibrant yellow and green leaves, and the Serpentine lake reflects the soft white clouds. The atmosphere is calm, expansive, and natural, contrasting with the urban bustle of the city." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrJO9nxceMHUFD2wzXh8rx9QdxvCJrIjrbKkWYnj9LcpnCRxfgpfqRi3MnZrReZ9C6ZrBhnBcaUYFx2AznOxbQTkV0xwZF96CIvaqANbWYJ9TBxAxpOhUJ2GLpxDHi5V-4ySwecrwmdIpq2sQ_I4GG1gnpajOfm_AcnDp0gZKPYHXuOhxOnJMfC9TCnqayByHVK-2Ur80LggWpBnlAx7LyjFGnVJwMKHWJDhf3oW5JmEl5FFI34GgY00UCJ7WS4xPOlgPTPvlWD4U"/>
+<div class="absolute top-sm right-sm bg-bg-pure/90 backdrop-blur px-sm py-xs rounded-lg shadow-sm">
+<span class="text-label-md text-primary font-bold">Free</span>
+</div>
+</div>
+<div class="p-md space-y-xs">
+<div class="flex justify-between items-start">
+<h3 class="text-body-lg font-bold text-text-main">Hyde Park</h3>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-md text-text-muted">4.7</span>
+</div>
+</div>
+<p class="text-caption text-text-muted">Vast Royal Park with a large lake, meadow &amp; over 4,000 trees.</p>
+<div class="flex items-center gap-sm pt-sm">
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Nature</span>
+<span class="px-sm py-xs bg-surface-container-low text-caption rounded-lg text-text-muted">Outdoor</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Full-screen Map Content -->
+<section class="flex-grow relative bg-[#E5E3DF]">
+<!-- Map Placeholder -->
+<div class="absolute inset-0 grayscale-[0.2] contrast-[0.9] brightness-[1.05]" data-location="London" style="">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist topographical map style image of London. The visual style is inspired by modern digital mapping software with soft grays, muted blues for the river, and clean white lines for major thoroughfares. It has a professional, airy, and high-tech feel suitable for a premium travel application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3HCPX8JWZpVUbwTuTCzXDpgWWfgjX9sFIP4JM2hPH_qdMW5DaVrI_8mJMFae8cCLBigGRtDVmqyXvRdmdixcp-hPdAyqOfo6d6fKRl-hwrpWVAZf7ndjHT7o8nUvIYLsX1LyMxzBgIInLQJG0nKzu071T1DPp4QOgDSPf8jx7OCrxmk5M44I1SCJCZN04XfxpeNjuKOT5XghD_OhME9IhoHDKNcCg2JNRqRveVANx5VQRn1Yg-GtgwE91uVo5qFBBYVHuP3Cf0hU"/>
+</div>
+<!-- Map Overlays: Search & Zoom -->
+<div class="absolute top-md left-md right-md flex justify-between pointer-events-none">
+<div class="flex gap-sm pointer-events-auto">
+<!-- Location Badge -->
+<div class="bg-bg-pure/95 backdrop-blur-md px-md py-sm rounded-xl shadow-[0px_10px_30px_rgba(15,23,42,0.12)] flex items-center gap-sm border border-border-subtle">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span class="text-body-md font-semibold">Central London</span>
+</div>
+</div>
+<div class="flex flex-col gap-sm pointer-events-auto">
+<div class="bg-bg-pure/95 backdrop-blur-md p-xs rounded-xl shadow-[0px_10px_30px_rgba(15,23,42,0.12)] flex flex-col gap-xs border border-border-subtle">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<div class="h-px bg-border-subtle mx-xs"></div>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<button class="w-12 h-12 bg-bg-pure/95 backdrop-blur-md rounded-xl shadow-[0px_10px_30px_rgba(15,23,42,0.12)] flex items-center justify-center border border-border-subtle hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">my_location</span>
+</button>
+</div>
+</div>
+<!-- Map Pins (Interactive elements) -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- Pin 1: Tower of London -->
+<div class="absolute top-1/3 left-1/4 pointer-events-auto group">
+<!-- Pin Container -->
+<div class="relative flex flex-col items-center">
+<!-- Hover Card -->
+<div class="absolute bottom-full mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 w-56 pointer-events-none">
+<div class="bg-bg-pure rounded-xl overflow-hidden shadow-[0px_10px_30px_rgba(15,23,42,0.2)] border border-border-subtle">
+<img class="h-24 w-full object-cover" data-alt="A close-up high-quality photo of the architectural details of the Tower of London. The stone masonry is visible under soft morning light. The image has a clean, expensive feel with professional depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACDmhppLFUkNPqnDphShZ-LlUOFucycDDnsiT0iXQks7d4T5sYFWCguG9hzyptBSLsCBnzDQ5nZYjJjhpG4wemjusjCjvqxGdPSnEI19qF-7RachOYUvlh28S97ctZyYF51vLVR1wd7jbJgEsS3YJYNQMXF1Zk8w3VJbgtKC3lKNcV1djOLUJQoDDPxP5LuVLqzW6l54WI_5mUep8EedYA9owXdzsyB8fa6byj-Wn0LaAoh1BbXDMK93025MQyrMx5Cw_7k7_WL9s"/>
+<div class="p-sm">
+<p class="text-label-md font-bold truncate">Tower of London</p>
+<p class="text-caption text-text-muted">£24.00 · Historic</p>
+</div>
+</div>
+</div>
+<!-- Pin Head -->
+<div class="bg-primary hover:bg-primary-container text-on-primary px-sm py-xs rounded-full shadow-lg cursor-pointer transition-all transform hover:scale-110 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">castle</span>
+<span class="text-label-md font-bold">£24</span>
+</div>
+<!-- Pin Tail -->
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-primary"></div>
+</div>
+</div>
+<!-- Pin 2: Westminster -->
+<div class="absolute bottom-1/3 left-1/2 pointer-events-auto group">
+<div class="relative flex flex-col items-center">
+<div class="absolute bottom-full mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 w-56 pointer-events-none">
+<div class="bg-bg-pure rounded-xl overflow-hidden shadow-[0px_10px_30px_rgba(15,23,42,0.2)] border border-border-subtle">
+<img class="h-24 w-full object-cover" data-alt="A striking photo of Westminster Abbey's facade in London. The intricate stonework and gothic towers are framed by a soft, pale sky. The mood is sophisticated and respectful of historical heritage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT8DiT9zOZzsPUdCWS_fkPrDukC8WI8lH0xVpOJ5DHiEtRL25FGM1ZTmhxl_xX9tVp8IFN9SDWVfvYu356jd2D91CgfBy-B6u-cb5tAN4oI72pS0fB1HV609O6KweoSerpGkjSkcDhhNro3_XUEloIW9ySWu7x9EgH-jCfXY8XW3FG0aRUZ55hcHke95g8ZjPQOpsgS3MihytRHjQ1V8y1sS9s8s0CjxIov1ai_sSHxq-xw84iW0G2l_gJPeH0g2FXOCrn1l_Z42c"/>
+<div class="p-sm">
+<p class="text-label-md font-bold truncate">Westminster Abbey</p>
+<p class="text-caption text-text-muted">Free · Cathedral</p>
+</div>
+</div>
+</div>
+<div class="bg-primary hover:bg-primary-container text-on-primary px-sm py-xs rounded-full shadow-lg cursor-pointer transition-all transform hover:scale-110 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">church</span>
+<span class="text-label-md font-bold">Free</span>
+</div>
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-primary"></div>
+</div>
+</div>
+<!-- Pin 3: Hyde Park -->
+<div class="absolute top-1/4 right-1/4 pointer-events-auto group">
+<div class="relative flex flex-col items-center">
+<div class="absolute bottom-full mb-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 w-56 pointer-events-none">
+<div class="bg-bg-pure rounded-xl overflow-hidden shadow-[0px_10px_30px_rgba(15,23,42,0.2)] border border-border-subtle">
+<img class="h-24 w-full object-cover" data-alt="A bright and airy photo of Hyde Park's greenery and the Serpentine lake. The sun is shining, creating high-contrast shadows and highlights. The aesthetic is modern, natural, and inviting for outdoor enthusiasts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT0Fm4e-t65UbpePgRj9HzgqspT2H78IymivXmhYbcB6aG_mwro19quzLrnxN4Vosfu0kc7p8TcxV7JPEq0YUcicAD8x1sFnGU1iFd-2QPzjpQ1C5JthgmxRhsT-wTWOqx_HJlMmD5fefHcM2Io5odqXh--jTaTD5RcmJxAPDGLKS_GD8XfV090ibl-E8tydEqxBLOvL9SCKPOqADXOTtKrPLSRSLpncQC6zG9aDpD3UJ6IRj64gbpb7Az22aW_9Co2FWG9g6tKvM"/>
+<div class="p-sm">
+<p class="text-label-md font-bold truncate">Hyde Park</p>
+<p class="text-caption text-text-muted">Free · Nature</p>
+</div>
+</div>
+</div>
+<div class="bg-primary hover:bg-primary-container text-on-primary px-sm py-xs rounded-full shadow-lg cursor-pointer transition-all transform hover:scale-110 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">park</span>
+<span class="text-label-md font-bold">Free</span>
+</div>
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-primary"></div>
+</div>
+</div>
+<!-- Pin 4: Hidden Gem -->
+<div class="absolute bottom-1/4 right-1/3 pointer-events-auto group">
+<div class="relative flex flex-col items-center">
+<div class="bg-secondary-container hover:bg-secondary text-on-secondary-container px-sm py-xs rounded-full shadow-lg cursor-pointer transition-all transform hover:scale-110 flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="text-label-md font-bold">Leadenhall Market</span>
+</div>
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-secondary-container"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Floating Action -->
+<div class="absolute bottom-md left-1/2 -translate-x-1/2 flex items-center gap-sm">
+<button class="bg-inverse-surface text-inverse-on-surface px-md py-sm rounded-full shadow-xl flex items-center gap-sm hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">map</span>
+<span class="text-label-md">Toggle List</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Interactive Map Script (Mock) -->
+<script>
+        // Simple micro-interactions for UI feedback
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.add('scale-95');
+                setTimeout(() => this.classList.remove('scale-95'), 100);
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('ring-2', 'ring-primary-container');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('ring-2', 'ring-primary-container');
+        });
+    </script>
+</body></html>
