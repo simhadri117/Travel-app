@@ -3,7 +3,8 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC-DRPpZ02gfADJdPaPwoQiJ9IW1lTvtT0",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+}
   authDomain: "travelsphere-ai-46777.firebaseapp.com",
   projectId: "travelsphere-ai-46777",
   storageBucket: "travelsphere-ai-46777.firebasestorage.app",
