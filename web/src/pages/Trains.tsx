@@ -317,19 +317,19 @@ export default function Trains() {
       <div className="flex gap-4 border-b border-slate-100 pb-2.5 text-xs font-bold">
         <button 
           onClick={() => { setActiveTab('book'); setStep('search'); }}
-          className={`pb-2 transition-all ${activeTab === 'book' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
+          className={`pb-2 transition-all ${activeTab === 'book' ? 'text-primary border-b-2 border-primary' : 'text-slate-500 hover:text-slate-600'}`}
         >
           Book Train Tickets
         </button>
         <button 
           onClick={() => setActiveTab('pnr')}
-          className={`pb-2 transition-all ${activeTab === 'pnr' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
+          className={`pb-2 transition-all ${activeTab === 'pnr' ? 'text-primary border-b-2 border-primary' : 'text-slate-500 hover:text-slate-600'}`}
         >
           PNR Status Check
         </button>
         <button 
           onClick={() => setActiveTab('status')}
-          className={`pb-2 transition-all ${activeTab === 'status' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-655'}`}
+          className={`pb-2 transition-all ${activeTab === 'status' ? 'text-primary border-b-2 border-primary' : 'text-slate-500 hover:text-slate-600'}`}
         >
           Live Train Running Status
         </button>
@@ -359,7 +359,7 @@ export default function Trains() {
                     <div className="md:col-span-4 relative flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100/80 transition-colors group cursor-pointer">
                       <MapPin size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
                       <div className="flex flex-col flex-grow min-w-0">
-                        <span className="text-[9px] font-bold text-slate-405 uppercase tracking-wider">From Station</span>
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">From Station</span>
                         <input
                           type="text"
                           placeholder="Search city or station..."
@@ -433,7 +433,7 @@ export default function Trains() {
                     <div className="md:col-span-4 relative flex items-center gap-3 px-4 py-2 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-slate-100/80 transition-colors group cursor-pointer">
                       <MapPin size={16} className="text-slate-400 group-hover:text-primary transition-colors" />
                       <div className="flex flex-col flex-grow min-w-0">
-                        <span className="text-[9px] font-bold text-slate-405 uppercase tracking-wider">To Station</span>
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider">To Station</span>
                         <input
                           type="text"
                           placeholder="Search destination..."
@@ -782,7 +782,7 @@ export default function Trains() {
               
               <div>
                 <h2 className="text-lg font-bold text-slate-900">Train Ticket Booked!</h2>
-                <p className="text-slate-405 text-xs mt-1">Your IRCTC simulated ticket has been successfully registered.</p>
+                <p className="text-slate-500 text-xs mt-1">Your IRCTC simulated ticket has been successfully registered.</p>
               </div>
 
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-left space-y-2 font-mono text-slate-700">
@@ -808,7 +808,7 @@ export default function Trains() {
                 </div>
                 <div className="border-t border-slate-200/50 pt-1.5">
                   <span className="text-slate-400 font-sans font-semibold block mb-1">Berth Assignments</span>
-                  <ul className="space-y-1 font-sans text-[11px] font-semibold text-slate-655 pl-2">
+                  <ul className="space-y-1 font-sans text-[11px] font-semibold text-slate-600 pl-2">
                     {bookingConfirmation.passengers.map((p: any, idx: number) => (
                       <li key={idx} className="flex justify-between">
                         <span>Passenger {idx + 1}: {p.name}</span>

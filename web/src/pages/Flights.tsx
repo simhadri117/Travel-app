@@ -266,7 +266,7 @@ export default function Flights() {
                     <select 
                       value={cabin} 
                       onChange={e => setCabin(e.target.value)} 
-                      className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-855 w-full cursor-pointer"
+                      className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full cursor-pointer"
                     >
                       <option>Economy</option>
                       <option>Business</option>
@@ -290,7 +290,7 @@ export default function Flights() {
                         setPassengersCount(val);
                         setPassengersDetails(Array.from({ length: val }, (_, i) => passengersDetails[i] || { name: '', age: '', gender: 'Male', id_type: 'Aadhaar', id_number: '' }));
                       }}
-                      className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-855 w-full" 
+                      className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full" 
                       required 
                     />
                   </div>
@@ -322,8 +322,8 @@ export default function Flights() {
                       {deal.logo}
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-slate-905">{deal.fromCity} ({deal.fromCode}) → {deal.toCity} ({deal.toCode})</h4>
-                      <p className="text-[10px] text-slate-400">{deal.airline} • {deal.type}</p>
+                      <h4 className="text-xs font-bold text-slate-900">{deal.fromCity} ({deal.fromCode}) → {deal.toCity} ({deal.toCode})</h4>
+                      <p className="text-[10px] text-slate-500">{deal.airline} • {deal.type}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -572,7 +572,7 @@ export default function Flights() {
               </div>
               <div>
                 <p className="font-bold text-xs text-slate-900">Travel Protection</p>
-                <p className="text-[9px] text-slate-405">Covers delays, loss & medical services</p>
+                <p className="text-[9px] text-slate-500">Covers delays, loss & medical services</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -715,7 +715,7 @@ export default function Flights() {
 
           <div>
             <h2 className="text-lg font-bold text-slate-900">Booking Confirmed!</h2>
-            <p className="text-slate-405 text-xs mt-1">Your e-ticket has been generated successfully.</p>
+            <p className="text-slate-500 text-xs mt-1">Your e-ticket has been generated successfully.</p>
           </div>
 
           <div className="bg-slate-50 rounded-2xl p-4 text-left space-y-2 text-xs font-mono border border-slate-100 text-slate-700">

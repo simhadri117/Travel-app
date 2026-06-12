@@ -218,7 +218,7 @@ export default function Hotels() {
                   max={10}
                   value={guests}
                   onChange={(e) => setGuests(Number(e.target.value))}
-                  className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-855 w-full"
+                  className="bg-transparent border-none p-0 focus:ring-0 text-xs font-semibold text-slate-800 w-full"
                   required
                 />
               </div>
@@ -275,7 +275,7 @@ export default function Hotels() {
                   <h3 className="font-bold text-xs text-slate-900 group-hover:text-primary transition-colors leading-tight truncate">{hotel.name}</h3>
                   <span className="text-xs font-extrabold text-primary flex-shrink-0">
                     ₹{hotel.price_per_night?.toLocaleString('en-IN')}
-                    <span className="text-[9px] font-normal text-slate-405">/night</span>
+                    <span className="text-[9px] font-normal text-slate-400">/night</span>
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1 leading-none"><MapPin size={10} className="text-slate-300" /> {city}</p>
@@ -298,7 +298,7 @@ export default function Hotels() {
           <div className="w-full max-w-lg bg-white border border-slate-100 rounded-3xl p-6 space-y-6 shadow-2xl relative animate-scale-in">
             <button
               onClick={() => setSelectedHotel(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-655 font-bold"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 font-bold"
             >
               ✕
             </button>
@@ -310,7 +310,7 @@ export default function Hotels() {
               </div>
             </div>
             <div className="space-y-4 text-xs text-slate-600">
-              <p className="leading-relaxed font-medium text-slate-505">{selectedHotel.description || 'Experience ultimate luxury and unparalleled comfort in this premium curated property, offering world-class amenities and stellar services.'}</p>
+              <p className="leading-relaxed font-medium text-slate-500">{selectedHotel.description || 'Experience ultimate luxury and unparalleled comfort in this premium curated property, offering world-class amenities and stellar services.'}</p>
               
               <div className="space-y-1.5">
                 <p className="font-bold text-slate-900 uppercase tracking-wider text-[9px]">What this place offers:</p>
@@ -354,15 +354,15 @@ export default function Hotels() {
 
             <div className="space-y-4 text-xs">
               {/* Hotel Summary */}
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1.5 text-slate-705">
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-1.5 text-slate-700">
                 <p className="font-extrabold text-slate-800 leading-tight">{selectedHotel.name}</p>
-                <p className="text-[10px] text-slate-405 font-semibold">Check-in: {checkIn} | Check-out: {checkOut}</p>
+                <p className="text-[10px] text-slate-400 font-semibold">Check-in: {checkIn} | Check-out: {checkOut}</p>
                 <p className="text-primary font-bold text-xs pt-1 border-t border-slate-200/50 mt-1">Total Stay Fare: ₹{(selectedHotel.price_per_night * guests).toLocaleString('en-IN')}</p>
               </div>
 
               {/* Guest Details */}
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold text-slate-405 uppercase tracking-wider block">Lead Guest Details</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Lead Guest Details</label>
                 <input
                   type="text"
                   placeholder="Guest Full Name"
@@ -375,7 +375,7 @@ export default function Hotels() {
 
               {/* Payment Methods */}
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-slate-405 uppercase tracking-wider block">Select Payment Gateway</label>
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Select Payment Gateway</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"

@@ -1139,7 +1139,7 @@ export default function Maps() {
                       userAccuracyCircleRef.current = null;
                     }
                   }}
-                  className="text-[10px] text-slate-455 hover:text-slate-655 font-extrabold"
+                  className="text-[10px] text-slate-500 hover:text-slate-700 font-extrabold"
                 >
                   Clear GPS
                 </button>
@@ -1189,7 +1189,7 @@ export default function Maps() {
               <select
                 value={sortBy}
                 onChange={(e: any) => setSortBy(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-black text-slate-650 focus:outline-none focus:ring-1 focus:ring-blue-500 flex-shrink-0"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-[10px] font-black text-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500 flex-shrink-0"
               >
                 <option value="distance">📍 Distance</option>
                 <option value="rating">⭐ Rating</option>
@@ -1451,7 +1451,7 @@ export default function Maps() {
                   <div className="space-y-1.5 max-h-36 overflow-y-auto no-scrollbar font-mono text-[9px]">
                     {navigationPath.map((step, idx) => (
                       <div key={idx} className="flex justify-between items-start bg-slate-50 border border-slate-100 p-2 rounded-xl gap-2">
-                        <span className="text-slate-650 leading-relaxed">{idx + 1}. {step.step}</span>
+                        <span className="text-slate-600 leading-relaxed">{idx + 1}. {step.step}</span>
                         <span className="text-blue-600 font-bold font-sans flex-shrink-0 mt-0.5">{step.dist}</span>
                       </div>
                     ))}

@@ -295,7 +295,7 @@ export default function Trips() {
               className={`text-sm font-bold pb-2 transition-all relative ${
                 activeTab === 'upcoming' 
                   ? 'text-primary border-b-2 border-primary' 
-                  : 'text-slate-400 hover:text-slate-650'
+                  : 'text-slate-500 hover:text-slate-600'
               }`}
             >
               Upcoming Trips
@@ -305,7 +305,7 @@ export default function Trips() {
               className={`text-sm font-bold pb-2 transition-all relative ${
                 activeTab === 'past' 
                   ? 'text-primary border-b-2 border-primary' 
-                  : 'text-slate-400 hover:text-slate-655'
+                  : 'text-slate-500 hover:text-slate-600'
               }`}
             >
               Past Journeys
@@ -418,7 +418,7 @@ export default function Trips() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
               <span className="text-[10px] font-black text-white/95 bg-primary/80 px-2 py-0.5 rounded-full w-fit mb-2 uppercase tracking-widest shadow-sm">Premium Route</span>
               <h1 className="text-2xl sm:text-3xl font-black text-white">{activeDetailedTrip.name}</h1>
-              <p className="text-xs text-slate-205 font-semibold flex items-center gap-1.5 mt-1.5">
+              <p className="text-xs text-slate-200 font-semibold flex items-center gap-1.5 mt-1.5">
                 <MapPin size={12} className="text-primary-fixed-dim" /> {activeDetailedTrip.destination}
                 <span className="text-slate-500">•</span>
                 <Calendar size={12} className="text-primary-fixed-dim" /> {new Date(activeDetailedTrip.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {new Date(activeDetailedTrip.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -884,10 +884,10 @@ export default function Trips() {
                       <p className="text-xs text-slate-400 italic py-4">No manual expenses logged yet.</p>
                     ) : (
                       activeDetailedTrip.expense_logs?.map((e: any) => (
-                        <div key={e.id} className="flex justify-between items-center text-xs text-slate-655 bg-slate-50 border border-slate-50 p-2.5 rounded-xl">
+                        <div key={e.id} className="flex justify-between items-center text-xs text-slate-600 bg-slate-50 border border-slate-50 p-2.5 rounded-xl">
                           <div>
                             <p className="font-bold text-slate-800 capitalize">{e.category}</p>
-                            {e.note && <p className="text-[10px] text-slate-400 italic mt-0.5">{e.note}</p>}
+                            {e.note && <p className="text-[10px] text-slate-500 italic mt-0.5">{e.note}</p>}
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-slate-850">₹{e.amount}</span>
@@ -975,7 +975,7 @@ export default function Trips() {
                     placeholder="Add custom checklist item..."
                     value={newChecklistItem}
                     onChange={(e) => setNewChecklistItem(e.target.value)}
-                    className="flex-grow bg-slate-50 text-slate-855 font-bold placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs"
+                    className="flex-grow bg-slate-50 text-slate-800 font-bold placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs"
                     required
                   />
                   <button type="submit" className="border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-xl px-4 py-2 text-xs font-bold transition-all shadow-sm">
@@ -1019,7 +1019,7 @@ export default function Trips() {
                       placeholder="Type planning notes..."
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
-                      className="flex-grow bg-slate-50 text-slate-855 font-bold placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs"
+                      className="flex-grow bg-slate-50 text-slate-800 font-bold placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs"
                       required
                     />
                     <button type="submit" className="bg-primary text-white rounded-xl px-5 py-2 text-xs font-bold shadow-sm transition-all hover:bg-primary/95">
@@ -1081,7 +1081,7 @@ export default function Trips() {
           <form onSubmit={handleCreateTrip} className="w-full max-w-md bg-white border border-slate-100 rounded-[28px] p-6 space-y-6 shadow-2xl animate-scale-in">
             <div className="flex justify-between items-center border-b border-slate-100 pb-3">
               <h3 className="font-black text-slate-800 text-sm sm:text-base uppercase tracking-wider">Create a New Trip</h3>
-              <button type="button" onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-655 font-bold">✕</button>
+              <button type="button" onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600 font-bold">✕</button>
             </div>
 
             <div className="space-y-4">

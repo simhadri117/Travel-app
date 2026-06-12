@@ -368,7 +368,7 @@ export default function Home() {
               onClick={() => setActiveStory(story)}
               className="flex-shrink-0 flex flex-col items-center gap-2 group"
             >
-              <div className="w-16 h-16 rounded-full p-[3px] bg-gradient-to-tr from-brand-500 to-pink-505 shadow-md group-hover:scale-105 transition-all duration-300">
+              <div className="w-16 h-16 rounded-full p-[3px] bg-gradient-to-tr from-brand-500 to-pink-500 shadow-md group-hover:scale-105 transition-all duration-300">
                 <img
                   src={story.avatar}
                   alt={story.name}

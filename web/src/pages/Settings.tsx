@@ -332,7 +332,7 @@ export default function Settings() {
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Profile Photo URL</label>
               <input 
                 type="text" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)}
-                className="w-full bg-slate-50 text-slate-805 font-mono placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs" 
+                className="w-full bg-slate-50 text-slate-800 font-mono placeholder-slate-400 px-4 py-2.5 rounded-xl border-0 focus:ring-1 focus:ring-primary focus:outline-none text-xs" 
               />
             </div>
 
