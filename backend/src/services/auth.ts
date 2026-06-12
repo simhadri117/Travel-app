@@ -54,7 +54,11 @@ export async function verifyFirebaseIdToken(idToken: string): Promise<{ uid: str
 
   // 2. Fallback: call the Google Identity Toolkit REST API which verifies the ID token's validity
   // using Google's public certificates. This is secure and works without a service account JSON.
-  const firebaseApiKey = process.env.FIREBASE_API_KEY || 'AIzaSyC-DRPpZ02gfADJdPaPwoQiJ9IW1lTvtT0';
+ const firebaseApiKey = process.env.FIREBASE_API_KEY;
+
+if (!firebaseApiKey) {
+  throw new Error("FIREBASE_API_KEY missing");
+}
   const url = `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseApiKey}`;
   const response = await axios.post(url, { idToken });
   const user = response.data.users?.[0];
