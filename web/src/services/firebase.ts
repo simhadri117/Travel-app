@@ -1,10 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-}
   authDomain: "travelsphere-ai-46777.firebaseapp.com",
   projectId: "travelsphere-ai-46777",
   storageBucket: "travelsphere-ai-46777.firebasestorage.app",
@@ -16,6 +15,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export Auth services
+// Export Auth
 export const auth = getAuth(app);
+
 export default app;
