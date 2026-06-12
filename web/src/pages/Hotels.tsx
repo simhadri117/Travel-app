@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { createBooking } from '../services/firestore';
 import { useAuthStore } from '../store/useAuthStore';
 import { Search, Star, MapPin, Building, ShieldCheck, Check, Loader, User, CreditCard, Sparkles, Calendar, Users, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -87,16 +88,30 @@ export default function Hotels() {
         await api.post('/payment/stripe-intent', { amount: selectedHotel.price_per_night * guests });
       }
 
+      const totalPaid = selectedHotel.price_per_night * guests;
       const res = await api.post('/hotels/book', {
         hotel_details: selectedHotel,
         passengers,
         check_in: checkIn,
         check_out: checkOut,
-        amount_paid: selectedHotel.price_per_night * guests,
+        amount_paid: totalPaid,
         payment_id: `pay_mock_${Math.random().toString(36).substring(2, 12).toUpperCase()}`
       });
 
       if (res.data.success) {
+        // Sync hotel booking to Firestore
+        try {
+          await createBooking({
+            booking_type: 'hotel',
+            booking_reference: res.data.data.booking_reference,
+            amount_paid: res.data.data.amount_paid || totalPaid,
+            journey_details: res.data.data.journey_details || { ...selectedHotel, checkIn, checkOut, city },
+            status: 'confirmed'
+          });
+        } catch (fsErr) {
+          console.error('[Firestore Hotel Booking Sync Failed]:', fsErr);
+        }
+
         setSuccessBooking(res.data.data);
         confetti({ particleCount: 100, spread: 60 });
       }

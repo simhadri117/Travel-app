@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { createBooking } from '../services/firestore';
 import {
   Plane, Calendar, Users, ArrowRight, ArrowLeftRight,
   ShieldCheck, CheckCircle, Download, ChevronDown, ChevronUp,
@@ -117,7 +118,23 @@ export default function Flights() {
           amount_paid: totalAmount,
           payment_id: intentData.client_secret || `pay_stripe_${Math.random().toString(36).substring(2, 10)}`
         });
-        if (resBook.data.success) { setBookingConfirmation(resBook.data.data); setStep('ticket'); }
+        if (resBook.data.success) {
+          // Sync flight booking to Firestore
+          try {
+            await createBooking({
+              booking_type: 'flight',
+              booking_reference: resBook.data.data.booking_reference,
+              amount_paid: resBook.data.data.amount_paid || totalAmount,
+              journey_details: resBook.data.data.journey_details || { ...selectedFlight, date },
+              status: 'confirmed'
+            });
+          } catch (fsErr) {
+            console.error('[Firestore Flight Booking Sync Failed]:', fsErr);
+          }
+
+          setBookingConfirmation(resBook.data.data);
+          setStep('ticket');
+        }
       }
     } catch {}
   };

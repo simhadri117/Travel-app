@@ -79,9 +79,9 @@ router.get('/itinerary/place-photo', async (req, res) => {
     res.setHeader('Cache-Control', 'public, max-age=86400');
     response.data.pipe(res);
   } catch {
-    // Fallback to Picsum seed URL
+    // Fallback to Unsplash Featured dynamic photo matching keywords
     const query = (req.query.name as string) || (req.query.destination as string) || 'travel';
-    const fallbackUrl = `https://picsum.photos/seed/${encodeURIComponent(query)}/800/500`;
+    const fallbackUrl = `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(query)}`;
     res.redirect(fallbackUrl);
   }
 });

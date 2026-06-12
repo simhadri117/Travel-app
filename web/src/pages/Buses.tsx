@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { createBooking } from '../services/firestore';
 import { 
   Bus, Calendar, Users, Star, MapPin, 
   CheckCircle, ArrowRight, Shield, RefreshCw, Download,
@@ -130,6 +131,26 @@ export default function Buses() {
         });
 
         if (resBook.data.success) {
+          // Sync bus booking to Firestore
+          try {
+            await createBooking({
+              booking_type: 'bus',
+              booking_reference: resBook.data.data.booking_reference,
+              amount_paid: resBook.data.data.amount_paid || totalPrice,
+              journey_details: resBook.data.data.journey_details || {
+                ...selectedBus,
+                date,
+                source,
+                destination,
+                boarding_point: selectedBoardingPoint,
+                dropping_point: selectedDroppingPoint
+              },
+              status: 'confirmed'
+            });
+          } catch (fsErr) {
+            console.error('[Firestore Bus Booking Sync Failed]:', fsErr);
+          }
+
           setBookingConfirmation(resBook.data.data);
           setStep('ticket');
         }

@@ -4,6 +4,8 @@ import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
 import { Loader, Camera, Check } from 'lucide-react';
 
+import { setUserProfile } from '../services/firestore';
+
 const PRESET_AVATARS = [
   'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150',
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
@@ -63,6 +65,19 @@ export default function Onboard() {
       });
 
       if (res.data.success) {
+        // Sync user profile to Firestore
+        try {
+          await setUserProfile({
+            name,
+            email: auth.user?.email || '',
+            profile_photo_url: avatar,
+            home_city: homeCity,
+            travel_preferences: selectedThemes
+          });
+        } catch (fsErr) {
+          console.error('[Firestore Onboarding Sync Failed]:', fsErr);
+        }
+
         auth.updateUser(res.data.data);
         navigate('/');
       } else {

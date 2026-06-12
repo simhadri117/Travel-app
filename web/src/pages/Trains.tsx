@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { createBooking } from '../services/firestore';
 import { 
   Train, Calendar, Users, Briefcase, Search, 
   MapPin, CheckCircle, Clock, AlertTriangle, Download, Mic, ArrowLeftRight, Plane, Building, Bus, Star, Check
@@ -232,6 +233,19 @@ export default function Trains() {
         });
 
         if (resBook.data.success) {
+          // Sync train booking to Firestore
+          try {
+            await createBooking({
+              booking_type: 'train',
+              booking_reference: resBook.data.data.booking_reference,
+              amount_paid: resBook.data.data.amount_paid || totalPrice,
+              journey_details: resBook.data.data.journey_details || { ...selectedTrain, class_name: selectedClass.class_name, date },
+              status: 'confirmed'
+            });
+          } catch (fsErr) {
+            console.error('[Firestore Train Booking Sync Failed]:', fsErr);
+          }
+
           setBookingConfirmation(resBook.data.data);
           setStep('ticket');
         }

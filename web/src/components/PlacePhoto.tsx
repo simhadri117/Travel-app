@@ -28,20 +28,22 @@ export default function PlacePhoto({
   fallbackCategory = 'attraction',
 }: PlacePhotoProps) {
   const [src, setSrc] = useState<string>(() => {
-    // Priority 1: pre-resolved photo_url from backend
-    if (photoUrl) return photoUrl;
+    // Priority 1: pre-resolved photo_url from backend (ensure it is not a picsum placeholder)
+    if (photoUrl && !photoUrl.includes('picsum.photos')) return photoUrl;
     // Priority 2: proxy via our backend using photo_reference
     if (photoReference) return `${API_BASE}/itinerary/place-photo?ref=${encodeURIComponent(photoReference)}&name=${encodeURIComponent(placeName)}&destination=${encodeURIComponent(destination)}`;
-    // Priority 3: Picsum seeded photo fallback
-    return `https://picsum.photos/seed/${encodeURIComponent(placeName || destination)}/800/500`;
+    // Priority 3: Unsplash dynamic featured photo matching keywords
+    const keywords = `${placeName},${destination},${FALLBACK_TOPICS[fallbackCategory] || 'travel'}`;
+    return `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(keywords)}`;
   });
   const [fallbackLevel, setFallbackLevel] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
   const handleError = () => {
-    if (fallbackLevel === 0 && (photoReference || photoUrl)) {
-      // Try Picsum fallback
-      setSrc(`https://picsum.photos/seed/${encodeURIComponent(placeName || destination)}/800/500`);
+    if (fallbackLevel === 0) {
+      // Try simpler keywords
+      const keywords = `${fallbackCategory},${destination},travel`;
+      setSrc(`https://images.unsplash.com/featured/800x500/?${encodeURIComponent(keywords)}`);
       setFallbackLevel(1);
     } else {
       // Final fallback: standard static Unsplash travel photo

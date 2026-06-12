@@ -5,6 +5,7 @@ import { api } from '../services/api';
 import { Phone, Shield, ArrowRight, Sparkles, Globe, Star, MapPin } from 'lucide-react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import { getUserProfile, setUserProfile } from '../services/firestore';
 
 const FEATURES = [
   { icon: '✈️', text: 'Book flights, trains & buses' },
@@ -35,6 +36,24 @@ export default function Login() {
       const res = await api.post('/auth/google', { idToken });
       
       if (res.data.success) {
+        // Sync user profile to Firestore
+        try {
+          const profile = await getUserProfile(result.user.uid);
+          if (!profile && res.data.data.user) {
+            await setUserProfile({
+              name: res.data.data.user.name || result.user.displayName || 'Traveler',
+              email: res.data.data.user.email || result.user.email || '',
+              phone: res.data.data.user.phone || result.user.phoneNumber || '',
+              profile_photo_url: res.data.data.user.profile_photo_url || result.user.photoURL || '',
+              bio: res.data.data.user.bio || '',
+              home_city: res.data.data.user.home_city || 'Delhi',
+              travel_preferences: res.data.data.user.travel_preferences || []
+            });
+          }
+        } catch (fsErr) {
+          console.error('[Firestore Login Profile Sync Failed]:', fsErr);
+        }
+
         login(res.data.data.token, res.data.data.user);
         navigate(res.data.data.user?.name ? '/' : '/onboard');
       } else {

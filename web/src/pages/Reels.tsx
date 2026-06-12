@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuthStore } from '../store/useAuthStore';
+import { 
+  getReels, createReel, updateReel, addReelComment, 
+  createFavorite, deleteFavorite, getFavorites 
+} from '../services/firestore';
 import {
   Heart, MessageCircle, Volume2, VolumeX, Share2, Bookmark, Send, X, Music2,
   Star, MapPin, Sparkles, Building, Utensils, Compass, Calendar, Award, Check
@@ -123,26 +127,96 @@ const formatNum = (n: number) => n >= 1000 ? (n / 1000).toFixed(1) + 'K' : n.toS
 
 export default function Reels() {
   const navigate = useNavigate();
-  const { isAuthenticated, openAuthModal } = useAuthStore();
-  const [reels, setReels] = useState<any[]>(REELS_DATA);
+  const { user, isAuthenticated, openAuthModal } = useAuthStore();
+  const [reels, setReels] = useState<any[]>([]);
   const [muted, setMuted] = useState(true);
   const [commentReel, setCommentReel] = useState<any>(null);
-  const [comments, setComments] = useState<any[]>([
-    { id: '1', user: 'Arjun', text: 'This looks absolute magic! 🔥' },
-    { id: '2', user: 'Simran', text: 'On my bucket list for sure! 😍' },
-    { id: '3', user: 'Neil', text: 'Which camera was this shot on?' },
-  ]);
+  const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState('');
   const [heartAnim, setHeartAnim] = useState<Record<string, boolean>>({});
   
   // Track active reel currently in view
-  const [activeReelId, setActiveReelId] = useState(reels[0].id);
+  const [activeReelId, setActiveReelId] = useState(reels[0]?.id || 'reel_1');
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Load and seed reels from Firestore
+  useEffect(() => {
+    const initReels = async () => {
+      try {
+        let dbReels = await getReels();
+        if (dbReels.length === 0) {
+          console.log('[Reels Migration] Firestore reels collection is empty. Seeding from REELS_DATA...');
+          // Seed mock reels
+          const seedPromises = REELS_DATA.map(async (r) => {
+            const created = await createReel({
+              videoUrl: r.video,
+              caption: r.caption,
+              author: r.author,
+              handle: r.handle,
+              avatar: r.avatar,
+              likes_count: r.likes,
+              comments_count: r.comments,
+              music: r.music,
+              comments: [
+                { id: '1', user: 'Arjun', text: 'This looks absolute magic! 🔥' },
+                { id: '2', user: 'Simran', text: 'On my bucket list for sure! 😍' },
+                { id: '3', user: 'Neil', text: 'Which camera was this shot on?' }
+              ]
+            });
+            return created;
+          });
+          await Promise.all(seedPromises);
+          dbReels = await getReels();
+        }
+        
+        // Fetch user favorites to check saved reels
+        let bookmarkedIds: string[] = [];
+        if (isAuthenticated) {
+          try {
+            const favs = await getFavorites();
+            bookmarkedIds = favs.filter(f => f.targetType === 'reel').map(f => f.targetId);
+          } catch (favErr) {
+            console.error('Error fetching favorites for reels:', favErr);
+          }
+        }
+
+        const mapped = dbReels.map(r => ({
+          id: r.id,
+          author: r.author,
+          handle: r.handle,
+          avatar: r.avatar,
+          caption: r.caption,
+          video: r.videoUrl,
+          likes: r.likes_count || 0,
+          comments: r.comments_count || 0,
+          saves: r.saves ?? 850,
+          music: r.music,
+          liked: false,
+          saved: bookmarkedIds.includes(r.id || ''),
+          dbComments: r.comments || []
+        }));
+        setReels(mapped);
+        if (mapped.length > 0) {
+          setActiveReelId(mapped[0].id);
+        }
+      } catch (err) {
+        console.error('Failed to load reels from Firestore:', err);
+      }
+    };
+    initReels();
+  }, [isAuthenticated]);
+
+  // Sync comments list when commentReel changes
+  useEffect(() => {
+    if (commentReel) {
+      setComments(commentReel.dbComments || []);
+    }
+  }, [commentReel]);
 
   // Setup scroll observer
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || reels.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -170,7 +244,7 @@ export default function Reels() {
     };
   }, [reels]);
 
-  const handleLike = (id: string, doubleTap = false) => {
+  const handleLike = async (id: string, doubleTap = false) => {
     if (!isAuthenticated) {
       openAuthModal({
         title: 'Like Reel',
@@ -181,17 +255,31 @@ export default function Reels() {
       });
       return;
     }
+
+    const targetReel = reels.find(r => r.id === id);
+    if (!targetReel) return;
+
+    const newLiked = !targetReel.liked;
+    const newLikesCount = newLiked ? targetReel.likes + 1 : targetReel.likes - 1;
+
     setReels(r => r.map(reel => reel.id === id
-      ? { ...reel, liked: !reel.liked, likes: reel.liked ? reel.likes - 1 : reel.likes + 1 }
+      ? { ...reel, liked: newLiked, likes: newLikesCount }
       : reel
     ));
+
     if (doubleTap) {
       setHeartAnim(p => ({ ...p, [id]: true }));
       setTimeout(() => setHeartAnim(p => ({ ...p, [id]: false })), 800);
     }
+
+    try {
+      await updateReel(id, { likes_count: newLikesCount });
+    } catch (err) {
+      console.error('[Firestore Like Reel Failed]:', err);
+    }
   };
 
-  const handleSave = (id: string) => {
+  const handleSave = async (id: string) => {
     if (!isAuthenticated) {
       openAuthModal({
         title: 'Save Reel',
@@ -202,12 +290,36 @@ export default function Reels() {
       });
       return;
     }
-    setReels(r => r.map(reel => reel.id === id ? { ...reel, saved: !reel.saved } : reel));
+
+    const targetReel = reels.find(r => r.id === id);
+    if (!targetReel) return;
+
+    const newSaved = !targetReel.saved;
+    setReels(r => r.map(reel => reel.id === id ? { ...reel, saved: newSaved } : reel));
+
+    try {
+      if (newSaved) {
+        await createFavorite({
+          targetId: id,
+          targetType: 'reel',
+          name: targetReel.caption || 'Travel Reel',
+          imageUrl: targetReel.avatar || ''
+        });
+      } else {
+        const favs = await getFavorites();
+        const targetFav = favs.find(f => f.targetId === id && f.targetType === 'reel');
+        if (targetFav && targetFav.id) {
+          await deleteFavorite(targetFav.id);
+        }
+      }
+    } catch (err) {
+      console.error('[Firestore Save Reel Favorite Failed]:', err);
+    }
   };
 
-  const postComment = (e: React.FormEvent) => {
+  const postComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || !commentReel) return;
     if (!isAuthenticated) {
       openAuthModal({
         title: 'Comment on Reel',
@@ -218,10 +330,29 @@ export default function Reels() {
       });
       return;
     }
-    setComments(c => [...c, { id: Date.now().toString(), user: 'Me', text: newComment }]);
+
+    const commentObj = {
+      id: Date.now().toString(),
+      user: user?.name || 'Explorer',
+      text: newComment
+    };
+
+    setComments(c => [...c, commentObj]);
     setNewComment('');
-    if (commentReel) {
-      setReels(r => r.map(reel => reel.id === commentReel.id ? { ...reel, comments: reel.comments + 1 } : reel));
+    
+    setReels(r => r.map(reel => reel.id === commentReel.id 
+      ? { 
+          ...reel, 
+          comments: reel.comments + 1, 
+          dbComments: [...(reel.dbComments || []), commentObj] 
+        } 
+      : reel
+    ));
+
+    try {
+      await addReelComment(commentReel.id, commentObj);
+    } catch (err) {
+      console.error('[Firestore Post Comment Failed]:', err);
     }
   };
 

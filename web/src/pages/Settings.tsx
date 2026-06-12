@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { updateUserProfile, runFirebaseAudit, firestoreAuditStats, triggerSimulatedFailure } from '../services/firestore';
 import { 
   User as UserIcon, Settings as SettingsIcon, Shield, 
   Users, Info, Check, Trash, Plus, Save, Compass,
@@ -24,8 +25,8 @@ export default function Settings() {
   const auth = useAuthStore();
   const { user, openAuthModal, isAuthenticated } = auth;
 
-  // Active section tab: 'passport' | 'profile' | 'passengers' | 'about'
-  const [activeSec, setActiveSec] = useState<'passport' | 'profile' | 'passengers' | 'about'>('passport');
+  // Active section tab: 'passport' | 'profile' | 'passengers' | 'about' | 'firebase-report'
+  const [activeSec, setActiveSec] = useState<'passport' | 'profile' | 'passengers' | 'about' | 'firebase-report'>('passport');
 
   // Profile forms
   const [name, setName] = useState(user?.name || '');
@@ -42,6 +43,10 @@ export default function Settings() {
   const [pAge, setPAge] = useState('');
   const [pGender, setPGender] = useState('Male');
 
+  // Firebase Audit diagnostic states
+  const [auditData, setAuditData] = useState<any>(null);
+  const [loadingAudit, setLoadingAudit] = useState(false);
+
   useEffect(() => {
     // Load passengers from local storage
     const passengers = localStorage.getItem('ww_saved_passengers');
@@ -49,6 +54,23 @@ export default function Settings() {
       setSavedPassengers(JSON.parse(passengers));
     }
   }, []);
+
+  useEffect(() => {
+    if (activeSec === 'firebase-report') {
+      const loadAudit = async () => {
+        setLoadingAudit(true);
+        try {
+          const report = await runFirebaseAudit();
+          setAuditData(report);
+        } catch (err) {
+          console.error('[Firebase Audit Run Failed]:', err);
+        } finally {
+          setLoadingAudit(false);
+        }
+      };
+      loadAudit();
+    }
+  }, [activeSec]);
 
   const toggleTheme = (id: string) => {
     if (selectedThemes.includes(id)) {
@@ -71,6 +93,19 @@ export default function Settings() {
         travel_preferences: selectedThemes
       });
       if (res.data.success) {
+        // Sync profile update to Firestore
+        try {
+          await updateUserProfile({
+            name,
+            bio,
+            profile_photo_url: avatarUrl,
+            home_city: homeCity,
+            travel_preferences: selectedThemes
+          });
+        } catch (fsErr) {
+          console.error('[Firestore Profile Update Sync Failed]:', fsErr);
+        }
+
         auth.updateUser(res.data.data);
         setSuccessMsg('Profile updated successfully!');
       }
@@ -153,6 +188,16 @@ export default function Settings() {
           }`}
         >
           <Info size={16} /> App Info
+        </button>
+        <button 
+          onClick={() => setActiveSec('firebase-report')}
+          className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-left transition-all ${
+            activeSec === 'firebase-report' 
+              ? 'bg-primary text-white shadow-sm' 
+              : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 bg-transparent'
+          }`}
+        >
+          <Shield size={16} /> Firebase Audit
         </button>
       </div>
 
@@ -437,6 +482,191 @@ export default function Settings() {
                 <li>Simulated IRCTC berths selectors &amp; RedBus decks maps.</li>
                 <li>Razorpay checkout verifies sandbox responses natively.</li>
               </ul>
+            </div>
+          </div>
+        )}
+
+        {activeSec === 'firebase-report' && (
+          <div className="space-y-6 animate-fade-in text-xs font-medium">
+            {/* Header / Diagnosis Pulse */}
+            <div className="bg-white rounded-[28px] border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.04)] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                  <Shield className="text-primary" size={16} />
+                  Firebase Persistence Diagnostics
+                </h2>
+                <p className="text-[10px] text-slate-400 mt-1">Real-time persistent state audit & CRUD logging console</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setLoadingAudit(true);
+                    try {
+                      const report = await runFirebaseAudit();
+                      setAuditData(report);
+                    } catch {} finally {
+                      setLoadingAudit(false);
+                    }
+                  }}
+                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all"
+                  disabled={loadingAudit}
+                >
+                  {loadingAudit ? 'Refreshing...' : 'Refresh Status'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    triggerSimulatedFailure();
+                    // trigger component state refresh to show new failure in the list
+                    setAuditData({ ...auditData });
+                  }}
+                  className="px-3.5 py-2 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 font-bold rounded-xl transition-all"
+                >
+                  Simulate Write Failure
+                </button>
+              </div>
+            </div>
+
+            {/* Service & Connection Panels */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Connected Services */}
+              <div className="bg-white rounded-[28px] border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.04)] space-y-4">
+                <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Connected Services</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-700">Firebase Auth</span>
+                    </div>
+                    {auditData?.authConnected || firestoreAuditStats.connectedServices.auth ? (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-100">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        Connected
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-150 text-slate-500 text-[10px] font-bold rounded-full border border-slate-200">
+                        Disconnected
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-slate-700">Cloud Firestore</span>
+                    </div>
+                    {auditData?.firestoreConnected || firestoreAuditStats.connectedServices.firestore ? (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-full border border-emerald-100">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        Active
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700 text-[10px] font-bold rounded-full border border-amber-100">
+                        No Connection
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Operations metrics summary */}
+              <div className="bg-white rounded-[28px] border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.04)] space-y-4">
+                <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Audit Operations Analytics</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total Reads</p>
+                    <p className="text-base font-black text-slate-800 mt-1">
+                      {Object.values(firestoreAuditStats.collections).reduce((sum, c) => sum + c.reads, 0)}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total Writes</p>
+                    <p className="text-base font-black text-slate-800 mt-1">
+                      {Object.values(firestoreAuditStats.collections).reduce((sum, c) => sum + c.writes, 0)}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total Deletes</p>
+                    <p className="text-base font-black text-slate-800 mt-1">
+                      {Object.values(firestoreAuditStats.collections).reduce((sum, c) => sum + c.deletes, 0)}
+                    </p>
+                  </div>
+                  <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-center">
+                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Total Failures</p>
+                    <p className="text-base font-black text-amber-700 mt-1">
+                      {Object.values(firestoreAuditStats.collections).reduce((sum, c) => sum + c.failures, 0)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Collection counts Checklist */}
+            <div className="bg-white rounded-[28px] border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.04)] space-y-4">
+              <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Active Collections Status</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+                {[
+                  { name: 'users', count: auditData?.collectionCounts?.users ?? 0 },
+                  { name: 'itineraries', count: auditData?.collectionCounts?.itineraries ?? 0 },
+                  { name: 'bookings', count: auditData?.collectionCounts?.bookings ?? 0 },
+                  { name: 'reels', count: auditData?.collectionCounts?.reels ?? 0 },
+                  { name: 'favorites', count: auditData?.collectionCounts?.favorites ?? 0 }
+                ].map((col) => {
+                  const key = col.name as keyof typeof firestoreAuditStats.collections;
+                  const stats = firestoreAuditStats.collections[key];
+                  return (
+                    <div key={col.name} className="bg-slate-50 border border-slate-100 p-3.5 rounded-2xl flex flex-col gap-1 text-center">
+                      <p className="text-[10px] font-bold text-slate-800 capitalize">{col.name}</p>
+                      <p className="text-lg font-black text-primary mt-1">{col.count} <span className="text-[9px] font-semibold text-slate-400">docs</span></p>
+                      <div className="text-[8px] text-slate-400 font-bold mt-2 pt-2 border-t border-slate-100 space-y-0.5">
+                        <p>R: {stats?.reads ?? 0} | W: {stats?.writes ?? 0}</p>
+                        <p>D: {stats?.deletes ?? 0} | F: {stats?.failures ?? 0}</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Failed Writes List Console logs */}
+            <div className="bg-white rounded-[28px] border border-slate-100 p-6 shadow-[0px_10px_30px_rgba(15,23,42,0.04)] space-y-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Failed Write Logs</h3>
+                  <p className="text-[10px] text-slate-400 mt-0.5">Chronological record of failed mutations caught by try-catch wrappers</p>
+                </div>
+                <span className="text-[9px] font-black text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+                  {firestoreAuditStats.failedWritesList.length} Errors Caught
+                </span>
+              </div>
+
+              {firestoreAuditStats.failedWritesList.length === 0 ? (
+                <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold">
+                  No failed writes detected. Persistence is fully operational.
+                </div>
+              ) : (
+                <div className="overflow-x-auto border border-slate-100 rounded-2xl">
+                  <table className="w-full text-left border-collapse text-slate-700 text-[11px]">
+                    <thead>
+                      <tr className="bg-slate-50 border-b border-slate-100">
+                        <th className="p-3 font-bold text-slate-500 uppercase tracking-wider text-[9px]">Timestamp</th>
+                        <th className="p-3 font-bold text-slate-500 uppercase tracking-wider text-[9px]">Collection</th>
+                        <th className="p-3 font-bold text-slate-500 uppercase tracking-wider text-[9px]">Operation</th>
+                        <th className="p-3 font-bold text-slate-500 uppercase tracking-wider text-[9px]">Error Message</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {firestoreAuditStats.failedWritesList.slice().reverse().map((log, index) => (
+                        <tr key={index} className="hover:bg-slate-50/50">
+                          <td className="p-3 font-mono text-slate-400 text-[9px]">{new Date(log.timestamp).toLocaleTimeString()}</td>
+                          <td className="p-3 font-bold text-slate-800 capitalize">{log.collection}</td>
+                          <td className="p-3"><span className="px-2 py-0.5 bg-slate-100 rounded-md font-mono text-[9px]">{log.operation}</span></td>
+                          <td className="p-3 font-semibold text-red-600 max-w-xs truncate" title={log.error}>{log.error}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
         )}

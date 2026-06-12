@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { getItineraries, getBookings } from '../services/firestore';
 import PlacePhoto from '../components/PlacePhoto';
 import DestinationImage from '../components/DestinationImage';
 import { 
@@ -60,9 +61,55 @@ export default function Trips() {
     if (!isAuthenticated) return;
     setLoading(true);
     try {
-      const res = await api.get('/trips');
-      if (res.data.success) {
-        setTripsList(res.data.data);
+      // Fetch from backend MongoDB
+      let mongodbTrips = { upcoming: [], past: [] };
+      try {
+        const res = await api.get('/trips');
+        if (res.data.success) {
+          mongodbTrips = res.data.data;
+        }
+      } catch (err) {
+        console.error('Error fetching MongoDB trips:', err);
+      }
+      
+      // Fetch from Firestore
+      try {
+        const firestoreItin = await getItineraries();
+        
+        // Merge Firestore itineraries as trips
+        const now = new Date();
+        const firestoreTripsMapped = firestoreItin.map(itin => ({
+          _id: itin.id, // Firestore ID
+          name: itin.title || `Trip to ${itin.destination}`,
+          destination: itin.destination,
+          start_date: itin.start_date,
+          end_date: itin.end_date,
+          isFirestoreTrip: true, // Marker
+          itineraryData: itin
+        }));
+
+        const upcomingF = firestoreTripsMapped.filter(t => new Date(t.end_date) >= now);
+        const pastF = firestoreTripsMapped.filter(t => new Date(t.end_date) < now);
+
+        // Merge keeping MongoDB trips as priority, but including any unique Firestore-only trips
+        const upcomingMerged = [...mongodbTrips.upcoming];
+        upcomingF.forEach((ft: any) => {
+          if (!upcomingMerged.some((mt: any) => mt.destination.toLowerCase() === ft.destination.toLowerCase())) {
+            upcomingMerged.push(ft);
+          }
+        });
+
+        const pastMerged = [...mongodbTrips.past];
+        pastF.forEach((ft: any) => {
+          if (!pastMerged.some((mt: any) => mt.destination.toLowerCase() === ft.destination.toLowerCase())) {
+            pastMerged.push(ft);
+          }
+        });
+
+        setTripsList({ upcoming: upcomingMerged, past: pastMerged });
+      } catch (fsErr) {
+        console.error('[Firestore fetchItineraries failed]:', fsErr);
+        setTripsList(mongodbTrips);
       }
     } catch (err) {
       console.error(err);
@@ -118,6 +165,37 @@ export default function Trips() {
   };
 
   const handleOpenDetailedView = async (tripId: string) => {
+    // Check if it's a Firestore trip first in our local list
+    const foundTrip = [...tripsList.upcoming, ...tripsList.past].find(t => t._id === tripId);
+    if (foundTrip && foundTrip.isFirestoreTrip) {
+      setActiveDetailedTrip({
+        _id: foundTrip._id,
+        name: foundTrip.name,
+        destination: foundTrip.destination,
+        start_date: foundTrip.start_date,
+        end_date: foundTrip.end_date,
+        expense_logs: [],
+        packing_list: [],
+        journal_entries: [],
+        isFirestoreTrip: true
+      });
+      // Set bookings from Firestore
+      try {
+        const allBookings = await getBookings();
+        const tripBookings = allBookings.filter(b => 
+          b.journey_details?.destination?.toLowerCase().includes(foundTrip.destination.toLowerCase()) ||
+          b.journey_details?.city?.toLowerCase().includes(foundTrip.destination.toLowerCase())
+        );
+        setActiveDetailedTripBookings(tripBookings);
+      } catch (err) {
+        console.error('Error fetching Firestore bookings for trip:', err);
+        setActiveDetailedTripBookings([]);
+      }
+      
+      setActiveDetailedTripItinerary(foundTrip.itineraryData);
+      return;
+    }
+
     try {
       const res = await api.get(`/trips/${tripId}`);
       if (res.data.success) {

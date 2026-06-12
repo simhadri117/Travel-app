@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { createFavorite, deleteFavorite, getFavorites } from '../services/firestore';
 import {
   Heart, MessageCircle, Share2, Send, X,
   MapPin, PlusCircle, Search, Bookmark, MoreHorizontal
@@ -28,14 +29,29 @@ export default function Social() {
     setLoadingFeed(true);
     try {
       const res = await api.get('/posts/feed');
-      if (res.data.success) setFeedPosts(res.data.data);
+      if (res.data.success) {
+        let bookmarkedIds: string[] = [];
+        if (isAuthenticated) {
+          try {
+            const favs = await getFavorites();
+            bookmarkedIds = favs.filter(f => f.targetType === 'post').map(f => f.targetId);
+          } catch (favErr) {
+            console.error('Error fetching favorites for social feed:', favErr);
+          }
+        }
+        const mapped = res.data.data.map((p: any) => ({
+          ...p,
+          saved: bookmarkedIds.includes(p._id)
+        }));
+        setFeedPosts(mapped);
+      }
     } catch {} finally { setLoadingFeed(false); }
   };
 
   useEffect(() => {
     if (tab === 'feed') fetchFeed();
     else if (tab === 'explore') handleExploreSearch();
-  }, [tab]);
+  }, [tab, isAuthenticated]);
 
   const handleLike = async (postId: string) => {
     if (!isAuthenticated) {
@@ -57,6 +73,44 @@ export default function Social() {
         ));
       }
     } catch {}
+  };
+
+  const handleSavePost = async (postId: string) => {
+    if (!isAuthenticated) {
+      openAuthModal({
+        title: 'Save Post',
+        subtitle: 'Sign in to save posts, interact with the community, and follow users.',
+        onSuccess: () => {
+          handleSavePost(postId);
+        }
+      });
+      return;
+    }
+
+    const targetPost = feedPosts.find(p => p._id === postId);
+    if (!targetPost) return;
+
+    const newSaved = !targetPost.saved;
+    setFeedPosts(posts => posts.map(p => p._id === postId ? { ...p, saved: newSaved } : p));
+
+    try {
+      if (newSaved) {
+        await createFavorite({
+          targetId: postId,
+          targetType: 'post',
+          name: targetPost.caption || 'Community Post',
+          imageUrl: targetPost.media_urls?.[0] || ''
+        });
+      } else {
+        const favs = await getFavorites();
+        const targetFav = favs.find(f => f.targetId === postId && f.targetType === 'post');
+        if (targetFav && targetFav.id) {
+          await deleteFavorite(targetFav.id);
+        }
+      }
+    } catch (err) {
+      console.error('[Firestore Save Post Favorite Failed]:', err);
+    }
   };
 
   const handleOpenComments = async (post: any) => {
@@ -93,7 +147,22 @@ export default function Social() {
   const handleExploreSearch = async () => {
     try {
       const res = await api.get('/explore', { params: { query: exploreQuery } });
-      if (res.data.success) setExplorePosts(res.data.data);
+      if (res.data.success) {
+        let bookmarkedIds: string[] = [];
+        if (isAuthenticated) {
+          try {
+            const favs = await getFavorites();
+            bookmarkedIds = favs.filter(f => f.targetType === 'post').map(f => f.targetId);
+          } catch (favErr) {
+            console.error('Error fetching favorites for explore feed:', favErr);
+          }
+        }
+        const mapped = res.data.data.map((p: any) => ({
+          ...p,
+          saved: bookmarkedIds.includes(p._id)
+        }));
+        setExplorePosts(mapped);
+      }
     } catch {}
   };
 
@@ -230,8 +299,11 @@ export default function Social() {
                     <button className="text-slate-400 hover:text-slate-700 transition-colors">
                       <Share2 size={20} />
                     </button>
-                    <button className="ml-auto text-slate-400 hover:text-slate-700 transition-colors">
-                      <Bookmark size={20} />
+                    <button 
+                      onClick={() => handleSavePost(post._id)}
+                      className={`ml-auto transition-all hover:scale-110 ${post.saved ? 'text-brand-600' : 'text-slate-400 hover:text-slate-750'}`}
+                    >
+                      <Bookmark size={20} fill={post.saved ? 'currentColor' : 'none'} />
                     </button>
                   </div>
                   {post.caption && (

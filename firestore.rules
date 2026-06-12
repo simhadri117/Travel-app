@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for auth verification
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocumentOwner() {
+      return isAuthenticated() && (
+        (resource != null && request.auth.uid == resource.data.userId) ||
+        (request.resource != null && request.auth.uid == request.resource.data.userId)
+      );
+    }
+
+    // 1. users collection: Users can only read/write their own user profile document
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) || (resource != null && isOwner(resource.data.userId));
+    }
+
+    // 2. itineraries collection: Only the owner (userId field) has read/write access
+    match /itineraries/{itineraryId} {
+      allow read, write: if isDocumentOwner();
+    }
+
+    // 3. bookings collection: Only the owner (userId field) has read/write access
+    match /bookings/{bookingId} {
+      allow read, write: if isDocumentOwner();
+    }
+
+    // 4. favorites collection: Only the owner (userId field) has read/write access
+    match /favorites/{favoriteId} {
+      allow read, write: if isDocumentOwner();
+    }
+
+    // 5. reels collection: Public reads, but only authenticated creator can write/delete
+    match /reels/{reelId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // 6. reviews collection: Public reads, but only authenticated author can write/delete
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // 7. Backend cache collections: Allow read/write for image caches
+    match /cached_images/{imageId} {
+      allow read, write: if true;
+    }
+    match /destination_images/{imageId} {
+      allow read, write: if true;
+    }
+    match /attraction_images/{imageId} {
+      allow read, write: if true;
+    }
+  }
+}

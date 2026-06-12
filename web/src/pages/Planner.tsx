@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import { api } from '../services/api';
+import { createItinerary } from '../services/firestore';
 import PlacePhoto from '../components/PlacePhoto';
 import WeatherBadge from '../components/WeatherBadge';
 import DestinationImage from '../components/DestinationImage';
@@ -261,6 +262,23 @@ export default function Planner() {
     }
     try {
       await api.post('/itinerary/save', { itinerary_id: itineraryId });
+      
+      // Sync generated itinerary to Firestore
+      try {
+        await createItinerary({
+          title: `Trip to ${destination}`,
+          destination,
+          start_date: startDate,
+          end_date: endDate,
+          days: numDays,
+          budget,
+          theme: travelType,
+          activities: itinerary?.days || []
+        });
+      } catch (fsErr) {
+        console.error('[Firestore Save Itinerary Failed]:', fsErr);
+      }
+
       alert('Itinerary saved!');
     } catch {}
   };

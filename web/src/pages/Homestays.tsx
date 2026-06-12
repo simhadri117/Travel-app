@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { createBooking } from '../services/firestore';
 import { useAuthStore } from '../store/useAuthStore';
 import { Home, Search, Star, MapPin, Plus, List, Loader, User, CheckCircle, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -126,16 +127,30 @@ export default function Homestays() {
     }
     setBookingLoading(true);
     try {
-      await api.post('/payment/stripe-intent', { amount: selectedHomestay.price_per_night * 3 });
+      const totalPaid = selectedHomestay.price_per_night * 3;
+      await api.post('/payment/stripe-intent', { amount: totalPaid });
       const res = await api.post('/homestays/book', {
         homestay_details: selectedHomestay,
         passengers: [{ name: user?.name || 'Lead Guest', age: 25, gender: 'Male' }],
         check_in: checkIn,
         check_out: checkOut,
-        amount_paid: selectedHomestay.price_per_night * 3,
+        amount_paid: totalPaid,
         payment_id: `pay_hms_${Math.random().toString(36).substring(2, 10).toUpperCase()}`
       });
       if (res.data.success) {
+        // Sync homestay booking to Firestore
+        try {
+          await createBooking({
+            booking_type: 'homestay',
+            booking_reference: res.data.data.booking_reference,
+            amount_paid: res.data.data.amount_paid || totalPaid,
+            journey_details: res.data.data.journey_details || { ...selectedHomestay, checkIn, checkOut, city },
+            status: 'confirmed'
+          });
+        } catch (fsErr) {
+          console.error('[Firestore Homestay Booking Sync Failed]:', fsErr);
+        }
+
         setBookingSuccess(res.data.data);
         confetti({ particleCount: 120, spread: 80 });
       }

@@ -1294,7 +1294,7 @@ function enrichWithPhotoUrls(itinerary: any, ctx: any): any {
         slot.photo_url = getPlacePhotoUrl(matchedPhotoRef);
       } else {
         const name = slot.activity_name || slot.restaurant_name || slot.hotel_name || 'travel';
-        slot.photo_url = `https://picsum.photos/seed/${encodeURIComponent(name)}/800/500`;
+        slot.photo_url = `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(name + ',' + ctx.filters?.destination + ',' + (slot.activity_name ? 'sightseeing' : slot.restaurant_name ? 'restaurant' : 'hotel'))}`;
       }
       return slot;
     };
@@ -1335,7 +1335,7 @@ function buildFallbackFromLiveData(ctx: any): any {
       rating: Math.round((4.0 + (idx % 9) / 10) * 10) / 10,
       user_ratings_total: 100 + idx * 15,
       price_level: (idx % 3) + 1,
-      photo_url: `https://picsum.photos/seed/attr-${filters.destination.toLowerCase()}-${idx}/800/500`,
+      photo_url: `https://images.unsplash.com/featured/800x500/?${encodeURIComponent('sightseeing,attraction,' + filters.destination + ',' + idx)}`,
       outdoor: idx % 2 === 0,
       types: idx % 2 === 0 ? ['park', 'natural_feature'] : ['museum', 'point_of_interest']
     });
@@ -1349,7 +1349,7 @@ function buildFallbackFromLiveData(ctx: any): any {
       address: `Street ${idx}, ${filters.destination}`,
       rating: Math.round((4.0 + (idx % 9) / 10) * 10) / 10,
       reviews_count: 50 + idx * 20,
-      photo_url: `https://picsum.photos/seed/rest-${filters.destination.toLowerCase()}-${idx}/800/500`,
+      photo_url: `https://images.unsplash.com/featured/800x500/?${encodeURIComponent('restaurant,food,' + filters.destination + ',' + idx)}`,
       price_range: idx % 2 === 0 ? '₹200-400 per person' : '₹500-1000 per person',
       must_try_dish: `Chef's Special ${idx}`
     });
@@ -1459,7 +1459,7 @@ function buildFallbackFromLiveData(ctx: any): any {
       tips,
       best_time_to_visit: best_time,
       photo_reference: place?.photo_reference || null,
-      photo_url: place?.photo_url || (place?.photo_reference ? getPlacePhotoUrl(place.photo_reference) : `https://picsum.photos/seed/${encodeURIComponent(name)}/800/500`),
+      photo_url: place?.photo_url || (place?.photo_reference ? getPlacePhotoUrl(place.photo_reference) : `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(name + ',' + filters.destination + ',sightseeing')}`),
     };
   };
 
@@ -1597,7 +1597,7 @@ function buildFallbackFromLiveData(ctx: any): any {
         rating: lunchRest.rating || 4.2,
         reviews_count: lunchRest.reviews_count || lunchRest.user_ratings_total || 250,
         photo_reference: lunchRest.photo_reference || null,
-        photo_url: lunchRest.photo_url || (lunchRest.photo_reference ? getPlacePhotoUrl(lunchRest.photo_reference) : `https://picsum.photos/seed/${encodeURIComponent(lunchRest.name)}/800/500`),
+        photo_url: lunchRest.photo_url || (lunchRest.photo_reference ? getPlacePhotoUrl(lunchRest.photo_reference) : `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(lunchRest.name + ',' + filters.destination + ',restaurant,food')}`),
       },
       travel_afternoon_to_evening: getDistanceBetween(afternoon, evening),
       evening: makeSlot(evening, '03:00 PM'),
@@ -1610,7 +1610,7 @@ function buildFallbackFromLiveData(ctx: any): any {
         rating: dinnerRest.rating || 4.3,
         reviews_count: dinnerRest.reviews_count || dinnerRest.user_ratings_total || 340,
         photo_reference: dinnerRest.photo_reference || null,
-        photo_url: dinnerRest.photo_url || (dinnerRest.photo_reference ? getPlacePhotoUrl(dinnerRest.photo_reference) : `https://picsum.photos/seed/${encodeURIComponent(dinnerRest.name)}/800/500`),
+        photo_url: dinnerRest.photo_url || (dinnerRest.photo_reference ? getPlacePhotoUrl(dinnerRest.photo_reference) : `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(dinnerRest.name + ',' + filters.destination + ',dinner,food')}`),
       },
       travel_evening_to_night: getDistanceBetween(evening, night),
       night: makeSlot(night, '07:00 PM'),
@@ -1621,7 +1621,7 @@ function buildFallbackFromLiveData(ctx: any): any {
         price_per_night: selectedHotel.price_per_night || Math.round(budgetPerDay * 0.35),
         amenities: selectedHotel.amenities || ['WiFi', 'AC', 'Breakfast', 'Room Service'],
         photo_reference: selectedHotel.photo_reference || null,
-        photo_url: selectedHotel.photo_url || (selectedHotel.photo_reference ? getPlacePhotoUrl(selectedHotel.photo_reference) : `https://picsum.photos/seed/${encodeURIComponent(selectedHotel.name)}/800/500`),
+        photo_url: selectedHotel.photo_url || (selectedHotel.photo_reference ? getPlacePhotoUrl(selectedHotel.photo_reference) : `https://images.unsplash.com/featured/800x500/?${encodeURIComponent(selectedHotel.name + ',' + filters.destination + ',hotel,lobby')}`),
         booking_url: `https://www.google.com/travel/hotels/${encodeURIComponent(filters.destination)}`,
       },
       total_day_cost: budgetPerDay,
