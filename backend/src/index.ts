@@ -146,4 +146,4 @@ async function seedInitialData() {
     console.error('Seeder execution error:', error);
   }
 }
-// Touched for nodemon restart once again - verified port 5001 free
+// Touched for nodemon restart once again - restarted with MongoDB active

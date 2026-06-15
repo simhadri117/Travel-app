@@ -52,6 +52,18 @@ service cloud.firestore {
       allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
     }
 
+    // 7. posts collection: Public reads, but only authenticated author can write/delete
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // 8. notifications collection: Only the owner has read/write access
+    match /notifications/{notificationId} {
+      allow read, write: if isDocumentOwner();
+    }
+
     // 7. Backend cache collections: Allow read/write for image caches
     match /cached_images/{imageId} {
       allow read, write: if true;
